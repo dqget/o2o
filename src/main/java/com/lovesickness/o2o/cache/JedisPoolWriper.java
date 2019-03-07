@@ -15,7 +15,7 @@ public class JedisPoolWriper {
     public JedisPoolWriper(final JedisPoolConfig poolConfig, final String host, final int port, String password) {
         try {
             jedisPool = new JedisPool(poolConfig, host, port, 2000, password);
-            System.out.println("JedisPoolWriper password "+password);
+            System.out.println("JedisPoolWriper password " + password);
         } catch (Exception e) {
             e.printStackTrace();
         }
