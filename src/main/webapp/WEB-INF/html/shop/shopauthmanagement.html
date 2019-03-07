@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>权限管理</title>
+    <meta name="description"
+          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="阿里巴巴国际UED前端">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Google Web Fonts -->
+
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+    <link rel="apple-touch-icon-precomposed"
+          href="/">
+    <link rel="stylesheet" href="../resources/css/shop/shopauthmanagement.css"
+          type="text/css">
+
+</head>
+<body>
+<div class="page-group">
+    <div id="page-grid" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back"
+               href="/" onclick="history.back(-1);">
+                <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">权限管理</h1>
+        </header>
+        <div class="content">
+            <div class="content-block">
+                <div class="row row-shopauth">
+                    <div class="col-40">雇员</div>
+                    <div class="col-20">职位</div>
+                    <div class="col-40">操作</div>
+                </div>
+                <div class="shopauth-wrap"></div>
+            </div>
+            <div class="content-block">
+                <img id="auth-img" src="/o2o/shopadmin/generateqrcode4shopauth" alt=""/>
+                <div class="row">
+                    <div class="col-33">
+                        <a class="button button-big button-fill button-danger" href="/o2o/shopadmin/shopmanage">
+                            返回 </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+<script type="text/javascript"
+        src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src='../resources/js/shop/shopauthmanagement.js'></script>
+
+</body>
+</html>

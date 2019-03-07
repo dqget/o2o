@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SUI Mobile Demo</title>
+    <meta name="description"
+          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="阿里巴巴国际UED前端">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../resources/css/frontend/shopdetail.css"
+          type="text/css">
+</head>
+<body>
+<div class="page-group">
+    <div id="page" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back"
+               href="#" onclick="window.history.back(-1);"> <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title" id="shop-name">店铺详情</h1>
+        </header>
+        <nav class="bar bar-tab">
+            <a class="tab-item external" href="/o2o/frontend/index">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-cart"></span>
+                <span class="tab-label">购物车</span>
+            </a>
+            <a class="tab-item external" href="#" id="me">
+                <span class="icon icon-me"></span>
+                <span class="tab-label">我</span>
+            </a>
+        </nav>
+
+        <!-- 添加 class infinite-scroll 和 data-distance  向下无限滚动可不加infinite-scroll-bottom类，这里加上是为了和下面的向上无限滚动区分-->
+        <div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
+            <!--店铺展示区-->
+            <div class="card demo-card-header-pic">
+                <div valign="bottom" class="card-header color-white no-border no-padding">
+                    <img class='card-cover' id="shop-cover-pic"
+                         src=""
+                         alt="">
+                </div>
+                <div class="card-content">
+                    <div class="card-content-inner">
+                        <p class="color-gray"><span id="shop-update-time"></span></p>
+                        <p id="shop-desc"></p>
+
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span id="shop-addr"></span>
+                    <span id="shop-phone"></span>
+
+                    <!--<a href="#" class="link">赞</a>-->
+                    <!--<a href="#" class="link">更多</a>-->
+                </div>
+            </div>
+            <!--类别列表展示-->
+            <div class="shopdetail-button-div" id="shopdetail-button-div">
+                <!--<a href="" class="">*****</a>-->
+            </div>
+            <!--搜索栏-->
+            <div class="detail-search">
+                <div class="searchbar">
+                    <a class="searchbar-cancel">取消</a>
+                    <div class="search-input">
+                        <label class="icon icon-search" for="search"></label>
+                        <input type="search" id='search' placeholder='输入关键字...'/>
+                    </div>
+                </div>
+            </div>
+            <!--商品列表-->
+            <div class="list-div product-list">
+                <!--<div class="card">-->
+                <!--<div class="card-header">新的公布:</div>-->
+                <!--<div class="card-content">-->
+                <!--<div class="list-block media-list">-->
+                <!--<ul>-->
+                <!--<li class="item-content">-->
+                <!--<div class="item-media">-->
+                <!--<img src="http://gqianniu.alicdn.com/bao/uploaded/i4//tfscom/i3/TB10LfcHFXXXXXKXpXXXXXXXXXX_!!0-item_pic.jpg_250x250q60.jpg"-->
+                <!--width="44">-->
+                <!--</div>-->
+                <!--<div class="item-inner">-->
+                <!--<div class="item-title-row">-->
+                <!--<div class="item-title">标题</div>-->
+                <!--</div>-->
+                <!--<div class="item-subtitle">子标题</div>-->
+                <!--</div>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</div>-->
+                <!--</div>-->
+                <!--<div class="card-footer">-->
+                <!--<span>2015/01/15</span>-->
+                <!--<span>5 评论</span>-->
+                <!--</div>-->
+                <!--</div>-->
+            </div>
+            <!-- 加载提示符 -->
+            <div class="infinite-scroll-preloader">
+                <div class="preloader"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 右侧栏 -->
+    <div class="panel-overlay"></div>
+    <div class="panel panel-right panel-cover theme-dark" id='panel-js-demo'>
+        <div class="content-block" id="right">
+            <p>我是从右边出现的</p>
+            <p>并且我是覆盖在页面上而不是推开页面</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--<script type="text/javascript" src="../resources/js/common/jquery.js"></script>-->
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+<script type="text/javascript"
+        src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src="../resources/js/frontend/shopdetail.js"></script>
+<script type="text/javascript" src="../resources/js/frontend/rightsidebar.js"></script>
+<script type="text/javascript" src="../resources/js/local/logout.js"></script>
+</body>
+
+</html>

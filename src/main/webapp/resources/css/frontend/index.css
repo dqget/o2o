@@ -1,0 +1,93 @@
+.bar{
+    background-color: #fff;
+}
+.index-banner {
+    height: 35%;
+}
+.swiper-container{
+    padding: 0;
+}
+.img-wrap {
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+}
+
+.total-shop-button {
+    /*height: 1.5rem;*/
+    /*line-height: 1.5rem;*/
+    padding: 20px 10px;
+    /*margin-bottom: 0.4rem;*/
+    position: relative;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+.total-shop-button:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    width: 0.15rem;
+    height: 1.5rem;
+    background-color: #0894ec;
+}
+
+.shop-classify {
+    /*height: 3.3rem;*/
+    /*padding: 0.2rem;*/
+    cursor: pointer;
+}
+
+.shop-classify > .word {
+    width: 65%;
+    height: 100%;
+    overflow: hidden;
+    float: left;
+}
+
+.shop-classify > .word > p {
+    margin: 0;
+}
+
+.shop-classify > .word > .shop-title {
+    margin-left: 15px;
+    font-size: 0.8rem;
+}
+
+.shop-classify > .word > .shop-desc {
+    margin-left: 15px;
+    font-size: 0.4rem;
+}
+
+.shop-classify > .shop-img {
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-left: 0.2rem;
+    display: inline-block;
+}
+
+.shop-classify > .shop-classify-img-warp {
+    width: 30%;
+    height: 100%;
+    margin-left: 0.2rem;
+    display: inline-block;
+}
+
+.shop-classify > .shop-classify-img-warp > .shop-img {
+    width: 100%;
+    height: 100%;
+}
+.row{
+    margin: 0;
+    background-color: #ffffff;
+    padding-bottom: 20px;
+}
+.row .col-50{
+    margin: 0;
+    width: 50%;
+    padding: 3px 10px;
+}

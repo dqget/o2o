@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.ShopAuthMapDao">
+    <resultMap id="shopAuthResultMap" type="com.lovesickness.o2o.entity.ShopAuthMap">
+        <id column="shop_auth_id" property="shopAuthId"/>
+        <result column="title" property="title"/>
+        <result column="title_flag" property="titleFlag"/>
+        <result column="create_time" property="createTime"/>
+        <result column="last_edit_time" property="lastEditTime"/>
+        <result column="enable_status" property="enableStatus"/>
+        <association property="employee" column="employee_id" javaType="com.lovesickness.o2o.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+        </association>
+        <association property="shop" column="shop_id" javaType="com.lovesickness.o2o.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+    </resultMap>
+    <select id="queryShopAuthMapListByShopId" resultMap="shopAuthResultMap">
+        SELECT
+            sam.shop_auth_id,
+            title,
+            title_flag,
+            sam.create_time,
+            sam.last_edit_time,
+            sam.enable_status,
+            s.shop_id,
+            shop_name,
+            user_id,
+            name
+        FROM
+            tb_shop_auth_map sam,
+            tb_person_info p,
+            tb_shop s
+        WHERE
+            sam.employee_id = p.user_id
+            AND
+            sam.shop_id = s.shop_id
+            AND
+            sam.shop_id = #{shopId}
+        LIMIT
+            ${rowIndex}, #{pageSize}
+    </select>
+    <select id="queryShopAuthMapCountByShopId" resultType="int">
+        SELECT COUNT(1)
+        FROM
+            tb_shop_auth_map sam,
+            tb_person_info p,
+            tb_shop s
+        WHERE
+            sam.employee_id = p.user_id
+            AND
+            sam.shop_id = s.shop_id
+            AND
+            sam.shop_id = #{shopId}
+    </select>
+    <select id="queryShopAuthMapById" resultMap="shopAuthResultMap">
+        SELECT
+            sam.shop_auth_id,
+            title,
+            title_flag,
+            sam.create_time,
+            sam.last_edit_time,
+            sam.enable_status,
+            s.shop_id,
+            shop_name,
+            user_id,
+            name
+        FROM
+            tb_shop_auth_map sam,
+            tb_person_info p,
+            tb_shop s
+        WHERE
+            sam.employee_id = p.user_id
+            AND
+            sam.shop_id = s.shop_id
+            AND
+            sam.shop_auth_id = #{shopAuthId}
+    </select>
+    <insert id="insertShopAuthMap" parameterType="com.lovesickness.o2o.entity.ShopAuthMap" useGeneratedKeys="true">
+        INSERT tb_shop_auth_map (employee_id, shop_id, title, title_flag, create_time, last_edit_time, enable_status)
+        VALUES (#{employee.userId}, #{shop.shopId}, #{title}, #{titleFlag}, #{createTime}, #{lastEditTime},
+                #{enableStatus})
+    </insert>
+    <update id="updateShopAuthMap" parameterType="com.lovesickness.o2o.entity.ShopAuthMap">
+        UPDATE tb_shop_auth_map
+        <set>
+            <if test="title!=null ">title=#{title},</if>
+            <if test="titleFlag!=null ">title_flag=#{titleFlag},</if>
+            <if test="createTime!=null ">create_time=#{createTime},</if>
+            <if test="lastEditTime!=null ">last_edit_time=#{lastEditTime},</if>
+            <if test="enableStatus!=null ">enable_status=#{enableStatus}</if>
+        </set>
+        WHERE shop_auth_id = #{shopAuthId}
+    </update>
+    <delete id="deleteShopAuthMap">
+        DELETE FROM tb_shop_auth_map
+        WHERE shop_auth_id = #{shopAuthId}
+    </delete>
+</mapper>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SUI Mobile Demo</title>
+
+    <meta name="author" content="阿里巴巴国际UED前端">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="/">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Google Web Fonts -->
+
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+</head>
+<body>
+<div class="page-group">
+    <div id="page-grid" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back"
+               href="/" onclick="window.location.href='/o2o/shopadmin/shoplist';">
+                <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">商铺信息</h1>
+        </header>
+        <div class="content">
+            <div class="content-block">
+                <div class="row row-shop">
+                    <div class="col-50">
+                        <a class="button button-big button-fill" id="shopInfo"> 商铺信息
+                        </a>
+                    </div>
+                    <div class="col-50">
+                        <a class="button button-big button-fill" href="/o2o/shopadmin/productlist"
+                           id="productInfo"> 商品管理
+                        </a>
+                    </div>
+                    <div class="col-50">
+                        <a class="button button-big button-fill" href="/o2o/shopadmin/productcategorymanagement">
+                            类别管理
+                        </a>
+                    </div>
+                    <div class="col-50">
+                        <a class="button button-big button-fill" href="/o2o/shopadmin/shopauthmanagement">
+                            权限管理
+                        </a>
+                    </div>
+                    <div class="col-50">
+                        <a class="button button-big button-fill" href="/o2o/shopadmin/productbuycheck">
+                            消费记录
+                        </a>
+                    </div>
+                </div>
+                <div class="shop-wrap"></div>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-100">
+                        <a class="button button-big button-fill button-danger"
+                           href="/o2o/shopadmin/shoplist"> 返回 </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<script type="text/javascript" src='../resources/js/shop/shopmanagment.js'></script>
+<script src='../resources/js/common/common.js'></script>
+</body>
+</html>

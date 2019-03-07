@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.ProductSellDailyDao">
+    <resultMap id="productSellDailyMap" type="com.lovesickness.o2o.entity.ProductSellDaily">
+        <id column="product_sell_daily_id" property="productSellDailyId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="total" property="total"/>
+        <association property="product" column="prooduct_id"
+                     javaType="com.lovesickness.o2o.entity.Product">
+            <id column="product_id" property="productId"/>
+            <result column="product_name" property="productName"/>
+        </association>
+        <association property="shop" column="shop_id"
+                     javaType="com.lovesickness.o2o.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+    </resultMap>
+    <select id="queryProductSellDailyList" resultMap="productSellDailyMap">
+        SELECT
+        psd.product_sell_daily_id,
+        psd.create_time,
+        psd.total,
+        p.product_id,
+        p.product_name,
+        s.shop_id,
+        s.shop_name
+        FROM
+        tb_product_sell_daily psd,
+        tb_product p,
+        tb_shop s
+        <where>
+            psd.product_id = p.product_id
+            AND
+            psd.shop_id = s.shop_id
+            <!--根据店铺Id-->
+            <if test="productSellDailyCondition.shop!=null
+            and productSellDailyCondition.shop.shopId!=null">
+                AND psd.shop_id = #{productSellDailyCondition.shop.shopId}
+            </if>
+            <!--根据商品名称模糊-->
+            <if test="productSellDailyCondition.product!=null
+            and productSellDailyCondition.product.productName!=null">
+                AND p.product_name LIKE '%${productSellDailyCondition.product.productName}%'
+            </if>
+            <if test="beginTime!=null">
+                AND DATE_FORMAT(psd.create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{beginTime},'%Y-%m-%d')
+            </if>
+            <if test="endTime!=null">
+                AND DATE_FORMAT(psd.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d')
+            </if>
+        </where>
+        ORDER BY psd.product_id,create_time
+    </select>
+    <insert id="insertProductSellDaily"
+            parameterType="com.lovesickness.o2o.entity.ProductSellDaily">
+        INSERT INTO
+            tb_product_sell_daily (SELECT
+                                       product_id,
+                                       shop_id,
+                                       DATE_FORMAT(create_time, '%Y-%m-%d') AS create_time,
+                                       COUNT(product_id)                    AS total
+                                   FROM tb_user_product_map
+                                   WHERE
+                                       DATE_FORMAT(create_time, '%Y-%m-%d')
+                                       = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+                                   GROUP BY product_id
+            )
+    </insert>
+    <insert id="insertDefaultProductSellDaily">
+        INSERT INTO
+            tb_product_sell_daily (product_id, shop_id, create_time, total)
+            (SELECT
+                 p.product_id,
+                 p.shop_id,
+                 DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS create_time,
+                 0                                   AS total
+             FROM tb_product p
+             WHERE p.product_id NOT IN (SELECT product_id
+                                        FROM tb_product_sell_daily
+                                        WHERE DATE_FORMAT(create_time, '%Y-%m-%d')
+                                              = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+             )
+            )
+    </insert>
+</mapper>
