@@ -29,7 +29,8 @@
             <result column="enable_status" property="enableStatus"/>
             <result column="advice" property="advice"/>
         </association>
-        <association property="productCategory" column="product_category_id" javaType="com.lovesickness.o2o.entity.ProductCategory">
+        <association property="productCategory" column="product_category_id"
+                     javaType="com.lovesickness.o2o.entity.ProductCategory">
             <id column="product_category_id" property="productCategoryId"/>
             <result column="product_category_name" property="productCategoryName"/>
             <result column="product_category_desc" property="productCategoryDesc"/>
@@ -41,7 +42,7 @@
             <result column="img_addr" property="imgAddr"/>
             <result column="img_desc" property="imgDesc"/>
             <result column="priority" property="priority"/>
-            <result column="create_time" property="createTime"/>
+            <result column="product_img_create_time" property="createTime"/>
             <result column="product_id" property="productId"/>
         </collection>
     </resultMap>
@@ -94,7 +95,7 @@
             pm.img_addr,
             pm.img_desc,
             pm.priority,
-            pm.create_time
+            pm.create_time   product_img_create_time
         FROM
             tb_product p LEFT JOIN tb_product_img pm ON p.product_id = pm.product_id
         WHERE

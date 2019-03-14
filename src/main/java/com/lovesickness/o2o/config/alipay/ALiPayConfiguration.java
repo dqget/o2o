@@ -28,29 +28,56 @@ public class ALiPayConfiguration {
      * 签名类型
      */
     public static String signType;
+    /**
+     *
+     */
+    public static String notifyUrl;
+    /**
+     *
+     */
+    public static String returnUrl;
 
-    @Value(value = "ali.app_id")
+    /**
+     *
+     */
+    public static String charset;
+
+    @Value(value = "${ali.notify_url}")
+    public void setNotifyUrl(String notifyUrl) {
+        ALiPayConfiguration.notifyUrl = notifyUrl;
+    }
+
+    @Value(value = "${ali.return_url}")
+    public void setReturnUrl(String returnUrl) {
+        ALiPayConfiguration.returnUrl = returnUrl;
+    }
+
+    @Value(value = "${ali.charset}")
+    public void setCharset(String charset) {
+        ALiPayConfiguration.charset = charset;
+    }
+
+    @Value(value = "${ali.app_id}")
     public void setAppId(String appId) {
         ALiPayConfiguration.appId = appId;
     }
 
-    @Value(value = "ali.merchant_private_key")
-
+    @Value(value = "${ali.merchant_private_key}")
     public void setMerchantPrivateKey(String merchantPrivateKey) {
         ALiPayConfiguration.merchantPrivateKey = merchantPrivateKey;
     }
 
-    @Value(value = "ali.alipay_public_key")
+    @Value(value = "${ali.alipay_public_key}")
     public void setAliPublicKry(String aliPublicKry) {
         ALiPayConfiguration.aliPublicKry = aliPublicKry;
     }
 
-    @Value(value = "ali.gateyay.url")
+    @Value(value = "${ali.gateway.url}")
     public void setGateWayUrl(String gateWayUrl) {
         ALiPayConfiguration.gateWayUrl = gateWayUrl;
     }
 
-    @Value(value = "ali.sign_type")
+    @Value(value = "${ali.sign_type}")
     public void setSignType(String signType) {
         ALiPayConfiguration.signType = signType;
     }

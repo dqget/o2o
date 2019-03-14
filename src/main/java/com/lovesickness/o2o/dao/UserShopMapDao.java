@@ -25,8 +25,7 @@ public interface UserShopMapDao {
      * @param userShopCondition
      * @return
      */
-    int queryUserShopMapCount(
-            @Param("userShopCondition") UserShopMap userShopCondition);
+    int queryUserShopMapCount(@Param("userShopCondition") UserShopMap userShopCondition);
 
     /**
      * 根据传入的用户Id和shopId查询该用户在某个店铺下的积分信息

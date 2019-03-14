@@ -21,4 +21,9 @@ public class LocalController {
     public String changePwd() {
         return "local/changepwd";
     }
+
+    @GetMapping(value = "/personoperation")
+    public String personOperation() {
+        return "local/personoperation";
+    }
 }

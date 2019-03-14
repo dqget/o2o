@@ -73,9 +73,9 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(rollbackFor = RuntimeException.class)
     public ProductExecution modifyProduct(Product product, ImageHolder thumbnail, List<ImageHolder> productImgList) throws ProductOperationException {
         if (product != null && product.getShop() != null && product.getShop().getShopId() != null) {
-            Product tempShop = productDao.queryProductByProductId(product.getProductId());
             if (thumbnail != null) {
-                ImageUtile.deleteFileOrPath(tempShop.getImgAddr());
+                Product tempProduct = productDao.queryProductByProductId(product.getProductId());
+                ImageUtile.deleteFileOrPath(tempProduct.getImgAddr());
                 addThumbnail(product, thumbnail);
             }
             //商品详情图不为空，删除、添加

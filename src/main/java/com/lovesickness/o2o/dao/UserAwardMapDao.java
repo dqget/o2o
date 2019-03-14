@@ -5,7 +5,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface UserAwardDao {
+public interface UserAwardMapDao {
     /**
      * 根据传入的条件查询分页返回用户兑换奖品记录的列表信息
      *

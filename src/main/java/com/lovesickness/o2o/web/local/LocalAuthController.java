@@ -53,6 +53,7 @@ public class LocalAuthController {
             LocalAuth localAuth = localAuthService.getLocalAuthByUserNameAndPwd(userName, password);
             if (localAuth != null) {
                 modelMap.put("success", true);
+                modelMap.put("user", localAuth.getPersonInfo());
                 request.getSession().setAttribute("user", localAuth.getPersonInfo());
             } else {
                 modelMap.put("success", false);

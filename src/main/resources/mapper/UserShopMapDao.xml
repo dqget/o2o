@@ -37,22 +37,22 @@
             usm.shop_id = s.shop_id
             <if test="userShopCondition.user!=null
             and userShopCondition.user.userId!=null">
-                and user_id = #{userShopCondition.user.userId}
+                and usm.user_id = #{userShopCondition.user.userId}
             </if>
             <if test="userShopCondition.shop!=null
             and userShopCondition.shop.shopId!=null">
-                and shop_id = #{userShopCondition.shop.shopId}
+                and usm.shop_id = #{userShopCondition.shop.shopId}
             </if>
             <if test="userShopCondition.user!=null
-            and userShopCondition.user.userName!=null">
-                and user_name like '%${userShopCondition.user.userName}%'
+            and userShopCondition.user.name!=null">
+                and p.name like '%${userShopCondition.user.name}%'
             </if>
             <if test="userShopCondition.shop!=null
             and userShopCondition.shop.shopName!=null">
-                and shop_name like '%${userShopCondition.shop.shopName}%'
+                and usm.shop_name like '%${userShopCondition.shop.shopName}%'
             </if>
             <if test="userShopCondition.createTime!=null">
-                and create_time > #{userShopCondition.createTime}
+                and usm.create_time > #{userShopCondition.createTime}
             </if>
         </where>
         LIMIT #{rowIndex},#{pageSize};
@@ -70,22 +70,22 @@
             usm.shop_id = s.shop_id
             <if test="userShopCondition.user!=null
             and userShopCondition.user.userId!=null">
-                and user_id = #{userShopCondition.user.userId}
+                and usm.user_id = #{userShopCondition.user.userId}
             </if>
             <if test="userShopCondition.shop!=null
             and userShopCondition.shop.shopId!=null">
-                and shop_id = #{userShopCondition.shop.shopId}
+                and usm.shop_id = #{userShopCondition.shop.shopId}
             </if>
             <if test="userShopCondition.user!=null
-            and userShopCondition.user.userName!=null">
-                and user_name like '%${userShopCondition.user.userName}%'
+            and userShopCondition.user.name!=null">
+                and p.name like '%${userShopCondition.user.name}%'
             </if>
             <if test="userShopCondition.shop!=null
             and userShopCondition.shop.shopName!=null">
-                and shop_name like '%${userShopCondition.shop.shopName}%'
+                and usm.shop_name like '%${userShopCondition.shop.shopName}%'
             </if>
             <if test="userShopCondition.createTime!=null">
-                and create_time > #{userShopCondition.createTime}
+                and usm.create_time > #{userShopCondition.createTime}
             </if>
         </where>
     </select>
@@ -117,7 +117,7 @@
         INSERT
         INTO
             tb_user_shop_map (user_id, shop_id,
-                                 create_time, point)
+                              create_time, point)
         VALUES
             (#{user.userId}, #{shop.shopId}, #{createTime}, #{point})
     </insert>

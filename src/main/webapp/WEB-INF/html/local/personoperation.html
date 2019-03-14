@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商品</title>
+    <meta name="description"
+          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="阿里巴巴国际UED前端">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Google Web Fonts -->
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+    <link rel="apple-touch-icon-precomposed"
+          href="/">
+</head>
+<body>
+<div class="page-group">
+    <div id="page-label-input" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back"
+               href="/" onclick="history.back(-1);">
+                <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">个人信息</h1>
+        </header>
+        <div class="content">
+            <div class="list-block">
+                <ul>
+                    <!-- 头像 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">头像</div>
+                                <div class="item-input">
+                                    <img id="profile_Img">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 用户昵称 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">用户昵称</div>
+                                <div class="item-input">
+                                    <input type="text" id="name" placeholder="用户昵称">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 性别 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">性别</div>
+                                <div class="item-input">
+                                    <select id="gender">
+                                        <option value="1">男</option>
+                                        <option value="2">女</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- email -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">Email</div>
+                                <div class="item-input">
+                                    <input id="email" type="email" placeholder="email">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 用户身份 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">用户身份</div>
+                                <div class="item-input">
+                                    <input id="userType" type="email" placeholder="用户身份" readonly="readonly">
+
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 验证码 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">验证码</div>
+                                <input type="text" id="j_kaptcha" placeholder="验证码">
+
+                                <div class="item-input">
+                                    <img id="kaptcha_img" alt="点击更换" title="点击更换" onclick="changeVerifyCode(this)"
+                                         src="../Kaptcha">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="col-50">
+                    <a href="#" class="button button-big button-fill "
+                       id="submit">修改</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<script type="text/javascript"
+        src='../resources/js/local/personoperation.js' charset='utf-8'></script>
+<script type="text/javascript"
+        src='../resources/js/common/common.js' charset='utf-8'></script>
+
+</body>
+</html>

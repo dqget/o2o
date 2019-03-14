@@ -10,9 +10,13 @@ $(function () {
     var productCategoryId = '';
     var productName = '';
 
-    var searchDivUrl = '/o2o/frontend/listshopdetailpageinfo?shopId='
-        + shopId;
+    var searchDivUrl = '/o2o/frontend/listshopdetailpageinfo?shopId=' + shopId;
+    $('#exchangelist').attr('href', '/o2o/frontend/awardlist?shopId=' + shopId);
+
     getSearchDivData();
+    //加载10条商品信息
+    addItems(pageSize, pageNum);
+
 
     function getSearchDivData() {
         var url = searchDivUrl;
@@ -92,7 +96,6 @@ $(function () {
         });
     }
 
-    addItems(pageSize, pageNum);
 
     $(document).on('infinite', '.infinite-scroll-bottom', function () {
         if (loading)

@@ -29,18 +29,23 @@ $(function () {
             },
             success: function (data) {
                 if (data.success) {
+                    console.log(data);
                     $.toast('登录成功！');
-                    if (!window.localStorage) {
-                        alert("浏览器支持localstorage");
-                        return false;
-                    } else {
-                        var storage = window.localStorage;
-                        storage.setItem('isLogin', 'true');
-                    }
-                    if (userType == 1) {
+                    if (data.user.userType === 1) {
+                        if (!window.localStorage) {
+                            alert("浏览器不支持localstorage");
+                            return false;
+                        } else {
+                            var storage = window.localStorage;
+                            storage.setItem('user', JSON.stringify(data.user));
+                        }
                         window.location.href = '/o2o/frontend/index';
                     } else {
-                        window.location.href = '/o2o/shopadmin/shoplist';
+                        if (userType === 1) {
+                            window.location.href = '/o2o/frontend/index';
+                        } else {
+                            window.location.href = '/o2o/shopadmin/shoplist';
+                        }
                     }
                 } else {
                     $.toast('登录失败！' + data.errMsg);

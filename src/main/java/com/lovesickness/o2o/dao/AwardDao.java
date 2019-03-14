@@ -11,10 +11,10 @@ public interface AwardDao {
     /**
      * 依据传入进来的查询条件分页显示奖品信息列表
      *
-     * @param award
-     * @param rowIndex
-     * @param pageSize
-     * @return
+     * @param award    查询条件
+     * @param rowIndex 查询开始行数
+     * @param pageSize 所需要的行数
+     * @return 列表
      */
     List<Award> queryAwardList(@Param("awardCondition") Award award,
                                @Param("rowIndex") int rowIndex,
@@ -24,7 +24,12 @@ public interface AwardDao {
 
     Award queryAwardByAwardId(long awardId);
 
-    //添加奖品
+    /**
+     * 添加奖品
+     *
+     * @param award 奖品实体类
+     * @return 修改数据库行数
+     */
     int insertAward(Award award);
 
     int updateAward(Award award);

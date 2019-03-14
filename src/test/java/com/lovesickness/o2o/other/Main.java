@@ -40,7 +40,9 @@ public class Main {
 //        System.out.println(new MyString().getStr());
 //        Map map = new HashMap();
 //        map.put("Str",new MyString().getStr());
-        System.out.println(tableSizeFor(30));;
+//        System.out.println(tableSizeFor(30));;
+
+
     }
 
     static final int tableSizeFor(int cap) {
@@ -53,7 +55,8 @@ public class Main {
         return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
     }
 }
-class MyString{
+
+class MyString {
     private String str;
 
     public String getStr() {

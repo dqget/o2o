@@ -21,9 +21,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class UserAwardDaoTest {
+public class UserAwardMapDaoTest {
     @Autowired
-    private UserAwardDao userAwardDao;
+    private UserAwardMapDao userAwardMapDao;
 
     @Test
     public void testAInsertUserAwardMap() {
@@ -43,7 +43,7 @@ public class UserAwardDaoTest {
         PersonInfo operator = new PersonInfo();
         operator.setUserId(1L);
         userAwardMap.setOperator(operator);
-        int effectedNum = userAwardDao.insertUserAwardMap(userAwardMap);
+        int effectedNum = userAwardMapDao.insertUserAwardMap(userAwardMap);
         assertEquals(1, effectedNum);
     }
 
@@ -55,13 +55,13 @@ public class UserAwardDaoTest {
         PersonInfo user = new PersonInfo();
         user.setUserId(6L);
         userAwardMap.setUser(user);
-        int effectedNum = userAwardDao.updateUserAwardMap(userAwardMap);
+        int effectedNum = userAwardMapDao.updateUserAwardMap(userAwardMap);
         assertEquals(effectedNum, 1);
     }
 
     @Test
     public void testCQueryUserAwardMapById() {
-        UserAwardMap userAwardMap = userAwardDao.queryUserAwardMapById(1L);
+        UserAwardMap userAwardMap = userAwardMapDao.queryUserAwardMapById(1L);
         System.out.println(userAwardMap);
     }
 
@@ -74,8 +74,8 @@ public class UserAwardDaoTest {
 //        user.setUserId(6L);
         user.setName("");
         userAwardMap.setUser(user);
-        List<UserAwardMap> userAwardMapList = userAwardDao.queryUserAwardMapList(userAwardMap, 0, 99);
-        int effectedNum = userAwardDao.queryUserAwardMapCount(userAwardMap);
+        List<UserAwardMap> userAwardMapList = userAwardMapDao.queryUserAwardMapList(userAwardMap, 0, 99);
+        int effectedNum = userAwardMapDao.queryUserAwardMapCount(userAwardMap);
         userAwardMapList.forEach(System.out::println);
         assertEquals(effectedNum, userAwardMapList.size());
     }

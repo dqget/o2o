@@ -4,12 +4,9 @@
 function changeVerifyCode(img) {
     img.src = "../Kaptcha?" + Math.floor(Math.random() * 100);
 }
+
 function getContextPath() {
-   return "/o2o/"
-}
-function isLogin() {
-    var storage = window.localStorage;
-    return storage.getItem('isLogin') === 'true';
+    return "/o2o/"
 }
 
 function getQueryString(name) {

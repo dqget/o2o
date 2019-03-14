@@ -3,27 +3,27 @@ package com.lovesickness.o2o.util;
 import javax.servlet.http.HttpServletRequest;
 
 public class HttpServletRequestUtil {
-    public static int getInt(HttpServletRequest request, String key) {
+    public static Integer getInt(HttpServletRequest request, String key) {
         try {
             return Integer.decode(request.getParameter(key));
         } catch (Exception e) {
-            return -1;
+            return null;
         }
     }
 
-    public static long getLong(HttpServletRequest request, String key) {
+    public static Long getLong(HttpServletRequest request, String key) {
         try {
             return Long.valueOf(request.getParameter(key));
         } catch (Exception e) {
-            return -1;
+            return null;
         }
     }
 
-    public static double getDouble(HttpServletRequest request, String key) {
+    public static Double getDouble(HttpServletRequest request, String key) {
         try {
             return Double.valueOf(request.getParameter(key));
         } catch (Exception e) {
-            return -1d;
+            return null;
         }
     }
 

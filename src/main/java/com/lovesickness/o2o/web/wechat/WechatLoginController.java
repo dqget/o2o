@@ -1,6 +1,5 @@
 package com.lovesickness.o2o.web.wechat;
 
-import com.alipay.api.internal.util.json.JSONReader;
 import com.lovesickness.o2o.dto.UserAccessToken;
 import com.lovesickness.o2o.dto.WechatAuthExecution;
 import com.lovesickness.o2o.dto.WechatUser;
@@ -10,7 +9,6 @@ import com.lovesickness.o2o.enums.WechatAuthStateEnum;
 import com.lovesickness.o2o.service.PersonInfoService;
 import com.lovesickness.o2o.service.WechatAuthService;
 import com.lovesickness.o2o.util.weixin.WechatUtil;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

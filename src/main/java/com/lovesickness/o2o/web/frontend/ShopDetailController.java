@@ -1,9 +1,12 @@
 package com.lovesickness.o2o.web.frontend;
 
+import com.lovesickness.o2o.dto.AwardExecution;
 import com.lovesickness.o2o.dto.ProductExecution;
+import com.lovesickness.o2o.entity.Award;
 import com.lovesickness.o2o.entity.Product;
 import com.lovesickness.o2o.entity.ProductCategory;
 import com.lovesickness.o2o.entity.Shop;
+import com.lovesickness.o2o.service.AwardService;
 import com.lovesickness.o2o.service.ProductCategoryService;
 import com.lovesickness.o2o.service.ProductService;
 import com.lovesickness.o2o.service.ShopService;
@@ -28,6 +31,8 @@ public class ShopDetailController {
     private ProductService productService;
     @Autowired
     private ProductCategoryService productCategoryService;
+    @Autowired
+    private AwardService awardService;
 
     /**
      * 根据shopid查询店铺信息及店铺下的productCategory列表信息
@@ -89,5 +94,19 @@ public class ShopDetailController {
         }
         productCondition.setEnableStatus(1);
         return productCondition;
+    }
+
+    @GetMapping("/getawardlistbyshopid")
+    public ResultBean<AwardExecution> getAwardListByShopId(HttpServletRequest request) {
+        Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        Award award = new Award();
+        award.setShopId(shopId);
+        String awardName = HttpServletRequestUtil.getString(request, "awardName");
+        if (awardName != null) {
+            award.setAwardName(awardName);
+        }
+        return new ResultBean<>(awardService.queryAwardList(award, pageIndex, pageSize));
     }
 }

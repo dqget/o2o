@@ -2,12 +2,16 @@ package com.lovesickness.o2o.entity;
 
 import java.util.Date;
 
-//顾客与店铺积分映射
+/**
+ * 顾客与店铺积分映射
+ */
 public class UserShopMap {
     private Long userShopId;
 
     private Date createTime;
-    //在该店铺的总积分
+    /**
+     * 在该店铺的总积分
+     */
     private Integer point;
     private PersonInfo user;
     private Shop shop;
