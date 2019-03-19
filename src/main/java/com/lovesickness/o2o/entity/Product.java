@@ -1,9 +1,11 @@
 package com.lovesickness.o2o.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Product {
+public class Product implements Serializable {
+    private static final long serialVersionUID = 5311661909232091349L;
     private Long productId;
     private String productName;
     private String productDesc;
@@ -11,8 +13,8 @@ public class Product {
     private String imgAddr;
     //原价
     private String normalPrice;
-    private String promotionPrice;
     //折扣价
+    private String promotionPrice;
     private Integer priority;
     private Date createTime;
     private Date lastEditTime;
@@ -137,11 +139,37 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [productId=" + productId + ", productName=" + productName + ", productDesc=" + productDesc
-                + ", imgAddr=" + imgAddr + ", normalPrice=" + normalPrice + ", promotionPrice=" + promotionPrice
-                + ", priority=" + priority + ", createTime=" + createTime + ", lastEditTime=" + lastEditTime
-                + ", enableStatus=" + enableStatus + ", productImgList=" + productImgList + ", productCategory="
-                + productCategory + ", shop=" + shop + "]";
+        return "Product [productId=" + productId
+                + ", productName=" + productName
+                + ", productDesc=" + productDesc
+                + ", imgAddr=" + imgAddr
+                + ", normalPrice=" + normalPrice
+                + ", promotionPrice=" + promotionPrice
+                + ", priority=" + priority
+                + ", createTime=" + createTime
+                + ", lastEditTime=" + lastEditTime
+                + ", enableStatus=" + enableStatus
+                + ", productImgList=" + productImgList
+                + ", productCategory=" + productCategory
+                + ", shop=" + shop + "]";
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Product product = (Product) o;
+
+        return productId != null ? productId.equals(product.productId) : product.productId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return productId != null ? productId.hashCode() : 0;
+    }
 }
