@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.OrderDao">
+    <resultMap id="orderMap" type="com.lovesickness.o2o.entity.Order">
+        <id column="order_id" property="orderId"/>
+        <result column="order_number" property="orderNumber"/>
+        <result column="pay_price" property="payPrice"/>
+        <result column="is_pay" property="isPay"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="is_receipt" property="isReceipt"/>
+        <result column="receipt_time" property="receiptTime"/>
+        <result column="is_ship" property="isShip"/>
+        <result column="ship_time" property="shipTime"/>
+        <result column="order_update_time" property="updateTime"/>
+        <result column="order_status" property="status"/>
+        <result column="order_create_time" property="createTime"/>
+        <result column="receive_phone" property="receivePhone"/>
+        <result column="receive_addr" property="receiveAddr"/>
+        <result column="receive_name" property="receiveName"/>
+        <result column="track_number" property="receiveName"/>
+        <association property="user" column="user_id"
+                     javaType="com.lovesickness.o2o.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+        </association>
+        <collection property="orderProductMapList" column="order_id"
+                    ofType="com.lovesickness.o2o.entity.OrderProductMap">
+            <id column="order_product_id" property="orderProductId"/>
+            <result column="product_num" property="productNum"/>
+            <result column="product_price" property="productPrice"/>
+            <result column="star_level" property="starLevel"/>
+            <result column="evaluation_id" property="evaluationId"/>
+            <result column="op_status" property="status"/>
+            <result column="op_create_time" property="createTime"/>
+            <result column="op_update_time" property="updateTime"/>
+            <association property="product" column="product_id"
+                         javaType="com.lovesickness.o2o.entity.Product">
+                <id column="product_id" property="productId"/>
+                <result column="product_name" property="productName"/>
+                <result column="img_addr" property="imgAddr"/>
+            </association>
+        </collection>
+    </resultMap>
+
+    <insert id="insertOrder" parameterType="com.lovesickness.o2o.entity.Order" useGeneratedKeys="true"
+            keyProperty="orderId" keyColumn="order_id">
+        INSERT INTO tb_order
+        (order_number,
+         user_id,
+         pay_price,
+         update_time,
+         create_time,
+         receive_phone,
+         receive_addr,
+         receive_name)
+        VALUES (
+            #{orderNumber},
+            #{user.userId},
+            #{payPrice},
+            #{updateTime},
+            #{createTime},
+            #{receivePhone},
+            #{receiveAddr},
+            #{receiveName}
+        )
+    </insert>
+    <select id="queryOrderById" parameterType="Long" resultMap="orderMap">
+        SELECT
+            o.order_id,
+            o.order_number,
+            o.order_number,
+            o.pay_price,
+            o.is_pay,
+            o.pay_time,
+            o.is_receipt,
+            o.receipt_time,
+            o.is_ship,
+            o.ship_time,
+            o.update_time  order_update_time,
+            o.status       order_status,
+            o.create_time  order_create_time,
+            o.receive_phone,
+            o.receive_addr,
+            o.receive_name,
+            o.track_number,
+            op.order_product_id,
+            op.product_num,
+            op.product_price,
+            op.star_level,
+            op.evaluation_id,
+            op.status      op_status,
+            op.create_time op_create_time,
+            op.update_time op_update_time,
+            p.product_id,
+            p.img_addr
+        FROM tb_product p,
+            tb_person_info u,
+            tb_order o
+            LEFT JOIN
+            tb_order_product_map op
+                ON o.order_id = op.order_id
+
+        WHERE
+            u.user_id = o.user_id AND
+            p.product_id = op.product_id AND
+            o.order_id = #{orderId}
+        ORDER BY
+            o.update_time DESC
+    </select>
+    <select id="queryOrderByNo" parameterType="String" resultMap="orderMap">
+        SELECT
+            o.order_id,
+            o.order_number,
+            o.order_number,
+            o.pay_price,
+            o.is_pay,
+            o.pay_time,
+            o.is_receipt,
+            o.receipt_time,
+            o.is_ship,
+            o.ship_time,
+            o.update_time  order_update_time,
+            o.status       order_status,
+            o.create_time  order_create_time,
+            o.receive_phone,
+            o.receive_addr,
+            o.receive_name,
+            o.track_number,
+            op.order_product_id,
+            op.product_num,
+            op.product_price,
+            op.star_level,
+            op.evaluation_id,
+            op.status      op_status,
+            op.create_time op_create_time,
+            op.update_time op_update_time,
+            p.product_id,
+            p.img_addr,
+            u.user_id
+        FROM tb_product p,
+            tb_person_info u,
+            tb_order o
+            LEFT JOIN
+            tb_order_product_map op
+                ON o.order_id = op.order_id
+        WHERE
+            u.user_id = o.user_id AND
+            p.product_id = op.product_id AND
+            o.order_number = #{orderNo}
+        ORDER BY
+            o.update_time DESC
+    </select>
+</mapper>

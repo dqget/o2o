@@ -24,7 +24,6 @@ public interface ProductDao {
     int updateProduct(Product product);
 
     /**
-     * =
      * 根据productId查询指定商品
      *
      * @param productId

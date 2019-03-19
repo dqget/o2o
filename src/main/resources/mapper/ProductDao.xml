@@ -97,7 +97,10 @@
             pm.priority,
             pm.create_time   product_img_create_time
         FROM
-            tb_product p LEFT JOIN tb_product_img pm ON p.product_id = pm.product_id
+            tb_product p
+            LEFT JOIN
+            tb_product_img pm
+                ON p.product_id = pm.product_id
         WHERE
             p.product_id = #{productId}
         ORDER BY
