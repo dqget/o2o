@@ -39,7 +39,7 @@ public class OrderProductMap {
     /**
      * 该条记录状态 1正常 0禁用 -1删除
      */
-    private Long status;
+    private Integer status;
 
     private Date createTime;
     private Date updateTime;
@@ -108,11 +108,11 @@ public class OrderProductMap {
         this.evaluationId = evaluationId;
     }
 
-    public Long getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Long status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
