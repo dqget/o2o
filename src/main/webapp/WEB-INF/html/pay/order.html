@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商铺助手</title>
+    <meta name="description"
+          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../resources/css/frontend/index.css"
+          type="text/css">
+</head>
+<body>
+<div class="page-group">
+    <div class="page">
+        <header class="bar bar-nav">
+            <h1 class="title">确认订单</h1>
+        </header>
+        <nav class="bar bar-tab">
+            <p class="tab-item external">
+                <span class="tab-label" id="price"></span>
+            </p>
+            <a class="tab-item external">
+                <span class="tab-label" id="pay">支付</span>
+            </a>
+        </nav>
+
+        <div class="content">
+            <!--订单商品列表-->
+            <div class="list-div order-list"></div>
+            <div style="padding: 10px 10px;background-color: #ffffff;">
+                <span>填写订单信息</span>
+            </div>
+            <div class="list-block">
+                <ul>
+                    <!-- Text inputs -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件人姓名</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="收件人姓名" id="receiveName" value="刁强">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件人手机号</div>
+                                <div class="item-input">
+                                    <input type="number" placeholder="收件人手机号" id="receivePhone" value="17865313018">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件人地址</div>
+                                <div class="item-input">
+                                    <input type="text" id='city-picker' value="山东 济南 历城区"/>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">地址补充</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="地址补充" id="addrAdditional" value="山东建筑大学">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script type='text/javascript'
+            src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+    <script type='text/javascript'
+            src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+    <script type='text/javascript'
+            src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+    <script type="text/javascript"
+            src="//g.alicdn.com/msui/sm/0.6.2/js/sm-city-picker.min.js"></script>
+    <script type="text/javascript" src="../resources/js/pay/order.js"></script>
+    <script type="text/javascript" src="../resources/js/common/common.js"></script>
+    <script type="text/javascript" src="../resources/js/frontend/rightsidebar.js"></script>
+    <script type="text/javascript" src="../resources/js/local/logout.js"></script>
+</body>
+
+</html>

@@ -6,7 +6,6 @@
     <title>商铺助手</title>
     <meta name="description"
           content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
-    <meta name="author" content="阿里巴巴国际UED前端">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="#">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -23,14 +22,14 @@
 <div class="page-group">
     <div class="page">
         <header class="bar bar-nav">
-            <h1 class="title">小卖铺</h1>
+            <h1 class="title">购物车</h1>
         </header>
         <nav class="bar bar-tab">
             <a class="tab-item external" href="/o2o/frontend/index">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">首页</span>
             </a>
-            <a class="tab-item external" href="/o2o/frontend/buyercart">
+            <a class="tab-item external" href="#">
                 <span class="icon icon-cart"></span>
                 <span class="tab-label">购物车</span>
             </a>
@@ -41,27 +40,22 @@
         </nav>
 
         <div class="content">
-            <!-- 这里是页面内容区 -->
-            <div class="swiper-container index-banner" data-space-between='10' data-loop=true
-                 data-autoplay-disable-on-interaction=false>
-                <div class="swiper-wrapper">
+            <!--购物车列表-->
+            <div class="list-div buyercart-list">
+            </div>
+            <div class="content-block">
+                <div class="col-100">
+                    <a href="#" class="button button-big button-fill button-warning" id="settleAccounts">结算</a>
                 </div>
-                <div class="swiper-pagination"></div>
-            </div>
-            <div class='total-shop-button'>
-                <a href="/o2o/frontend/shoplist" external>全部商店</a>
-            </div>
-            <div class="row">
-
             </div>
         </div>
-    </div>
-    <!-- 右侧栏 -->
-    <div class="panel-overlay"></div>
-    <div class="panel panel-right panel-cover theme-dark" id='panel-js-demo'>
-        <div class="content-block" id="right">
-            <a href="#">绑定账号</a>
+        <!-- 右侧栏 -->
+        <div class="panel-overlay"></div>
+        <div class="panel panel-right panel-cover theme-dark" id='panel-js-demo'>
+            <div class="content-block" id="right">
+                <a href="#">绑定账号</a>
 
+            </div>
         </div>
     </div>
 </div>
@@ -72,7 +66,7 @@
         src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
 <script type='text/javascript'
         src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
-<script type="text/javascript" src="../resources/js/frontend/index.js"></script>
+<script type="text/javascript" src="../resources/js/frontend/buyercart.js"></script>
 <script type="text/javascript" src="../resources/js/common/common.js"></script>
 <script type="text/javascript" src="../resources/js/frontend/rightsidebar.js"></script>
 <script type="text/javascript" src="../resources/js/local/logout.js"></script>

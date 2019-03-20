@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovesickness.o2o.cache.JedisUtil;
 import com.lovesickness.o2o.entity.BuyerCartItem;
+import com.lovesickness.o2o.entity.Product;
 import com.lovesickness.o2o.service.BuyerCartService;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
 import org.slf4j.Logger;
@@ -17,7 +18,6 @@ import redis.clients.jedis.Jedis;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -28,40 +28,62 @@ public class BuyerCartServiceImpl implements BuyerCartService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public boolean addItem(Long userId, BuyerCartItem newCartItem) {
+    public boolean updateItem(Long userId, BuyerCartItem newCartItem) {
         //用户id不能为空  商品id不能为空  添加商品的数量不能为空或0
         if (userId == null || !BuyerCartItemUtil.isRightItem(newCartItem)) {
             return false;
         }
         String key = "cart_" + userId;
         Jedis jedis = jedisUtil.getJedis();
+        ObjectMapper mapper = new ObjectMapper();
         List<BuyerCartItem> buyerCart;
         if (jedis.exists(key)) {
-            buyerCart = getBuyerCart(userId);
+            //1.先查询购物车列表
+            JavaType javaType = mapper.getTypeFactory().constructParametricType(ArrayList.class, BuyerCartItem.class);
+            try {
+                buyerCart = mapper.readValue(jedis.get(key), javaType);
+            } catch (IOException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+            if (buyerCart == null) {
+                buyerCart = new ArrayList<>();
+            }
+            //2.判断购物车中是否含有想要修改的产品
             //是否已经添加过该商品
-            boolean isHave = buyerCart.contains(newCartItem);
-            if (isHave) {
+            //如果存在，更改产品数量
+            if (buyerCart.contains(newCartItem)) {
                 BuyerCartItem oldItem = buyerCart
                         .stream()
-                        .filter(newCartItem::equals)
-                        .collect(Collectors.toList()).get(0);
-                newCartItem.setAmount(oldItem.getAmount() + newCartItem.getAmount());
-                buyerCart.remove(oldItem);
-                buyerCart.add(newCartItem);
+                        .filter(buyerCartItem -> buyerCartItem.equals(newCartItem))
+                        .findFirst()
+                        .get();
+                int amount = oldItem.getAmount() + newCartItem.getAmount();
+                if (amount < 0) {
+                    throw new RuntimeException("产品数量修改失败");
+                } else if (amount == 0) {
+                    buyerCart.remove(oldItem);
+                } else {
+                    newCartItem.setAmount(amount);
+                    buyerCart.remove(oldItem);
+                    buyerCart.add(newCartItem);
+                }
             } else {
+                if (newCartItem.getAmount() <= 0) {
+                    throw new RuntimeException("产品数量修改失败");
+                }
                 buyerCart.add(newCartItem);
             }
         } else {
             buyerCart = new ArrayList<>();
             buyerCart.add(newCartItem);
         }
-        ObjectMapper mapper = new ObjectMapper();
+        //添加到redis 储存时间为1天
         try {
             jedis.set(key, mapper.writeValueAsString(buyerCart));
             jedis.expire(key, 60 * 60 * 24);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            logger.error("BuyerCartServiceImpl addItem error" + e.getMessage());
+            logger.error("BuyerCartServiceImpl updateItem error" + e.getMessage());
             throw new RuntimeException(e.getMessage());
         } finally {
             jedisUtil.returnJedis(jedis);
@@ -125,5 +147,19 @@ public class BuyerCartServiceImpl implements BuyerCartService {
             jedisUtil.returnJedis(jedis);
         }
         return buyerCart;
+    }
+
+    @Override
+    public BuyerCartItem getBuyerCartByProductId(Long userId, Long productId) {
+        List<BuyerCartItem> buyerCart = getBuyerCart(userId);
+        Product product = new Product();
+        product.setProductId(productId);
+        BuyerCartItem itemCondition = new BuyerCartItem(product, 0);
+        //如果在购物车中找到了 就返回购物车中该产品的信息，如果没有找到，就说明购物车中该产品的数目为0
+        return buyerCart
+                .stream()
+                .filter(buyerCartItem -> buyerCartItem.equals(itemCondition))
+                .findFirst()
+                .orElse(itemCondition);
     }
 }

@@ -31,6 +31,8 @@ $(function () {
                 if (data.success) {
                     console.log(data);
                     $.toast('登录成功！');
+                    console.log(userType);
+
                     if (data.user.userType === 1) {
                         if (!window.localStorage) {
                             alert("浏览器不支持localstorage");
@@ -43,8 +45,10 @@ $(function () {
                     } else {
                         if (userType === 1) {
                             window.location.href = '/o2o/frontend/index';
-                        } else {
+                        } else if (userType === 2) {
                             window.location.href = '/o2o/shopadmin/shoplist';
+                        }else {
+                            window.location.href = '/o2o/frontend/index';
                         }
                     }
                 } else {

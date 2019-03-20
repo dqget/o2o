@@ -6,17 +6,18 @@ import java.util.List;
 
 public interface BuyerCartService {
     /**
-     * 添加购物车
+     * 修改或者添加购物车
      *
      * @param userId      用户id
-     * @param newCartItem 需要添加到购物车的订单项
+     * @param newCartItem 需要修改到购物车的订单项
      * @return 成功或失败
      */
-    boolean addItem(Long userId, BuyerCartItem newCartItem);
+    boolean updateItem(Long userId, BuyerCartItem newCartItem);
 
     /**
      * 商品总数
      *
+     * @param userId 用户ID
      * @return 商品数量和
      */
     Integer getProductAmount(Long userId);
@@ -37,5 +38,21 @@ public interface BuyerCartService {
      */
     Integer getProductNormalPrice(Long userId);
 
+    /**
+     * 查询该用户的购物车列表
+     *
+     * @param userId 用户ID
+     * @return 购物车列表
+     */
     List<BuyerCartItem> getBuyerCart(Long userId);
+
+    /**
+     * 根据产品Id查询该产品在购物车中存在的情况
+     *
+     * @param userId    用户Id
+     * @param productId 产品Id
+     * @return 对应的产品在购物车中的信息
+     */
+    BuyerCartItem getBuyerCartByProductId(Long userId, Long productId);
+
 }

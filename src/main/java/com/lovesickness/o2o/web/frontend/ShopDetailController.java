@@ -40,13 +40,13 @@ public class ShopDetailController {
     @GetMapping(value = "/listshopdetailpageinfo")
     public Map<String, Object> shopDetail(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
-        long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
         Shop shop;
         List<ProductCategory> productCategoryList;
         try {
-            if (shopId <= -1L) {
+            if (shopId == null) {
                 modelMap.put("success", false);
-                modelMap.put("errMsg", "empty shopId or pageIndex or pageSize");
+                modelMap.put("errMsg", "empty shopId");
                 return modelMap;
             }
             shop = shopService.queryShopById(shopId);
@@ -63,11 +63,11 @@ public class ShopDetailController {
 
     @GetMapping(value = "/listproductbyshop")
     public ResultBean<ProductExecution> listProductByShop(HttpServletRequest request) {
-        long shopId = HttpServletRequestUtil.getLong(request, "shopId");
-        int pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        int pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-        if ((shopId > -1) && (pageIndex > -1) && (pageSize > -1)) {
-            long productCategoryId = HttpServletRequestUtil.getLong(request, "productCategoryId");
+        Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        if ((shopId != null) && (pageIndex != null) && (pageSize != null)) {
+            Long productCategoryId = HttpServletRequestUtil.getLong(request, "productCategoryId");
             String productName = HttpServletRequestUtil.getString(request, "productName");
             Product product = compactProductCondition(shopId, productCategoryId, productName);
             return new ResultBean<>(productService.getProductList(product, pageIndex, pageSize));
@@ -76,14 +76,14 @@ public class ShopDetailController {
         }
     }
 
-    private Product compactProductCondition(long shopId, long productCategoryId, String productName) {
+    private Product compactProductCondition(Long shopId, Long productCategoryId, String productName) {
         Product productCondition = new Product();
 
-        if (shopId != -1L) {
+        if (shopId != null) {
             Shop shop = new Shop();
             shop.setShopId(shopId);
             productCondition.setShop(shop);
-            if (productCategoryId != -1L) {
+            if (productCategoryId != null) {
                 ProductCategory productCategory = new ProductCategory();
                 productCategory.setProductCategoryId(productCategoryId);
                 productCondition.setProductCategory(productCategory);

@@ -9,12 +9,12 @@ public class BuyerCartItem implements Serializable {
 
     private static final long serialVersionUID = 4506865766629125198L;
     private Product product;
-    private Integer amount;
+    private int amount;
 
     public BuyerCartItem() {
     }
 
-    public BuyerCartItem(Product product, Integer amount) {
+    public BuyerCartItem(Product product, int amount) {
         this.product = product;
         this.amount = amount;
     }
@@ -27,11 +27,11 @@ public class BuyerCartItem implements Serializable {
         this.product = product;
     }
 
-    public Integer getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 

@@ -34,7 +34,7 @@ public class ShopListController {
         List<ShopCategory> shopCategoryList = null;
         Long parentId = HttpServletRequestUtil.getLong(request, "parentId");
         //如果parentId存在，取出该一级ShopCategory下的二级ShopCategory列表
-        if (parentId != -1) {
+        if (parentId != null) {
             try {
                 ShopCategory childShopCategory = new ShopCategory();
                 ShopCategory parentShopCategory = new ShopCategory();
@@ -71,14 +71,14 @@ public class ShopListController {
     @GetMapping(value = "/listshop")
     public Map listShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
-        int pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-        int pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        if ((pageIndex > -1) && (pageIndex > -1)) {
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        if ((pageIndex != null) && (pageSize != null)) {
             //一级分类Id
-            long parentId = HttpServletRequestUtil.getLong(request, "parentId");
+            Long parentId = HttpServletRequestUtil.getLong(request, "parentId");
             //二级分类Id
-            long shopCategoryId = HttpServletRequestUtil.getLong(request, "shopCategoryId");
-            int areaId = HttpServletRequestUtil.getInt(request, "areaId");
+            Long shopCategoryId = HttpServletRequestUtil.getLong(request, "shopCategoryId");
+            Long areaId = HttpServletRequestUtil.getLong(request, "areaId");
             String shopName = HttpServletRequestUtil.getString(request, "shopName");
             Shop shopCondition = compactShopCondition(parentId, shopCategoryId, areaId, shopName);
             ShopExecution se = shopService.getShopList(shopCondition, pageIndex, pageSize);
@@ -92,22 +92,22 @@ public class ShopListController {
         return modelMap;
     }
 
-    private Shop compactShopCondition(long parentId,
-                                      long shopCategoryId, long areaId, String shopName) {
+    private Shop compactShopCondition(Long parentId,
+                                      Long shopCategoryId, Long areaId, String shopName) {
         Shop shopCondition = new Shop();
-        if (parentId != -1L) {
+        if (parentId != null) {
             ShopCategory childCategory = new ShopCategory();
             ShopCategory parentCategory = new ShopCategory();
             parentCategory.setShopCategoryId(parentId);
             childCategory.setParent(parentCategory);
             shopCondition.setShopCategory(childCategory);
         }
-        if (shopCategoryId != -1L) {
+        if (shopCategoryId != null) {
             ShopCategory shopCategory = new ShopCategory();
             shopCategory.setShopCategoryId(shopCategoryId);
             shopCondition.setShopCategory(shopCategory);
         }
-        if (areaId != -1L) {
+        if (areaId != null) {
             Area area = new Area();
             area.setAreaId(areaId);
             shopCondition.setArea(area);

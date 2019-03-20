@@ -6,10 +6,14 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
+import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
+import com.lovesickness.o2o.util.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,6 +39,8 @@ import java.util.Map;
 @RequestMapping("/pay")
 public class AliPayController {
     private static Logger log = LoggerFactory.getLogger(AliPayController.class);
+    @Autowired
+    private OrderService orderService;
 
     @PostMapping("/open")
     public void aliPay(HttpServletRequest request, HttpServletResponse response) {
@@ -150,5 +156,12 @@ public class AliPayController {
             return "fail";
         }
     }
+
+    @GetMapping("/getorderno")
+    @ResponseBody
+    public String getOrderNo() {
+        return IdGenerator.INSTANCE.nextId();
+    }
+
 
 }

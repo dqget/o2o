@@ -26,8 +26,16 @@ public class MainManagementController {
     public String productDetail() {
         return "frontend/productdetail";
     }
+
     @GetMapping(value = "/awardlist")
     public String awardList() {
         return "frontend/shopaward";
     }
+
+    @GetMapping(value = "/buyercart")
+    public String buyerCart() {
+        return "frontend/buyercart";
+    }
+
+
 }

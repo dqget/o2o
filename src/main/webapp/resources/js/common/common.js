@@ -38,16 +38,39 @@ Date.prototype.Format = function (fmt) {
                 : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 };
+//订单对象
+var order = {
+    orderId: 0,
+    orderNumber: '',
+    userId: 0,
+    payPrice: '',
+    isPay: 0,
+    payTime: null,
+    isReceipt: 0,
+    receiptTime: null,
+    receivePhone: '',
+    receiveAddr: '',
+    receiveName: '',
+    trackNumber: '',
+    isShip: 0,
+    shipTime: null,
+    status: 1,
+    createTime: null,
+    updateTime: null,
+    orderProductsMapList: []
+};
+var orderProductsMap = {
+    orderProductId: 0,
+    orderId: 0,
+    productId: 0,
+    productNum: 0,
+    productPrice: '',
+    isEvaluation: 0,
+    starLevel: 0,
+    evaluationId: 0,
+    status: 1,
+    createTime: null,
+    updateTime: null
 
-// $(document).ready(function () {
-//    $.ajax({
-//        url:'user',
-//        type:'post',
-//        success:function (data) {
-//            console.log(data);
-//        },
-//        error:function (data) {
-//            alert("系统错误");
-//        }
-//    })
-// });
+
+};
