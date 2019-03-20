@@ -16,7 +16,7 @@ public class BuyerCartItemUtil {
             return false;
         }
         //商品不能为空  商品数量不能为空 不能<0
-        if (item.getProduct() == null || item.getAmount() != 0) {
+        if (item.getProduct() == null || item.getAmount() == 0) {
             return false;
         }
         Product p = item.getProduct();
