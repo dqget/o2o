@@ -42,6 +42,7 @@ public class HeadLineServiceImpl implements HeadLineService {
                 headLineList = headLineDao.queryHeadLine(headLineCondition);
                 headLineJson = mapper.writeValueAsString(headLineList);
                 jedis.set(key, headLineJson);
+                jedis.expire(key, 60 * 60 * 24);
             } else {
                 headLineJson = jedis.get(key);
                 JavaType javaType = mapper.getTypeFactory().constructParametricType(ArrayList.class, HeadLine.class);
