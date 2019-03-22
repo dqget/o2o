@@ -5,6 +5,7 @@ import com.lovesickness.o2o.dao.OrderProductMapDao;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.OrderProductMap;
+import com.lovesickness.o2o.entity.PersonInfo;
 import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.exception.OrderOperationException;
 import com.lovesickness.o2o.exception.OrderProductMapOperationException;
@@ -50,6 +51,21 @@ public class OrderServiceImpl implements OrderService {
         } else {
             return new OrderExecution(OrderStateEnum.EMPTY);
         }
+    }
+
+    @Override
+    public Order getOrderById(PersonInfo user, Long orderId) {
+        return orderDao.queryOrderById(orderId);
+    }
+
+    @Override
+    public Order getOrderByNo(PersonInfo user, String orderNumbers) {
+        return orderDao.queryOrderByNo(orderNumbers);
+    }
+
+    @Override
+    public OrderExecution getOrderList() {
+        return null;
     }
 
     /**

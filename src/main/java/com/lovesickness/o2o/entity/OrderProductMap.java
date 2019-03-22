@@ -131,4 +131,21 @@ public class OrderProductMap {
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
+
+    @Override
+    public String toString() {
+        return "OrderProductMap{" +
+                "orderProductId=" + orderProductId +
+                ", orderId=" + orderId +
+                ", product=" + product +
+                ", productNum=" + productNum +
+                ", productPrice='" + productPrice + '\'' +
+                ", isEvaluation=" + isEvaluation +
+                ", starLevel=" + starLevel +
+                ", evaluationId=" + evaluationId +
+                ", status=" + status +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                '}';
+    }
 }

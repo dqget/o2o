@@ -23,7 +23,7 @@ public class OrderProductMapTest {
     private ProductDao productDao;
 
     @Test
-    public void testAInsertOrder() {
+    public void testAInsertOrderProductMap() {
         List<OrderProductMap> orderProductMaps = new ArrayList<>();
         OrderProductMap orderProductMap = new OrderProductMap();
         Product product = productDao.queryProductByProductId(4L);
@@ -41,5 +41,9 @@ public class OrderProductMapTest {
         assertEquals(2,effectedNum);
 
     }
-
+    @Test
+    public void testAQueryOrderProductMapById() {
+        OrderProductMap orderProductMap = orderProductMapDao.queryOrderProductMapById(1L);
+        System.out.println(orderProductMap);
+    }
 }

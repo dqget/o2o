@@ -3,6 +3,24 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lovesickness.o2o.dao.OrderProductMapDao">
+    <resultMap id="orderProductMap" type="com.lovesickness.o2o.entity.OrderProductMap">
+        <id column="order_product_id" property="orderProductId"/>
+        <result column="product_num" property="productNum"/>
+        <result column="order_id" property="orderId"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="is_evaluation" property="isEvaluation"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="star_level" property="starLevel"/>
+        <result column="evaluation_id" property="evaluationId"/>
+        <association property="product" column="product_id"
+                     javaType="com.lovesickness.o2o.entity.Product">
+            <id column="product_id" property="productId"/>
+            <result column="product_name" property="productName"/>
+            <result column="img_addr" property="imgAddr"/>
+        </association>
+    </resultMap>
     <insert id="batchInsertOrderProductMap" parameterType="java.util.List">
         INSERT INTO tb_order_product_map (
         order_id,
@@ -23,4 +41,16 @@
             )
         </foreach>
     </insert>
+    <select id="queryOrderProductMapById" parameterType="Long" resultMap="orderProductMap">
+        SELECT *
+        FROM tb_order_product_map op,
+            tb_product p
+        WHERE op.order_product_id = #{orderProductMapId}
+              and op.product_id = p.product_id
+    </select>
+    <select id="queryOrderProductMapList" resultMap="orderProductMap">
+        SELECT *
+        FROM tb_order_product_map op, tb_order o
+        WHERE o.order_id = op.order_id AND op.is_evaluation = 0
+    </select>
 </mapper>

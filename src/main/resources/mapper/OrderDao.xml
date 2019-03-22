@@ -42,7 +42,6 @@
             </association>
         </collection>
     </resultMap>
-
     <insert id="insertOrder" parameterType="com.lovesickness.o2o.entity.Order" useGeneratedKeys="true"
             keyProperty="orderId" keyColumn="order_id">
         INSERT INTO tb_order
@@ -69,7 +68,6 @@
         SELECT
             o.order_id,
             o.order_number,
-            o.order_number,
             o.pay_price,
             o.is_pay,
             o.pay_time,
@@ -93,6 +91,7 @@
             op.create_time op_create_time,
             op.update_time op_update_time,
             p.product_id,
+            p.product_name,
             p.img_addr
         FROM tb_product p,
             tb_person_info u,
@@ -111,7 +110,6 @@
     <select id="queryOrderByNo" parameterType="String" resultMap="orderMap">
         SELECT
             o.order_id,
-            o.order_number,
             o.order_number,
             o.pay_price,
             o.is_pay,
@@ -137,6 +135,7 @@
             op.update_time op_update_time,
             p.product_id,
             p.img_addr,
+            p.product_name,
             u.user_id
         FROM tb_product p,
             tb_person_info u,
@@ -150,5 +149,70 @@
             o.order_number = #{orderNo}
         ORDER BY
             o.update_time DESC
+    </select>
+    <select id="queryOrderList" resultMap="orderMap">
+        SELECT
+        o.order_id,
+        o.order_number,
+        o.pay_price,
+        o.is_pay,
+        o.pay_time,
+        o.is_receipt,
+        o.receipt_time,
+        o.is_ship,
+        o.ship_time,
+        o.update_time order_update_time,
+        o.status order_status,
+        o.create_time order_create_time,
+        o.receive_phone,
+        o.receive_addr,
+        o.receive_name,
+        o.track_number,
+        op.order_product_id,
+        p.product_id,
+        p.product_name,
+        p.img_addr
+        FROM tb_product p,
+        tb_order o
+        LEFT JOIN
+        tb_order_product_map op
+        ON o.order_id = op.order_id
+        <where>
+            p.product_id = op.product_id
+            <if test="orderCondition.user!=null and orderCondition.user.userId!=null">
+                AND o.user_id = #{orderCondition.user.userId}
+            </if>
+            <if test="orderCondition.isPay!=null">
+                AND o.is_pay=#{orderCondition.isPay}
+            </if>
+            <if test="orderCondition.isReceipt!=null">
+                AND o.is_receipt=#{orderCondition.isReceipt}
+            </if>
+            <if test="orderCondition.isShip!=null">
+                AND o.is_ship=#{orderCondition.isShip}
+            </if>
+        </where>
+        ORDER BY
+        o.create_time DESC
+        LIMIT #{rowIndex},#{pageSize};
+    </select>
+    <select id="queryOrderCount" parameterType="com.lovesickness.o2o.entity.Order" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM tb_order o
+        <where>
+            <if test="orderCondition.user!=null and orderCondition.user.userId!=null">
+                AND o.user_id = #{orderCondition.user.userId}
+            </if>
+            <if test="orderCondition.isPay!=null">
+                AND o.is_pay=#{orderCondition.isPay}
+            </if>
+            <if test="orderCondition.isReceipt!=null">
+                AND o.is_receipt=#{orderCondition.isReceipt}
+            </if>
+            <if test="orderCondition.isShip!=null">
+                AND o.is_ship=#{orderCondition.isShip}
+            </if>
+        </where>
     </select>
 </mapper>
