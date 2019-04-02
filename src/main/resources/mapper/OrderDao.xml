@@ -24,6 +24,13 @@
                      javaType="com.lovesickness.o2o.entity.PersonInfo">
             <id column="user_id" property="userId"/>
         </association>
+        <association property="shop" column="shop_id"
+                     javaType="com.lovesickness.o2o.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+            <result column="shop_desc" property="shopDesc"/>
+            <result column="shop_img" property="shopImg"/>
+        </association>
         <collection property="orderProductMapList" column="order_id"
                     ofType="com.lovesickness.o2o.entity.OrderProductMap">
             <id column="order_product_id" property="orderProductId"/>
@@ -46,6 +53,7 @@
             keyProperty="orderId" keyColumn="order_id">
         INSERT INTO tb_order
         (order_number,
+         shop_id,
          user_id,
          pay_price,
          update_time,
@@ -55,6 +63,7 @@
          receive_name)
         VALUES (
             #{orderNumber},
+            #{shop.shopId},
             #{user.userId},
             #{payPrice},
             #{updateTime},
@@ -92,8 +101,12 @@
             op.update_time op_update_time,
             p.product_id,
             p.product_name,
-            p.img_addr
-        FROM tb_product p,
+            p.img_addr,
+            s.shop_id,
+            s.shop_name,
+            s.shop_desc
+        FROM tb_shop s,
+            tb_product p,
             tb_person_info u,
             tb_order o
             LEFT JOIN
@@ -103,9 +116,8 @@
         WHERE
             u.user_id = o.user_id AND
             p.product_id = op.product_id AND
+            s.shop_id = o.shop_id AND
             o.order_id = #{orderId}
-        ORDER BY
-            o.update_time DESC
     </select>
     <select id="queryOrderByNo" parameterType="String" resultMap="orderMap">
         SELECT
@@ -136,8 +148,12 @@
             p.product_id,
             p.img_addr,
             p.product_name,
-            u.user_id
-        FROM tb_product p,
+            u.user_id,
+            s.shop_id,
+            s.shop_name,
+            s.shop_desc
+        FROM tb_shop s,
+            tb_product p,
             tb_person_info u,
             tb_order o
             LEFT JOIN
@@ -146,9 +162,8 @@
         WHERE
             u.user_id = o.user_id AND
             p.product_id = op.product_id AND
+            s.shop_id = o.shop_id AND
             o.order_number = #{orderNo}
-        ORDER BY
-            o.update_time DESC
     </select>
     <select id="queryOrderList" resultMap="orderMap">
         SELECT
@@ -162,25 +177,25 @@
         o.is_ship,
         o.ship_time,
         o.update_time order_update_time,
-        o.status order_status,
-        o.create_time order_create_time,
-        o.receive_phone,
-        o.receive_addr,
-        o.receive_name,
-        o.track_number,
-        op.order_product_id,
-        p.product_id,
-        p.product_name,
-        p.img_addr
-        FROM tb_product p,
+        s.shop_id,
+        s.shop_name,
+        s.shop_desc,
+        s.shop_img
+        FROM tb_shop s,
         tb_order o
         LEFT JOIN
         tb_order_product_map op
         ON o.order_id = op.order_id
         <where>
-            p.product_id = op.product_id
-            <if test="orderCondition.user!=null and orderCondition.user.userId!=null">
+            o.shop_id = s.shop_id
+            <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
                 AND o.user_id = #{orderCondition.user.userId}
+            </if>
+            <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
+                AND o.shopId = #{orderCondition.shop.shopId}
+            </if>
+            <if test="keyWord!=null">
+                AND p.product_name LIKE '%${keyWord}%'
             </if>
             <if test="orderCondition.isPay!=null">
                 AND o.is_pay=#{orderCondition.isPay}
@@ -193,16 +208,27 @@
             </if>
         </where>
         ORDER BY
-        o.create_time DESC
+        o.update_time DESC
         LIMIT #{rowIndex},#{pageSize};
     </select>
     <select id="queryOrderCount" parameterType="com.lovesickness.o2o.entity.Order" resultType="int">
         SELECT
-        COUNT(1)
-        FROM tb_order o
+        COUNT(DISTINCT o.order_id)
+        FROM tb_shop s,
+        tb_order o
+        LEFT JOIN
+        tb_order_product_map op
+        ON o.order_id = op.order_id
         <where>
-            <if test="orderCondition.user!=null and orderCondition.user.userId!=null">
+            o.shop_id = s.shop_id
+            <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
                 AND o.user_id = #{orderCondition.user.userId}
+            </if>
+            <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
+                AND o.shopId = #{orderCondition.shop.shopId}
+            </if>
+            <if test="keyWord!=null">
+                AND p.product_name LIKE '%${keyWord}%'
             </if>
             <if test="orderCondition.isPay!=null">
                 AND o.is_pay=#{orderCondition.isPay}
@@ -215,4 +241,90 @@
             </if>
         </where>
     </select>
+    <select id="queryNotEvaOrderList" resultMap="orderMap">
+        SELECT
+        o.order_id,
+        o.order_number,
+        o.pay_price,
+        o.is_pay,
+        o.pay_time,
+        o.is_receipt,
+        o.receipt_time,
+        o.is_ship,
+        o.ship_time,
+        o.update_time order_update_time,
+        s.shop_id,
+        s.shop_name,
+        s.shop_desc,
+        s.shop_img
+        p.product_id,
+        p.product_name
+        FROM tb_shop s,
+        tb_product p,
+        tb_order o
+        LEFT JOIN
+        tb_order_product_map op
+        ON o.order_id = op.order_id
+        WHERE
+        o.shop_id = s.shop_id
+        <if test="keyWord!=null">
+            AND p.product_name LIKE '%${keyWord}%'
+        </if>
+        <if test="shopId!=null">
+            AND o.shop_id = #{shopId}
+        </if>
+        <if test="userId!=null">
+            AND o.user_id = #{userId}
+        </if>
+        AND o.is_pay = '1'
+        AND o.is_receipt = '1'
+        AND o.is_ship = '1'
+        AND op.is_evaluation = '0'
+        ORDER BY
+        o.update_time DESC
+        LIMIT #{rowIndex}, #{pageSize};
+    </select>
+    <select id="queryNotEvaOrderCount" resultType="int">
+        SELECT COUNT(DISTINCT o.order_id)
+        FROM tb_product p,
+        tb_shop,
+        tb_order o
+        LEFT JOIN
+        tb_order_product_map op
+        ON o.order_id = op.order_id
+        WHERE
+        p.product_id = op.product_id
+        <if test="keyWord!=null">
+            AND p.product_name LIKE '%${keyWord}%'
+        </if>
+        <if test="shopId!=null">
+            AND o.shop_id = #{shopId}
+        </if>
+        <if test="userId!=null">
+            AND o.user_id = #{userId}
+        </if>
+        AND o.is_pay = '1'
+        AND o.is_receipt = '1'
+        AND o.is_ship = '1'
+        AND op.is_evaluation = '0'
+    </select>
+    <update id="updateOrder" parameterType="com.lovesickness.o2o.entity.Order">
+        UPDATE tb_order
+        <set>
+            <if test="isPay!=null">is_pay=#{isPay},</if>
+            <if test="payTime!=null">pay_time=#{payTime},</if>
+            <if test="isShip!=null">is_ship=#{isShip},</if>
+            <if test="shipTime!=null">ship_time=#{shipTime},</if>
+            <if test="isReceipt!=null">is_receipt=#{isReceipt},</if>
+            <if test="receiptTime!=null">receipt_time=#{receiptTime},</if>
+            <if test="updateTime!=null">update_time=#{updateTime},</if>
+            <if test="receivePhone!=null">receive_phone=#{receivePhone},</if>
+            <if test="receiveAddr!=null">receive_addr=#{receiveAddr},</if>
+            <if test="receiveName!=null">receive_name=#{receiveName},</if>
+            <if test="trackNumber!=null">track_number=#{trackNumber},</if>
+            <if test="status!=null">status=#{status}</if>
+        </set>
+        WHERE order_id = #{orderId}
+        AND user_id = #{user.userId}
+    </update>
 </mapper>
