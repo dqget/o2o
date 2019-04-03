@@ -34,7 +34,8 @@ $(function () {
 
     function goShop(status, id) {
         if (status !== 0 && status !== -1) {
-            return '<a href="/o2o/shopadmin/shopmanage?shopId=' + id + '" onclick="location.href=this.href;return false;">进入</a>';
+            return '<a class="in external" '
+                + 'href="/o2o/shopadmin/shopmanage?shopId=' + id + '">进入</a>';
         } else {
             return '';
         }
