@@ -36,18 +36,56 @@ public interface OrderDao {
      * @param order    订单信息
      * @param rowIndex 开始行数
      * @param pageSize 获取行数
+     * @param keyWord  关键字 产品
      * @return 订单列表
      */
     List<Order> queryOrderList(@Param("orderCondition") Order order,
+                               @Param("keyWord") String keyWord,
                                @Param("rowIndex") int rowIndex,
                                @Param("pageSize") int pageSize);
 
     /**
      * 查询对应的订单总数
      *
-     * @param order 订单信息
+     * @param order   订单信息
+     * @param keyWord 关键字 产品
      * @return 总数
      */
-    int queryOrderCount(@Param("orderCondition") Order order);
+    int queryOrderCount(@Param("orderCondition") Order order, @Param("keyWord") String keyWord);
 
+    /**
+     * 查询该用户的未评价订单
+     *
+     * @param userId   用户Id
+     * @param shopId   店铺Id
+     * @param rowIndex 开始行数
+     * @param pageSize 获取行数
+     * @param keyWord  关键字 产品
+     * @return 订单列表
+     */
+    List<Order> queryNotEvaOrderList(@Param("userId") Long userId,
+                                     @Param("shopId") Long shopId,
+                                     @Param("keyWord") String keyWord,
+                                     @Param("rowIndex") int rowIndex,
+                                     @Param("pageSize") int pageSize);
+
+    /**
+     * 查询该用户的未评价订单数
+     *
+     * @param userId  用户Id
+     * @param shopId  店铺Id
+     * @param keyWord 关键字 产品
+     * @return 总数
+     */
+    int queryNotEvaOrderCount(@Param("userId") Long userId,
+                              @Param("shopId") Long shopId,
+                              @Param("keyWord") String keyWord);
+
+    /**
+     * 修改订单
+     *
+     * @param order 订单
+     * @return 修改行数
+     */
+    int updateOrder(Order order);
 }

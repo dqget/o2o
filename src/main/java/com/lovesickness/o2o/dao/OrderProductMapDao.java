@@ -43,4 +43,11 @@ public interface OrderProductMapDao {
      */
     int queryOrderProductMapCount(@Param("orderProductMapCondition") OrderProductMap orderProductMapCondition);
 
+    /**
+     * 修改订单项
+     *
+     * @param orderProductMap 添加商品评论、评价星级
+     * @return 修改行数
+     */
+    int updateOrderProductMap(@Param("orderProductMap") OrderProductMap orderProductMap);
 }
