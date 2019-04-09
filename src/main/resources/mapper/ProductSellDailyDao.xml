@@ -72,7 +72,7 @@
     <insert id="insertDefaultProductSellDaily">
         INSERT INTO
             tb_product_sell_daily (product_id, shop_id, create_time, total)
-            (SELECT
+            SELECT
                  p.product_id,
                  p.shop_id,
                  DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS create_time,
@@ -83,6 +83,5 @@
                                         WHERE DATE_FORMAT(create_time, '%Y-%m-%d')
                                               = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
              )
-            )
     </insert>
 </mapper>
