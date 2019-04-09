@@ -19,7 +19,9 @@ import java.util.Properties;
         @Signature(args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}, method = "query", type = Executor.class)}
 )
 public class DynamicDataSourceIntercepor implements Interceptor {
-    // \\u0020代表空格
+    /**
+     * \\u0020代表空格
+     */
     private static final String REGEX = ".*insert\\u0020.*|.*delete\\u0020.*|.*update\\u0020.*|";
     private static final Logger logger = LoggerFactory.getLogger(DynamicDataSourceIntercepor.class);
 
@@ -30,10 +32,12 @@ public class DynamicDataSourceIntercepor implements Interceptor {
     public Object intercept(Invocation invocation) throws Throwable {
         //判断是不是事务
         boolean synchronizationActive = TransactionSynchronizationManager.isActualTransactionActive();
-        String lookupKey = DynamicDataSourceHolder.DB_Master;//决定DataSource
+        //决定DataSource
+        String lookupKey = DynamicDataSourceHolder.DB_Master;
         Object[] objects = invocation.getArgs();
         MappedStatement ms = (MappedStatement) objects[0];
-        if (!synchronizationActive) {//如果不是事务操作
+        //如果不是事务操作
+        if (!synchronizationActive) {
             //读方法
             if (ms.getSqlCommandType().equals(SqlCommandType.SELECT)) {
                 //selectKey为自增ID查询主键（SELECT LAST_INSERT_ID（））方法    ，  就使用主库
@@ -42,7 +46,8 @@ public class DynamicDataSourceIntercepor implements Interceptor {
                 } else {
                     BoundSql boundSql = ms.getSqlSource().getBoundSql(objects[1]);
                     String sql = boundSql.getSql().toLowerCase(Locale.CHINA).replace("[\\t\\n\\r]", " ");
-                    if (sql.matches(REGEX)) {//如果是insert delete update
+                    //如果是insert delete update
+                    if (sql.matches(REGEX)) {
                         lookupKey = DynamicDataSourceHolder.DB_Master;
                     } else {
                         lookupKey = DynamicDataSourceHolder.DB_Slave;
@@ -52,8 +57,7 @@ public class DynamicDataSourceIntercepor implements Interceptor {
         } else {//是事物操作
             lookupKey = DynamicDataSourceHolder.DB_Master;
         }
-        logger.debug(">>>>>设置方法[{}]use[{}]Strategy,SqlCommanType[{}]", ms.getId(), lookupKey
-                , ms.getSqlCommandType().name());
+        logger.debug(">>>>>设置方法[{}]use[{}]Strategy,SqlCommanType[{}]", ms.getId(), lookupKey, ms.getSqlCommandType().name());
         DynamicDataSourceHolder.setDbType(lookupKey);
         return invocation.proceed();
     }

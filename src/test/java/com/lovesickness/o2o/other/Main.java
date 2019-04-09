@@ -43,8 +43,8 @@ public class Main {
 //        System.out.println(tableSizeFor(30));;
 
 
-    }
 
+    }
     static final int tableSizeFor(int cap) {
         int n = cap - 1;
         n |= n >>> 1;

@@ -43,9 +43,11 @@ $(function () {
                         }
                         window.location.href = '/o2o/frontend/index';
                     } else {
-                        if (userType === 1) {
+                        if (userType === '1') {
+                            var storage = window.localStorage;
+                            storage.setItem('user', JSON.stringify(data.user));
                             window.location.href = '/o2o/frontend/index';
-                        } else if (userType === 2) {
+                        } else if (userType === '2') {
                             window.location.href = '/o2o/shopadmin/shoplist';
                         }else {
                             window.location.href = '/o2o/frontend/index';

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商铺助手</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../resources/css/frontend/shopdetail.css"
+          type="text/css">
+</head>
+<body>
+<div class="page-group">
+    <div id="page" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back"
+               href="#" onclick="window.history.back(-1);"> <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">订单列表</h1>
+        </header>
+        <nav class="bar bar-tab">
+            <a class="tab-item external" href="/o2o/frontend/index">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">首页</span>
+            </a>
+            <a class="tab-item external" href="#">
+                <span class="icon icon-cart"></span>
+                <span class="tab-label">购物车</span>
+            </a>
+            <a class="tab-item external" href="#" id="me">
+                <span class="icon icon-me"></span>
+                <span class="tab-label">我</span>
+            </a>
+        </nav>
+
+        <!-- 添加 class infinite-scroll 和 data-distance  向下无限滚动可不加infinite-scroll-bottom类，这里加上是为了和下面的向上无限滚动区分-->
+        <div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
+            <div class="searchbar">
+                <a class="searchbar-cancel">取消</a>
+                <div class="search-input">
+                    <label class="icon icon-search" for="search"></label>
+                    <input type="search" id='search' placeholder='输入关键字...'/>
+                </div>
+            </div>
+            <div class="buttons-tab">
+                <a href="#all" class="tab-link active button">全部</a>
+                <a href="#not-pay" class="tab-link button">待付款</a>
+                <a href="#not-ship" class="tab-link button">待发货</a>
+                <a href="#not-receipt" class="tab-link button">待收货</a>
+                <a href="#not-eva" class="tab-link button">待评价</a>
+            </div>
+            <div class="content-block">
+                <div class="tabs">
+                    <div id="all" class="tab active">
+                        <div class="content-block">
+                            <!--商品列表-->
+                            <div class="list-div order-list-all"></div>
+                            <!-- 加载提示符 -->
+                            <div class="infinite-scroll-preloader">
+                                <div class="preloader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="not-pay" class="tab">
+                        <div class="content-block">
+                            <!--商品列表-->
+                            <div class="list-div not-pay-order-list"></div>
+                            <!-- 加载提示符 -->
+                            <div class="infinite-scroll-preloader">
+                                <div class="preloader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="not-ship" class="tab">
+                        <div class="content-block">
+                            <!--商品列表-->
+                            <div class="list-div not-ship-order-list"></div>
+                            <!-- 加载提示符 -->
+                            <div class="infinite-scroll-preloader">
+                                <div class="preloader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="not-receipt" class="tab">
+                        <div class="content-block">
+                            <!--商品列表-->
+                            <div class="list-div not-receipt-order-list"></div>
+                            <!-- 加载提示符 -->
+                            <div class="infinite-scroll-preloader">
+                                <div class="preloader"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="not-eva" class="tab">
+                        <div class="content-block">
+                            <!--商品列表-->
+                            <div class="list-div not-eva-order-list"></div>
+                            <!-- 加载提示符 -->
+                            <div class="infinite-scroll-preloader">
+                                <div class="preloader"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 右侧栏 -->
+    <div class="panel-overlay"></div>
+    <div class="panel panel-right panel-cover theme-dark" id='panel-js-demo'>
+        <div class="content-block" id="right">
+            <p>我是从右边出现的</p>
+            <p>并且我是覆盖在页面上而不是推开页面</p>
+        </div>
+    </div>
+</div>
+</div>
+<!--<script type="text/javascript" src="../resources/js/common/jquery.js"></script>-->
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+<script type="text/javascript"
+        src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src="../resources/js/frontend/orderlist.js"></script>
+<script type="text/javascript" src="../resources/js/frontend/rightsidebar.js"></script>
+<script type="text/javascript" src="../resources/js/local/logout.js"></script>
+</body>
+
+</html>

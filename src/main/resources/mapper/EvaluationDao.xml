@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.EvaluationDao">
+    <resultMap id="evaluationMap" type="com.lovesickness.o2o.entity.Evaluation">
+        <id column="evaluation_id" property="evaluationId"/>
+        <result column="content" property="content"/>
+        <result column="from_uid" property="fromUid"/>
+        <result column="from_name" property="fromName"/>
+        <result column="to_name" property="toName"/>
+        <result column="to_uid" property="toUid"/>
+        <association property="product" column="product_id" javaType="com.lovesickness.o2o.entity.Product">
+            <id column="product_id" property="productId"/>
+        </association>
+    </resultMap>
+    <insert id="insertEvaluation"
+            parameterType="com.lovesickness.o2o.entity.Evaluation" useGeneratedKeys="true"
+            keyProperty="evaluationId" keyColumn="evaluation_id">
+        INSERT INTO
+            tb_evaluation (product_id, content, from_uid, from_name, to_uid, to_name)
+        VALUES (#{product.productId}, #{content}, #{fromUid}, #{fromName}, #{toUid}, #{toName})
+    </insert>
+    <select id="queryEvaluation" resultMap="evaluationMap">
+        SELECT
+            e.evaluation_id,
+            e.product_id,
+            e.content,
+            e.from_uid,
+            e.from_name,
+            e.to_uid,
+            e.to_name,
+            e.create_time
+        FROM tb_evaluation e
+        WHERE e.product_id = #{evaluationCondition.product.productId}
+        ORDER BY create_time
+        LIMIT #{rowIndex}, #{pageSize};
+    </select>
+    <select id="queryEvaluationCount" parameterType="com.lovesickness.o2o.entity.Evaluation"
+            resultType="int">
+        SELECT COUNT(1)
+        FROM tb_evaluation e
+        WHERE e.product_id = #{evaluationCondition.product.productId}
+    </select>
+</mapper>

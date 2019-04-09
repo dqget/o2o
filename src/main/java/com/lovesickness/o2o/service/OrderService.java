@@ -4,6 +4,7 @@ import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.OrderProductMap;
 import com.lovesickness.o2o.entity.PersonInfo;
+import com.lovesickness.o2o.exception.OrderOperationException;
 
 import java.util.List;
 
@@ -35,5 +36,29 @@ public interface OrderService {
      */
     Order getOrderByNo(PersonInfo user, String orderNumbers);
 
-    OrderExecution getOrderList();
+    /**
+     * 订单查询 ：根据名字模糊查询  待付款  待发货   待收货  评价
+     *
+     * @param order     订单信息
+     * @param pageIndex 查询当前页数
+     * @param pageSize  一页显示数
+     * @param keyWord   关键字 根据产品名模糊查询
+     * @return 订单信息及查询总数
+     */
+    OrderExecution getOrderList(Order order, String keyWord, Integer pageIndex, Integer pageSize);
+
+    /**
+     * 单查询 ：根据名字模糊查询 未评价
+     *
+     * @param userId    用户Id
+     * @param pageIndex 查询当前页数
+     * @param pageSize  一页显示数
+     * @param keyWord   关键字 根据产品名模糊查询
+     * @return 订单信息及查询总数
+     */
+    OrderExecution getOrderNotEvaList(Long userId, Long shopId, String keyWord, Integer pageIndex, Integer pageSize);
+
+    OrderExecution modifyOrderByUser(Order order) throws OrderOperationException;
+
+    OrderExecution modifyOrderByShop(Order order) throws OrderOperationException;
 }

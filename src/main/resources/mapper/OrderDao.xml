@@ -182,12 +182,13 @@
         s.shop_desc,
         s.shop_img
         FROM tb_shop s,
+        tb_product p ,
         tb_order o
         LEFT JOIN
         tb_order_product_map op
         ON o.order_id = op.order_id
         <where>
-            o.shop_id = s.shop_id
+            o.shop_id = s.shop_id AND p.product_id = op.product_id
             <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
                 AND o.user_id = #{orderCondition.user.userId}
             </if>
@@ -215,12 +216,13 @@
         SELECT
         COUNT(DISTINCT o.order_id)
         FROM tb_shop s,
+        tb_product p ,
         tb_order o
         LEFT JOIN
         tb_order_product_map op
         ON o.order_id = op.order_id
         <where>
-            o.shop_id = s.shop_id
+            o.shop_id = s.shop_id AND p.product_id = op.product_id
             <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
                 AND o.user_id = #{orderCondition.user.userId}
             </if>
@@ -267,6 +269,7 @@
         ON o.order_id = op.order_id
         WHERE
         o.shop_id = s.shop_id
+        AND op.product_id = p.product_id
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>
@@ -294,6 +297,7 @@
         ON o.order_id = op.order_id
         WHERE
         p.product_id = op.product_id
+        AND op.product_id = p.product_id
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>

@@ -26,6 +26,7 @@ public class ShopLoginInterceptor extends HandlerInterceptorAdapter {
         if (userObj != null) {
             //若用户信息不为空，将session中的用户信息转为PersonInfo实体类
             PersonInfo user = (PersonInfo) userObj;
+            log.info("请求的用户信息：" + user);
             //空值判断 确保userId不为空  状态为1  用户类型为店家
             if (user.getUserId() != null && user.getUserId() > 0 && user.getEnableStatus() == 1 && user.getUserType() != null && user.getUserType() != 1) {
                 return true;

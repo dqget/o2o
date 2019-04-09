@@ -37,5 +37,10 @@ public class MainManagementController {
         return "frontend/buyercart";
     }
 
+    @GetMapping(value = "/orderlist")
+    public String orderList() {
+        return "frontend/orderlist";
+    }
+
 
 }

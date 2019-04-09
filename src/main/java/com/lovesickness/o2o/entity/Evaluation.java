@@ -89,4 +89,17 @@ public class Evaluation {
     public void setToName(String toName) {
         this.toName = toName;
     }
+
+    @Override
+    public String toString() {
+        return "Evaluation{" +
+                "evaluationId=" + evaluationId +
+                ", product=" + product +
+                ", content='" + content + '\'' +
+                ", fromUid=" + fromUid +
+                ", fromName='" + fromName + '\'' +
+                ", toUid=" + toUid +
+                ", toName='" + toName + '\'' +
+                '}';
+    }
 }

@@ -70,6 +70,7 @@ public class WechatLoginController {
         }
         //wechatAuth==null表示微信用户是第一次登录
         if (wechatAuth == null) {
+            log.info("该用户首次登录");
             PersonInfo personInfo = WechatUtil.getPersonInfoFromRequest(user);
             wechatAuth = new WechatAuth();
             wechatAuth.setOpenId(user.getOpenId());
@@ -85,7 +86,13 @@ public class WechatLoginController {
             } else {
                 personInfo = personInfoService.getPersonInfoById(wechatAuth.getPersonInfo().getUserId());
                 request.getSession().setAttribute("user", personInfo);
+                log.info("将用户信息放入session " + personInfo);
             }
+        } else {
+            PersonInfo personInfo = wechatAuth.getPersonInfo();
+            log.info("该用户不是首次登录，个人信息:" + personInfo);
+            request.getSession().setAttribute("user", personInfo);
+            log.info("将用户信息放入session " + personInfo);
         }
         //若用户点击的是前端展示系统按钮则进入前端展示系统
         if (FRONTEND.equals(userType)) {

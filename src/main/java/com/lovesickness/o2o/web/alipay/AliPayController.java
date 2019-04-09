@@ -9,6 +9,10 @@ import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.IdGenerator;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +41,20 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/pay")
+@Api(value = "AliPayController|负责支付请求的控制器")
 public class AliPayController {
     private static Logger log = LoggerFactory.getLogger(AliPayController.class);
     @Autowired
     private OrderService orderService;
 
     @PostMapping("/open")
+    @ApiOperation(value = "根据用户订单信息支付宝支付功能", notes = "测试--")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "WIDout_trade_no", value = "订单编号", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "WIDtotal_amount", value = "总金额", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "WIDsubject", value = "商品名称", required = true, dataType = "string"),
+            @ApiImplicitParam(name = "WIDbody", value = "商品描述", required = true, dataType = "string")
+    })
     public void aliPay(HttpServletRequest request, HttpServletResponse response) {
         log.debug("alipay支付功能接口！");
         //获得初始化的AlipayClient
@@ -82,7 +94,7 @@ public class AliPayController {
         }
     }
 
-    @RequestMapping("notify")
+    @PostMapping("notify")
     @ResponseBody
     public String notify(HttpServletRequest request) throws AlipayApiException {
         //获取支付宝POST过来反馈信息

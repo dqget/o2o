@@ -31,6 +31,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/shopadmin")
+
 public class ProductManagementController {
     /**
      * 商品详情图允许最大上传数量
@@ -170,11 +171,11 @@ public class ProductManagementController {
 
     @GetMapping(value = "/getproductlistbyshop")
     public ResultBean<com.lovesickness.o2o.dto.ProductExecution> getProductListByShop(HttpServletRequest request) {
-        int pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        int pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-        if ((pageIndex > -1) && (pageSize > -1) && (currentShop != null) && (currentShop.getShopId() != null)) {
-            long productCategoryId = HttpServletRequestUtil.getLong(request, "productCategoryId");
+        if ((pageIndex != null) && (pageSize != null) && (currentShop != null) && (currentShop.getShopId() != null)) {
+            Long productCategoryId = HttpServletRequestUtil.getLong(request, "productCategoryId");
             String productName = HttpServletRequestUtil.getString(request, "productName");
             Product productCondition = compactProductCondition(currentShop.getShopId(), productCategoryId, productName);
             return new ResultBean<>(productService.getProductList(productCondition, pageIndex, pageSize));
@@ -184,11 +185,11 @@ public class ProductManagementController {
 
     }
 
-    private Product compactProductCondition(long shopId, long productCategoryId, String productName) {
+    private Product compactProductCondition(Long shopId, Long productCategoryId, String productName) {
         Product productCondition = new Product();
         Shop shop = new Shop();
         shop.setShopId(shopId);
-        if (productCategoryId != -1L) {
+        if (productCategoryId != null) {
             ProductCategory productCategory = new ProductCategory();
             productCategory.setProductCategoryId(productCategoryId);
             productCondition.setProductCategory(productCategory);

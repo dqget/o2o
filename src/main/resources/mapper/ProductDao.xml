@@ -47,8 +47,7 @@
         </collection>
     </resultMap>
 
-    <insert id="insertProduct" parameterType="com.lovesickness.o2o.entity.Product" useGeneratedKeys="true"
-            keyProperty="productId" keyColumn="product_id">
+    <insert id="insertProduct" parameterType="com.lovesickness.o2o.entity.Product" useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
         INSERT INTO tb_product
         (product_name, product_desc, img_addr, normal_price,
          promotion_price, priority, create_time, last_edit_time,

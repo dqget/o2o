@@ -50,9 +50,17 @@ public class OrderTest {
     public void testCQueryOrderList() {
         Order orderCondition = new Order();
         orderCondition.setIsPay(1);
-        List<Order> orders = orderDao.queryOrderList(orderCondition, 0, 999);
-        int effectedNum = orderDao.queryOrderCount(orderCondition);
+        List<Order> orders = orderDao.queryOrderList(orderCondition, "2", 0, 999);
+        int effectedNum = orderDao.queryOrderCount(orderCondition,"苹果");
         System.out.println(orders);
+        System.out.println(effectedNum);
+    }
+
+    @Test
+    public void testDQueryNotEvaOrderList() {
+        List<Order> orderList = orderDao.queryNotEvaOrderList(1L, null,"苹果", 0, 999);
+        int effectedNum = orderDao.queryNotEvaOrderCount(1L,null, "苹果");
+        System.out.println(orderList);
         System.out.println(effectedNum);
     }
 }

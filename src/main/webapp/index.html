@@ -9,7 +9,8 @@
 
 <body>
 Hello World!
-<a href="alipay/alipay11">1111</a>
+<a href="alipay/alipay11">${Test}</a>
+
 <div class="tb-module tshop-um tshop-um-testting">
     <div class="wrap">
         <ul class="triggers">
@@ -39,6 +40,14 @@ Hello World!
         src='resources/js/common/jquery.js' charset='utf-8'></script>
 <script>
 
+
+    $.ajax({
+        url: '/o2o/frontend/test',
+        type: 'get',
+        success: function (data) {
+            console.log(data);
+        }
+    });
 
 </script>
 

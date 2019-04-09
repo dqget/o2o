@@ -10,6 +10,7 @@ import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.exception.OrderOperationException;
 import com.lovesickness.o2o.exception.OrderProductMapOperationException;
 import com.lovesickness.o2o.service.OrderService;
+import com.lovesickness.o2o.util.PageCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -64,8 +65,57 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderExecution getOrderList() {
-        return null;
+    public OrderExecution getOrderList(Order order, String keyWord, Integer pageIndex, Integer pageSize) {
+        int bagenIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+        OrderExecution oe = new OrderExecution();
+        oe.setOrderList(orderDao.queryOrderList(order, keyWord, bagenIndex, pageSize));
+        oe.setCount(orderDao.queryOrderCount(order, keyWord));
+        return oe;
+    }
+
+    @Override
+    public OrderExecution getOrderNotEvaList(Long userId, Long shopId, String keyWord, Integer pageIndex, Integer pageSize) {
+        int bagenIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+        OrderExecution oe = new OrderExecution();
+        oe.setOrderList(orderDao.queryNotEvaOrderList(userId, shopId, keyWord, bagenIndex, pageSize));
+        oe.setCount(orderDao.queryNotEvaOrderCount(userId, shopId, keyWord));
+        return oe;
+    }
+
+    @Override
+    @Transactional(rollbackFor = OrderOperationException.class)
+    public OrderExecution modifyOrderByUser(Order order) throws OrderOperationException {
+        Long userId;
+        if (order.getOrderId() == null || order.getUser() == null || (userId = order.getUser().getUserId()) == null) {
+            return new OrderExecution(OrderStateEnum.EMPTY);
+        }
+        Order oldOrder = orderDao.queryOrderById(order.getOrderId());
+        if (!oldOrder.getUser().getUserId().equals(userId)) {
+            return new OrderExecution(OrderStateEnum.INNER_ERROR);
+        }
+        int effectedNum = orderDao.updateOrder(order);
+        if (effectedNum != 1) {
+            throw new OrderOperationException("修改订单失败");
+        }
+        return new OrderExecution(OrderStateEnum.SUCCESS);
+    }
+
+    @Override
+    @Transactional(rollbackFor = OrderOperationException.class)
+    public OrderExecution modifyOrderByShop(Order order) throws OrderOperationException {
+        Long shopId;
+        if (order.getOrderId() == null || order.getShop() == null || (shopId = order.getShop().getShopId()) == null) {
+            return new OrderExecution(OrderStateEnum.EMPTY);
+        }
+        Order oldOrder = orderDao.queryOrderById(order.getOrderId());
+        if (!oldOrder.getShop().getShopId().equals(shopId)) {
+            return new OrderExecution(OrderStateEnum.INNER_ERROR);
+        }
+        int effectedNum = orderDao.updateOrder(order);
+        if (effectedNum != 1) {
+            throw new OrderOperationException("修改订单失败");
+        }
+        return new OrderExecution(OrderStateEnum.SUCCESS);
     }
 
     /**

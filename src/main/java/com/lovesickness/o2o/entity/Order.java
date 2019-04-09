@@ -78,6 +78,10 @@ public class Order {
     private String trackNumber;
     private List<OrderProductMap> orderProductMapList;
 
+    /**
+     * 店铺
+     */
+    private Shop shop;
     public Order() {
     }
 
@@ -245,7 +249,17 @@ public class Order {
                 ", receiveAddr='" + receiveAddr + '\'' +
                 ", receiveName='" + receiveName + '\'' +
                 ", trackNumber='" + trackNumber + '\'' +
-                ", OrderProductMapList=" + orderProductMapList +
+                ", orderProductMapList=" + orderProductMapList +
+                ", shop=" + shop +
                 '}';
     }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
 }

@@ -18,9 +18,9 @@ public class BuyerCartController {
     private static final Logger LOGGER = LoggerFactory.getLogger(BuyerCartController.class);
     @Autowired
     private BuyerCartService buyerCartService;
-    @PostMapping("/updateitemtobuyercart")
 
-    public ResultBean<Boolean> updateItemToBuyerCart(@RequestBody BuyerCartItem buyerCartItem, HttpServletRequest request) {
+    @PostMapping("/updateitemtobuyercart")
+    public ResultBean<?> updateItemToBuyerCart(@RequestBody BuyerCartItem buyerCartItem, HttpServletRequest request) {
         LOGGER.debug("添加购物车入参：" + buyerCartItem);
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user != null) {
@@ -69,4 +69,5 @@ public class BuyerCartController {
             return new ResultBean<>(false, 0, "用户信息不存在");
         }
     }
+
 }

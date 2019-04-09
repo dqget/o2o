@@ -13,6 +13,7 @@ import com.lovesickness.o2o.exception.LocalAuthOperationException;
 import com.lovesickness.o2o.service.LocalAuthService;
 import com.lovesickness.o2o.util.CodeUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
+import com.lovesickness.o2o.util.ResultBean;
 import com.lovesickness.o2o.util.ShopNetAddressUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,5 +241,12 @@ public class LocalAuthController {
         request.getSession().setAttribute("currentShop", null);
         modelMap.put("success", true);
         return modelMap;
+    }
+
+    @GetMapping("/testlogin")
+    public ResultBean<?> testLogin(HttpServletRequest request) {
+        PersonInfo user = localAuthService.getLocalAuthByUserNameAndPwd("xiaoy","123123").getPersonInfo();
+        request.getSession().setAttribute("user", user);
+        return new ResultBean<>(user);
     }
 }
