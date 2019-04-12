@@ -21,6 +21,8 @@ import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
 import com.lovesickness.o2o.util.ShopNetAddressUtil;
 import com.lovesickness.o2o.util.weixin.WechatUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +42,7 @@ import java.util.Objects;
  */
 @Controller
 @RequestMapping("/shopadmin")
+@Api(tags = "ShopAuthManagementController|店铺店员管理控制器")
 public class ShopAuthManagementController {
     private static Logger logger = LoggerFactory.getLogger(ShopAuthManagementController.class);
 
@@ -53,12 +56,14 @@ public class ShopAuthManagementController {
 
     @GetMapping(value = "/getshopauthmaplistbyshop")
     @ResponseBody
+    @ApiOperation(value = "查询店铺下的店员列表", notes = "查询该店铺下的店员列表")
     public ResultBean<ShopAuthMapExecution> getShopAuthMapListByShop(HttpServletRequest request) {
         ResultBean<ShopAuthMapExecution> result;
-        int pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        int pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-        if (pageIndex > -1 && pageSize > -1 && currentShop != null && currentShop.getShopId() != null) {
+        if (pageIndex != null && pageSize != null
+                && currentShop != null && currentShop.getShopId() != null) {
             result = new ResultBean<>(shopAuthMapService.getShopAuthMapListByShopId(currentShop.getShopId(), pageIndex, pageSize));
         } else {
             result = new ResultBean<>(new ShopAuthMapOperationException("empty pageSize or pageIndex or shopId"));
@@ -68,6 +73,7 @@ public class ShopAuthManagementController {
 
     @GetMapping(value = "/getshopauthmapbyid")
     @ResponseBody
+    @ApiOperation(value = "根据店员Id查询店员信息", notes = "根据店员Id查询店员信息")
     public ResultBean<ShopAuthMap> getShopAuthMapById(@RequestParam Long shopAuthId) {
         ResultBean<ShopAuthMap> result;
         if (shopAuthId != null && shopAuthId > -1L) {
@@ -80,6 +86,7 @@ public class ShopAuthManagementController {
 
     @PostMapping(value = "modifyshopauthmap")
     @ResponseBody
+    @ApiOperation(value = "修改店员信息", notes = "根据店员Id查询店员信息")
     public ResultBean<?> modifyShopAuthMap(String shopAuthMapStr, HttpServletRequest request) {
         boolean statusChange = HttpServletRequestUtil.getBoolean(request, "statusChange");
         if (!statusChange && !CodeUtil.checkVerifyCode(request)) {
@@ -131,6 +138,7 @@ public class ShopAuthManagementController {
      * @param response
      */
     @GetMapping("/generateqrcode4shopauth")
+    @ApiOperation(value = "生成添加店员的二维码", notes = "扫面后添加到店店铺的店员")
     public void generateQRCode4ShopAuth(HttpServletRequest request, HttpServletResponse response) {
         //从session获取当前shop信息
         Shop shop = (Shop) request.getSession().getAttribute("currentShop");
@@ -166,6 +174,7 @@ public class ShopAuthManagementController {
      * @return
      */
     @GetMapping("/addshopauthmap")
+    @ApiOperation(value = "根据微信回传回来的参数添加店铺的授权信息", notes = "根据微信回传回来的参数添加店铺的授权信息")
     public String addShopAuthMap(HttpServletRequest request, HttpServletResponse response) {
         logger.info("用户通过扫描二维码欲成为该店的员工");
         //从request里面获取微信用户的信息

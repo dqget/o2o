@@ -17,7 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/frontend")
-@Api("订单控制类")
+@Api(tags = "OrderContorller|订单操作控制器")
 public class OrderContorller {
     private static final int ORDER_ALL = 0;
     private static final int ORDER_NOT_PAY = 1;
@@ -29,6 +29,7 @@ public class OrderContorller {
 
     @PostMapping("/addorderbyuser")
     @ResponseBody
+    @ApiOperation(value = "添加订单记录", notes = "根据订单项和session中存在的用户添加订单")
     public ResultBean<OrderExecution> addOrderByUser(@RequestBody OrderAndItems orderAndItems, HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         Order order = orderAndItems.getOrder();
@@ -45,7 +46,7 @@ public class OrderContorller {
     }
 
     @GetMapping("/getorderlistbyuser")
-    @ApiOperation(value = "根据用户订单信息查询", notes = "测试--")
+    @ApiOperation(value = "根据用户订单信息查询", notes = "查询用户的订单信息，status 0全部 1待付款、2待发货、3待收货 4待评价")
     public ResultBean<?> getOrderListByUser(String keyWord, int status, HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null || user.getUserId() == null) {
@@ -65,7 +66,7 @@ public class OrderContorller {
     }
 
     @GetMapping("/getorderlistbyshop")
-    @ApiOperation(value = "根据店铺订单信息查询", notes = "测试--")
+    @ApiOperation(value = "根据店铺订单信息查询", notes = "查询该店铺下的订单信息， status 0全部 1待付款、2待发货、3待收货 4待评价")
     public ResultBean<?> getOrderListByShop(String keyWord, int status, HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
@@ -81,7 +82,7 @@ public class OrderContorller {
     }
 
     @PostMapping("/modifyorderbyuser")
-    @ApiOperation(value = "用户修改订单", notes = "测试--")
+    @ApiOperation(value = "用户修改订单", notes = "用户修改订单信息，包括确认收货")
     public ResultBean<?> modifyOrderByUser(@RequestBody Order order, HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null || user.getUserId() == null) {
@@ -98,7 +99,7 @@ public class OrderContorller {
     }
 
     @PostMapping("/modifyorderbyshop")
-    @ApiOperation(value = "店家修改订单", notes = "测试--")
+    @ApiOperation(value = "店家修改订单", notes = "店家修改订单信息，包括发货")
     public ResultBean<?> modifyOrderByShop(@RequestBody Order order, HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         if (currentShop == null || currentShop.getShopId() == null) {

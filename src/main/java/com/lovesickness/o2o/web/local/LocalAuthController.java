@@ -15,6 +15,8 @@ import com.lovesickness.o2o.util.CodeUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
 import com.lovesickness.o2o.util.ShopNetAddressUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,14 +36,16 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "local", method = {RequestMethod.GET, RequestMethod.POST})
+@Api(tags = "LocalAuthController|本地账户管理控制器")
 public class LocalAuthController {
     private static Logger logger = LoggerFactory.getLogger(LocalAuthController.class);
     @Autowired
     private LocalAuthService localAuthService;
 
     @PostMapping(value = "/logincheck")
+    @ApiOperation(value = "用户登录", notes = "根据用户名和密码进行登录，needVerify表示是否需要验证码校验")
     private Map<String, Object> loginCheck(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         boolean needVerify = HttpServletRequestUtil.getBoolean(request, "needVerify");
         if (needVerify && !CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
@@ -68,19 +72,20 @@ public class LocalAuthController {
     }
 
     @RequestMapping(value = "/ownerregister", method = RequestMethod.POST)
+    @ApiOperation(value = "用户注册", notes = "非微信进行注册")
     private Map<String, Object> ownerRegister(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<String, Object>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
             modelMap.put("errMsg", "输入了错误的验证码");
             return modelMap;
         }
         ObjectMapper mapper = new ObjectMapper();
-        LocalAuth localAuth = null;
+        LocalAuth localAuth;
         String localAuthStr = HttpServletRequestUtil.getString(request,
                 "localAuthStr");
-        MultipartHttpServletRequest multipartRequest = null;
-        CommonsMultipartFile profileImg = null;
+        MultipartHttpServletRequest multipartRequest;
+        CommonsMultipartFile profileImg;
         CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
                 request.getSession().getServletContext());
         if (multipartResolver.isMultipart(request)) {
@@ -108,7 +113,6 @@ public class LocalAuthController {
                     localAuth.getPersonInfo().setUserId(user.getUserId());
                 }
                 localAuth.getPersonInfo().setUserType(2);
-
                 LocalAuthExecution le = localAuthService.register(localAuth,
                         new ImageHolder(profileImg.getInputStream(), profileImg.getOriginalFilename()));
                 if (le.getState() == LocalAuthStateEnum.SUCCESS.getState()) {
@@ -132,6 +136,7 @@ public class LocalAuthController {
 
 
     @PostMapping(value = "/bindlocalauth")
+    @ApiOperation(value = "微信用户绑定", notes = "微信用户可绑定本地账户")
     private Map<String, Object> bindLocalAuth(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
@@ -165,6 +170,7 @@ public class LocalAuthController {
     }
 
     @PostMapping(value = "/changelocalpwd")
+    @ApiOperation(value = "更改本地账户密码", notes = "根据用户名和原密码更改新密码")
     private Map<String, Object> changeLocalPwd(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         if (!CodeUtil.checkVerifyCode(request)) {
@@ -210,6 +216,8 @@ public class LocalAuthController {
     }
 
     @GetMapping("/generateqrcode4wechatlogin")
+    @ApiOperation(value = "生成微信登录的二维码",
+            notes = "生成微信登陆的二维码，usertype 1 表示登录前端系统 2 表示登录店家系统")
     public void generateQRCode4ShopAuth(HttpServletRequest request, HttpServletResponse response) {
         // 1 表示登录前端系统
         // 2 表示登录店家系统
@@ -234,6 +242,7 @@ public class LocalAuthController {
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ApiOperation(value = "退出登录", notes = "退出登录")
     private Map<String, Object> logoutCheck(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         request.getSession().setAttribute("user", null);
@@ -244,8 +253,9 @@ public class LocalAuthController {
     }
 
     @GetMapping("/testlogin")
+    @ApiOperation(value = "登录测试", notes = "模拟登录前端展示系统")
     public ResultBean<?> testLogin(HttpServletRequest request) {
-        PersonInfo user = localAuthService.getLocalAuthByUserNameAndPwd("xiaoy","123123").getPersonInfo();
+        PersonInfo user = localAuthService.getLocalAuthByUserNameAndPwd("xiaoy", "123123").getPersonInfo();
         request.getSession().setAttribute("user", user);
         return new ResultBean<>(user);
     }

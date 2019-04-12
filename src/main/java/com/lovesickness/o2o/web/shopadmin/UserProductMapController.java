@@ -11,11 +11,12 @@ import com.lovesickness.o2o.service.ProductSellDailyService;
 import com.lovesickness.o2o.service.UserProductMapService;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -24,8 +25,9 @@ import java.util.*;
 /**
  * @author 懿
  */
-@Controller
+@RestController
 @RequestMapping("/shopadmin")
+@Api(tags = "UserProductMapController|用户购买商品映射控制类")
 public class UserProductMapController {
     @Autowired
     private UserProductMapService userProductMapService;
@@ -33,15 +35,15 @@ public class UserProductMapController {
     private ProductSellDailyService productSellDailyService;
 
     @GetMapping("/listuserproductmapbyshop")
-    @ResponseBody
+    @ApiOperation(value = "根据店铺查询用户购买商品记录",notes = "根据店铺查询用户购买商品记录")
     public ResultBean<UserProductMapExecution> listUserProductMapByShop(HttpServletRequest request) {
         //获取分页信息
-        int pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        int pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
         //获取店铺信息
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         //空置判断
-        if (pageIndex > -1 && pageSize > -1 && currentShop != null && currentShop.getShopId() != null) {
+        if (pageIndex != null && pageSize != null && currentShop != null && currentShop.getShopId() != null) {
             UserProductMap userProductMapCondition = new UserProductMap();
             userProductMapCondition.setShop(currentShop);
             String productName = HttpServletRequestUtil.getString(request, "productName");
@@ -57,7 +59,7 @@ public class UserProductMapController {
     }
 
     @GetMapping(value = "/listproductselldailybyshop")
-    @ResponseBody
+    @ApiOperation(value = "根据店铺查询商品销售情况",notes = "数据返回的格式为Echarts的格式")
     public Map<String, Object> listProductSellDailyByShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(16);
         //获取当前的店铺信息

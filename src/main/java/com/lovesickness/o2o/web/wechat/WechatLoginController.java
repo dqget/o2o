@@ -9,6 +9,8 @@ import com.lovesickness.o2o.enums.WechatAuthStateEnum;
 import com.lovesickness.o2o.service.PersonInfoService;
 import com.lovesickness.o2o.service.WechatAuthService;
 import com.lovesickness.o2o.util.weixin.WechatUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @RequestMapping("wechatlogin")
+@Api(tags = "WechatLoginController|微信登录控制器")
 /**
  * 获取关注公众号之后的微信用户信息的接口，如果在微信浏览器里访问
  * https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx2f51d86feea57077&redirect_uri=http://101.132.153.176/o2o/wechatlogin/logincheck&role_type=1&response_type=code&scope=snsapi_userinfo&state=2#wechat_redirect
@@ -40,6 +43,7 @@ public class WechatLoginController {
     private WechatAuthService wechatAuthService;
 
     @RequestMapping(value = "/logincheck", method = {RequestMethod.GET})
+    @ApiOperation(value = "微信登录接口", notes = "在微信里通过访问网址回调到该接口")
     public String doGet(HttpServletRequest request, HttpServletResponse response) {
         log.debug("weChat login get...");
         // 获取微信公众号传输过来的code,通过code可获取access_token,进而获取用户信息

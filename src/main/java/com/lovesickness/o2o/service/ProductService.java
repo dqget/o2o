@@ -1,5 +1,6 @@
 package com.lovesickness.o2o.service;
 
+import com.lovesickness.o2o.dto.EvaluationExecution;
 import com.lovesickness.o2o.dto.ImageHolder;
 import com.lovesickness.o2o.dto.ProductExecution;
 import com.lovesickness.o2o.entity.Product;
@@ -51,4 +52,5 @@ public interface ProductService {
      */
     ProductExecution getProductList(Product productCondition, int pageIndex, int pageSize);
 
+    EvaluationExecution getProductEvaluation(Product productCondition, Integer pageIndex, Integer pageSize);
 }

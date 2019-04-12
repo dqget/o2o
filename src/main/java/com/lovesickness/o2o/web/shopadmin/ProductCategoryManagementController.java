@@ -6,6 +6,8 @@ import com.lovesickness.o2o.entity.Shop;
 import com.lovesickness.o2o.exception.ProductCategoryOperationException;
 import com.lovesickness.o2o.service.ProductCategoryService;
 import com.lovesickness.o2o.util.ResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +21,21 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/shopadmin")
+@Api(tags = "ProductCategoryManagementController|商品分类管理控制器")
 public class ProductCategoryManagementController {
     private static Logger logger = LoggerFactory.getLogger(ProductCategoryManagementController.class);
     @Autowired
     private ProductCategoryService service;
 
     @GetMapping(value = "/getproductcategorylist")
-    @ResponseBody
+    @ApiOperation(value = "获取店铺下的商品分类列表", notes = "获取session中店铺下的商品分类列表")
     public ResultBean<List<ProductCategory>> getProductCategoryList(HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         return new ResultBean<>(service.getProductCategoryList(currentShop.getShopId()));
     }
 
     @PostMapping(value = "/addproductcategory")
-    @ResponseBody
+    @ApiOperation(value = "添加商品分类", notes = "向该店铺下批量添加商品分类")
     private ResultBean<ProductCategoryExecution> addProductCategory(@RequestBody List<ProductCategory> productCategoryList, HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         if (productCategoryList == null || productCategoryList.size() == 0) {
@@ -45,7 +48,7 @@ public class ProductCategoryManagementController {
     }
 
     @PostMapping(value = "/removeproductcategory")
-    @ResponseBody
+    @ApiOperation(value = "删除商品分类", notes = "向该店铺下删除商品分类")
     private ResultBean<com.lovesickness.o2o.dto.ProductCategoryExecution> removeProductCategory(Long productCategoryId, HttpServletRequest request) {
         request.getSession().invalidate();
         if (productCategoryId == null || productCategoryId < 0) {

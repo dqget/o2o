@@ -14,6 +14,8 @@ import com.lovesickness.o2o.service.ShopCategoryService;
 import com.lovesickness.o2o.service.ShopService;
 import com.lovesickness.o2o.util.CodeUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,6 +40,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/shopadmin")
+@Api(tags = "ShopManagementController|商品信息管理控制器")
 public class ShopManagementController {
     @Autowired
     private ShopService shopService;
@@ -48,10 +51,11 @@ public class ShopManagementController {
 
     @GetMapping(value = "/getshopbyid")
     @ResponseBody
+    @ApiOperation(value = "根据店铺Id查询店铺信息", notes = "根据店铺Id查询店铺信息")
     private Map<String, Object> getShopById(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
-        if (shopId > -1) {
+        if (shopId != null) {
             try {
                 Shop shop = shopService.queryShopById(shopId);
                 List<Area> areaList = areaService.getAreaList();
@@ -71,8 +75,9 @@ public class ShopManagementController {
 
     @PostMapping(value = "/modifyshop")
     @ResponseBody
+    @ApiOperation(value = "修改店铺信息", notes = "修改店铺信息需要输入验证码")
     private Map<String, Object> modifyShop(@Param("shopImg") MultipartFile shopImg, HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("succese", false);
             modelMap.put("errMsg", "验证码输入错误");
@@ -120,8 +125,9 @@ public class ShopManagementController {
 
     @GetMapping(value = "/getshopinitinfo")
     @ResponseBody
+    @ApiOperation(value = "获取店铺分类列表和区域列表", notes = "添加店铺时使用，获取店铺分类列表和区域列表")
     private Map<String, Object> getShopInitInfo() {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         List<ShopCategory> shopCategoryList;
         List<Area> areaList;
         try {
@@ -139,8 +145,9 @@ public class ShopManagementController {
 
     @PostMapping(value = "/registershop")
     @ResponseBody
+    @ApiOperation(value = "注册店铺", notes = "添加店铺需要输入验证码")
     private Map<String, Object> registerShop(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("succese", false);
             modelMap.put("errMsg", "验证码输入错误");
@@ -207,8 +214,9 @@ public class ShopManagementController {
 
     @GetMapping(value = "/getshoplist")
     @ResponseBody
+    @ApiOperation(value = "获取店铺列表", notes = "获取该用户下的店铺列表")
     public Map<String, Object> getShopList(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         PersonInfo user;
         user = (PersonInfo) request.getSession().getAttribute("user");
 
@@ -231,10 +239,11 @@ public class ShopManagementController {
 
     @GetMapping(value = "/getshopmanagementinfo")
     @ResponseBody
+    @ApiOperation(value = "将点击的店铺信息添加到session", notes = "将点击的店铺信息添加到session")
     private Map<String, Object> getShopManagementInfo(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
-        long shopId = HttpServletRequestUtil.getLong(request, "shopId");
-        if (shopId <= 0) {
+        Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
+        if (shopId == null) {
             Object currentShopObj = request.getSession().getAttribute("currentShop");
             if (currentShopObj == null) {
                 modelMap.put("redirect", true);

@@ -1,6 +1,8 @@
 package com.lovesickness.o2o.web.shopadmin;
 
+import io.swagger.annotations.Api;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -9,48 +11,49 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping(value = "/shopadmin", method = {RequestMethod.GET})
+@Api(tags = "ShopAdminController|后台管理系统界面跳转控制器")
 public class ShopAdminController {
-    @RequestMapping(value = "/shopoperation")
+    @GetMapping(value = "/shopoperation")
     public String shopOperation() {
         return "shop/shopoperation";
     }
 
-    @RequestMapping(value = "/shoplist")
+    @GetMapping(value = "/shoplist")
     public String shopList() {
         return "shop/shoplist";
     }
 
-    @RequestMapping(value = "/shopmanage")
+    @GetMapping(value = "/shopmanage")
     public String shopManage() {
         return "shop/shopmanage";
     }
 
-    @RequestMapping(value = "/productcategorymanagement")
+    @GetMapping(value = "/productcategorymanagement")
     public String productCategoryList() {
         return "shop/productcategorylist";
     }
 
-    @RequestMapping(value = "/productoperation")
+    @GetMapping(value = "/productoperation")
     public String productOperation() {
         return "shop/productoperation";
     }
 
-    @RequestMapping(value = "/productlist")
+    @GetMapping(value = "/productlist")
     public String productList() {
         return "shop/productlist";
     }
 
-    @RequestMapping(value = "/shopauthmanagement")
+    @GetMapping(value = "/shopauthmanagement")
     public String shopAuthList() {
         return "shop/shopauthmanagement";
     }
 
-    @RequestMapping(value = "/shopauthedit")
+    @GetMapping(value = "/shopauthedit")
     public String shopauthEdit() {
         return "shop/shopauthedit";
     }
 
-    @RequestMapping(value = "/productbuycheck")
+    @GetMapping(value = "/productbuycheck")
     public String productBuyCheck() {
         return "shop/productbuycheck";
     }
@@ -60,7 +63,7 @@ public class ShopAdminController {
      *
      * @return
      */
-    @RequestMapping(value = "/operationsuccess")
+    @GetMapping(value = "/operationsuccess")
     public String operationSuccess() {
         return "local/operationsuccess";
     }
@@ -70,7 +73,7 @@ public class ShopAdminController {
      *
      * @return
      */
-    @RequestMapping(value = "/operationfail")
+    @GetMapping(value = "/operationfail")
     public String operationFail() {
         return "local/operationfail";
     }

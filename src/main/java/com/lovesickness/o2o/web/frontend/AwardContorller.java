@@ -9,6 +9,8 @@ import com.lovesickness.o2o.service.AwardService;
 import com.lovesickness.o2o.service.UserAwardMapService;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/frontend")
+@Api(tags = "AwardContorller|奖品操作的控制器")
 public class AwardContorller {
     @Autowired
     private UserAwardMapService userAwardMapService;
@@ -29,6 +32,7 @@ public class AwardContorller {
      * 用户使用积分兑换奖品
      */
     @PostMapping("/adduserawardmap")
+    @ApiOperation(value = "添加用户兑换奖品记录", notes = "用户使用积分兑换奖品")
     public ResultBean<?> addUserAwardMap(HttpServletRequest request) {
         PersonInfo currentUser = (PersonInfo) request.getSession().getAttribute("user");
         Long awardId = HttpServletRequestUtil.getLong(request, "awardId");
@@ -43,6 +47,8 @@ public class AwardContorller {
      * 可根据奖品名称进行模糊查询
      */
     @GetMapping("/getuserawardmaplistbyuser")
+    @ApiOperation(value = "根据用户查询用户兑换奖品的记录列表",
+            notes = "可根据店铺id进行查询该店铺下的记录列表，可根据奖品名称进行模糊查询")
     public ResultBean<UserAwardMapExecution> getUserAwardMapListByUser(HttpServletRequest request) {
         //分页信息
         Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");

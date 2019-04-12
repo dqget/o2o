@@ -11,6 +11,8 @@ import com.lovesickness.o2o.service.ProductService;
 import com.lovesickness.o2o.util.CodeUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/shopadmin")
-
+@Api(tags = "ProductManagementController|商品管理控制器")
 public class ProductManagementController {
     /**
      * 商品详情图允许最大上传数量
@@ -44,6 +46,7 @@ public class ProductManagementController {
     private ProductCategoryService productCategoryService;
 
     @PostMapping(value = "/addproduct")
+    @ApiOperation(value = "添加商品", notes = "向店铺添加一个商品信息，需要输入验证码")
     public ResultBean<ProductExecution> addProduct(HttpServletRequest request) {
         //校验验证码
         if (!CodeUtil.checkVerifyCode(request)) {
@@ -94,6 +97,7 @@ public class ProductManagementController {
 
 
     @PostMapping(value = "/modifyproduct")
+    @ApiOperation(value = "修改商品", notes = "修改商品信息，需要输入验证码")
     public ResultBean<ProductExecution> modifyProduct(HttpServletRequest request) {
         boolean statusChange = HttpServletRequestUtil.getBoolean(request, "statusChange");
 
@@ -153,8 +157,9 @@ public class ProductManagementController {
     }
 
     @GetMapping(value = "/getproductbyid")
+    @ApiOperation(value = "根据商品Id查询商品信息", notes = "根据商品Id查询商品信息")
     public Map<String, Object> getProductById(@RequestParam Long productId) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         if (productId > -1) {
             Product product = productService.getProductById(productId);
             List<ProductCategory> productCategoryList = productCategoryService
@@ -170,7 +175,8 @@ public class ProductManagementController {
     }
 
     @GetMapping(value = "/getproductlistbyshop")
-    public ResultBean<com.lovesickness.o2o.dto.ProductExecution> getProductListByShop(HttpServletRequest request) {
+    @ApiOperation(value = "查询店铺下的商品列表", notes = "查询店铺下的商品列表")
+    public ResultBean<ProductExecution> getProductListByShop(HttpServletRequest request) {
         Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
         Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");

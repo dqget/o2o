@@ -41,7 +41,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/pay")
-@Api(value = "AliPayController|负责支付请求的控制器")
+@Api(tags = "AliPayController|负责支付请求的控制器")
 public class AliPayController {
     private static Logger log = LoggerFactory.getLogger(AliPayController.class);
     @Autowired
@@ -96,6 +96,7 @@ public class AliPayController {
 
     @PostMapping("notify")
     @ResponseBody
+    @ApiOperation(value = "支付回调接口", notes = "开发未完成")
     public String notify(HttpServletRequest request) throws AlipayApiException {
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<>();

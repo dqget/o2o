@@ -8,6 +8,8 @@ import com.lovesickness.o2o.service.AreaService;
 import com.lovesickness.o2o.service.ShopCategoryService;
 import com.lovesickness.o2o.service.ShopService;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/frontend")
+@Api(tags = "ShopListController|前端展示系统的店铺信息查询控制器")
 public class ShopListController {
     @Autowired
     private AreaService areaService;
@@ -29,8 +32,9 @@ public class ShopListController {
     private ShopService shopService;
 
     @GetMapping(value = "/listshoppageinfo")
+    @ApiOperation(value = "查询店铺分类列表和区域列表", notes = "查询店铺分类列表和区域列表，如果店铺分类不存在，取出所有一级ShopCategory(用户在首页选择的是全部商品列表，如果是一级ShopCategoryId则取出该一级ShopCategory下的二级ShopCategory列表")
     public Map listShopPageInfo(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         List<ShopCategory> shopCategoryList = null;
         Long parentId = HttpServletRequestUtil.getLong(request, "parentId");
         //如果parentId存在，取出该一级ShopCategory下的二级ShopCategory列表
@@ -56,7 +60,7 @@ public class ShopListController {
             }
         }
         modelMap.put("shopCategoryList", shopCategoryList);
-        List<Area> areaList = null;
+        List<Area> areaList;
         try {
             areaList = areaService.getAreaList();
             modelMap.put("areaList", areaList);
@@ -69,6 +73,7 @@ public class ShopListController {
     }
 
     @GetMapping(value = "/listshop")
+    @ApiOperation(value = "根据店铺分类查询店铺列表", notes = "查询该店铺分类下的店铺列表")
     public Map listShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");

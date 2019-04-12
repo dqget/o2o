@@ -1,6 +1,7 @@
 package com.lovesickness.o2o.web.wechat;
 
 import com.lovesickness.o2o.util.weixin.SignUtil;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import java.io.PrintWriter;
  */
 @Controller
 @RequestMapping("wechat")
+@Api(tags = "WechatController|微信验证接口控制器")
 public class WechatController {
 
     private static Logger log = LoggerFactory.getLogger(WechatController.class);
