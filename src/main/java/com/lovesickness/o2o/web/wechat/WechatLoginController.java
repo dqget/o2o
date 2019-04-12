@@ -52,9 +52,9 @@ public class WechatLoginController {
         // 点击前端界面state=1  点击店家管理界面state=2
         String userType = request.getParameter("state");
         log.debug("weChat login code:" + code);
-        WechatUser user = null;
+        WechatUser user;
         String openId;
-        WechatAuth wechatAuth = null;
+        WechatAuth wechatAuth;
         if (null != code) {
             // 通过code获取access_token
             UserAccessToken token = WechatUtil.getUserAccessToken(code);
@@ -71,32 +71,33 @@ public class WechatLoginController {
             request.getSession().setAttribute("openId", openId);
             //通过openId查询微信账号信息
             wechatAuth = wechatAuthService.getWechatAuthByOpenId(openId);
-        }
-        //wechatAuth==null表示微信用户是第一次登录
-        if (wechatAuth == null) {
-            log.info("该用户首次登录");
-            PersonInfo personInfo = WechatUtil.getPersonInfoFromRequest(user);
-            wechatAuth = new WechatAuth();
-            wechatAuth.setOpenId(user.getOpenId());
-            if (FRONTEND.equals(userType)) {
-                personInfo.setUserType(1);
+
+            //wechatAuth==null表示微信用户是第一次登录
+            if (wechatAuth == null) {
+                log.info("该用户首次登录");
+                PersonInfo personInfo = WechatUtil.getPersonInfoFromRequest(user);
+                wechatAuth = new WechatAuth();
+                wechatAuth.setOpenId(user.getOpenId());
+                if (FRONTEND.equals(userType)) {
+                    personInfo.setUserType(1);
+                } else {
+                    personInfo.setUserType(2);
+                }
+                wechatAuth.setPersonInfo(personInfo);
+                WechatAuthExecution we = wechatAuthService.register(wechatAuth);
+                if (we.getState() != WechatAuthStateEnum.SUCCESS.getState()) {
+                    return null;
+                } else {
+                    personInfo = personInfoService.getPersonInfoById(wechatAuth.getPersonInfo().getUserId());
+                    request.getSession().setAttribute("user", personInfo);
+                    log.info("将用户信息放入session " + personInfo);
+                }
             } else {
-                personInfo.setUserType(2);
-            }
-            wechatAuth.setPersonInfo(personInfo);
-            WechatAuthExecution we = wechatAuthService.register(wechatAuth);
-            if (we.getState() != WechatAuthStateEnum.SUCCESS.getState()) {
-                return null;
-            } else {
-                personInfo = personInfoService.getPersonInfoById(wechatAuth.getPersonInfo().getUserId());
+                PersonInfo personInfo = wechatAuth.getPersonInfo();
+                log.info("该用户不是首次登录，个人信息:" + personInfo);
                 request.getSession().setAttribute("user", personInfo);
                 log.info("将用户信息放入session " + personInfo);
             }
-        } else {
-            PersonInfo personInfo = wechatAuth.getPersonInfo();
-            log.info("该用户不是首次登录，个人信息:" + personInfo);
-            request.getSession().setAttribute("user", personInfo);
-            log.info("将用户信息放入session " + personInfo);
         }
         //若用户点击的是前端展示系统按钮则进入前端展示系统
         if (FRONTEND.equals(userType)) {
