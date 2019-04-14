@@ -1,5 +1,11 @@
 package com.lovesickness.o2o.web.frontend;
 
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.domain.AlipayTradeWapPayModel;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.*;
 import com.lovesickness.o2o.enums.OrderStateEnum;
@@ -7,12 +13,19 @@ import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
+import com.lovesickness.o2o.web.alipay.AliPayController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -24,11 +37,11 @@ public class OrderContorller {
     private static final int ORDER_NOT_SHIP = 2;
     private static final int ORDER_NOT_RECEIPT = 3;
     private static final int ORDER_NOT_EVA = 4;
+    private static Logger LOGGER = LoggerFactory.getLogger(AliPayController.class);
     @Autowired
     private OrderService orderService;
 
     @PostMapping("/addorderbyuser")
-    @ResponseBody
     @ApiOperation(value = "添加订单记录", notes = "根据订单项和session中存在的用户添加订单")
     public ResultBean<OrderExecution> addOrderByUser(@RequestBody OrderAndItems orderAndItems, HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
@@ -42,6 +55,78 @@ public class OrderContorller {
             return new ResultBean<>(oe);
         } else {
             return new ResultBean<>(false, 0, oe.getStateInfo());
+        }
+    }
+
+    @PostMapping("/addorderandopenpay")
+    @ApiOperation(value = "添加订单并根据用户订单信息使用支付宝支付功能", notes = "测试--")
+    public void aliPay(@RequestBody OrderAndItems orderAndItems, HttpServletRequest request, HttpServletResponse response) {
+        //session中的用户信息
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+            return;
+        }
+        Order order = orderAndItems.getOrder();
+        List<BuyerCartItem> items = orderAndItems.getItems();
+        order.setUser(user);
+        List<OrderProductMap> orderProductMapList = BuyerCartItemUtil.buyerCartItemList2OrderProductMapList(items);
+        order.setShop(items.get(0).getProduct().getShop());
+        OrderExecution oe = orderService.addOrder(order, orderProductMapList);
+        if (!oe.getStateInfo().equals(OrderStateEnum.SUCCESS.getStateInfo())) {
+            return;
+        }
+        aliPay(order, request, response);
+    }
+
+    private void aliPay(Order order, HttpServletRequest request, HttpServletResponse response) {
+        //获得初始化的AlipayClient
+        AlipayClient alipayClient = new DefaultAlipayClient(ALiPayConfiguration.gateWayUrl,
+                ALiPayConfiguration.appId,
+                ALiPayConfiguration.merchantPrivateKey,
+                "json",
+                ALiPayConfiguration.charset,
+                ALiPayConfiguration.aliPublicKry,
+                ALiPayConfiguration.signType);
+
+        //设置请求参数
+        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
+
+        alipayRequest.setReturnUrl(ALiPayConfiguration.returnUrl);
+        alipayRequest.setNotifyUrl(ALiPayConfiguration.notifyUrl);
+
+        // 封装请求支付信息
+        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
+        //商户订单号，商户网站订单系统中唯一订单号，必填
+        String outTradeNo;
+        try {
+            outTradeNo = order.getOrderNumber();
+            //付款金额，必填
+            String totalAmount = order.getPayPrice();
+            //订单名称，必填
+            String subject = "订单名称";
+            //商品描述，可空
+            String body = "商品描述";
+//            HttpServletRequestUtil.getString(request, "WIDbody");
+
+            model.setOutTradeNo(outTradeNo);
+            model.setSubject(subject);
+            model.setTotalAmount(totalAmount);
+            model.setBody(body);
+            model.setProductCode("QUICK_WAP_WAY");
+            alipayRequest.setBizModel(model);
+
+            //请求
+            String result = alipayClient.pageExecute(alipayRequest).getBody();
+            LOGGER.info(result);
+            response.setContentType("text/html;charset=utf-8");
+            //输出
+            PrintWriter writer = response.getWriter();
+            //直接将完整的表单html输出到页面
+            writer.println(result);
+            writer.flush();
+            writer.close();
+        } catch (AlipayApiException | IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -146,7 +231,8 @@ public class OrderContorller {
         return order;
     }
 
-    private static class OrderAndItems {
+    private static class OrderAndItems implements Serializable {
+        private static final long serialVersionUID = 6382508072308942795L;
         Order order;
         List<BuyerCartItem> items;
 

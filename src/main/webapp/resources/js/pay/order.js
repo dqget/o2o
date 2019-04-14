@@ -1,6 +1,6 @@
 $(function () {
     var getOrderNoNrl = '/o2o/pay/getorderno';
-    var addOrderUrl = '/o2o/frontend/addorderbyuser';
+    var addOrderAndOpenPayUrl = '/o2o/frontend/addorderandopenpay';
     let orderNo = '';
     var localStorage = window.localStorage;
     var orderItems = JSON.parse(localStorage.getItem('orderItems'));
@@ -65,23 +65,38 @@ $(function () {
         order.payPrice = price;
         order.receivePhone = $('#receivePhone').val();
         order.receiveName = $('#receiveName').val();
-        order.receiveAddr = $('#city-picker').val() +' '+ $('#addrAdditional').val();
+        order.receiveAddr = $('#city-picker').val() + ' ' + $('#addrAdditional').val();
         return order;
     }
 
-    $('#pay').on('click', function (e) {
+    $('#pay').on('click', function () {
         const order = addOrder();
         $.ajax({
-            url: addOrderUrl,
+            url: addOrderAndOpenPayUrl,
             type: 'POST',
-            data: JSON.stringify({
-                items: orderItems,
-                order: order
-            }),
-            contentType: 'application/json',
-            dataType: 'json',
+            contentType: 'application/json;charset=utf-8',
+            data: JSON.stringify({items: orderItems, order: order}),
             success: function (data) {
-                console.log(data);
+                $('#returnAli').append(data);
+                $("#returnAli script").remove();
+
+                // var bizMap = {
+                //     "body":"对一笔交易的具体描述信息",
+                //     "out_trade_no":"70501111111S001111119",
+                //     "product_code":"QUICK_WAP_PAY",
+                //     "seller_id":"2088102147948060",
+                //     "subject":"商品名",
+                //     "total_amount":9.00
+                // };
+                // var bizStr = JSON.stringify(bizMap);
+                var queryParam = '';
+                // queryParam += 'bizcontent=' + encodeURIComponent(bizStr);
+                Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                    queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
+                });
+                var url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
+                _AP.pay(url);
+
             }
         })
     });

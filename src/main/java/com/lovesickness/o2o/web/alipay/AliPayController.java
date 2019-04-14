@@ -57,6 +57,7 @@ public class AliPayController {
     })
     public void aliPay(HttpServletRequest request, HttpServletResponse response) {
         log.debug("alipay支付功能接口！");
+
         //获得初始化的AlipayClient
         AlipayClient alipayClient = new DefaultAlipayClient(ALiPayConfiguration.gateWayUrl, ALiPayConfiguration.appId, ALiPayConfiguration.merchantPrivateKey, "json", ALiPayConfiguration.charset, ALiPayConfiguration.aliPublicKry, ALiPayConfiguration.signType);
 
@@ -66,17 +67,17 @@ public class AliPayController {
         alipayRequest.setNotifyUrl(ALiPayConfiguration.notifyUrl);
 
         //商户订单号，商户网站订单系统中唯一订单号，必填
-        String out_trade_no = null;
+        String outTradeNo;
         try {
-            out_trade_no = HttpServletRequestUtil.getString(request, "WIDout_trade_no");
+            outTradeNo = HttpServletRequestUtil.getString(request, "WIDout_trade_no");
             //付款金额，必填
-            String total_amount = HttpServletRequestUtil.getString(request, "WIDtotal_amount");
+            String totalAmount = HttpServletRequestUtil.getString(request, "WIDtotal_amount");
             //订单名称，必填
             String subject = HttpServletRequestUtil.getString(request, "WIDsubject");
             //商品描述，可空
             String body = HttpServletRequestUtil.getString(request, "WIDbody");
-            alipayRequest.setBizContent("{\"out_trade_no\":\"" + out_trade_no + "\","
-                    + "\"total_amount\":\"" + total_amount + "\","
+            alipayRequest.setBizContent("{\"out_trade_no\":\"" + outTradeNo + "\","
+                    + "\"total_amount\":\"" + totalAmount + "\","
                     + "\"subject\":\"" + subject + "\","
                     + "\"body\":\"" + body + "\","
                     + "\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}");
@@ -98,6 +99,7 @@ public class AliPayController {
     @ResponseBody
     @ApiOperation(value = "支付回调接口", notes = "开发未完成")
     public String notify(HttpServletRequest request) throws AlipayApiException {
+        log.info("支付宝回调成功");
         //获取支付宝POST过来反馈信息
         Map<String, String> params = new HashMap<>();
         Map requestParams = request.getParameterMap();
@@ -113,18 +115,21 @@ public class AliPayController {
             //valueStr = new String(valueStr.getBytes("ISO-8859-1"), "gbk");
             params.put(name, valueStr);
         }
-
+        log.debug(String.valueOf(params));
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
         //商户订单号
-        String out_trade_no = request.getParameter("out_trade_no");
+        String outTradeNo = request.getParameter("out_trade_no");
 
         //支付宝交易号
-        String trade_no = request.getParameter("trade_no");
+        String tradeNo = request.getParameter("trade_no");
 
         //交易状态
-        String trade_status = request.getParameter("trade_status");
+        String tradeStatus = request.getParameter("trade_status");
         //调用SDK验证签名
-        boolean signVerified = AlipaySignature.rsaCheckV1(params, ALiPayConfiguration.aliPublicKry, "UTF-8", ALiPayConfiguration.signType);
+        boolean signVerified = AlipaySignature.rsaCheckV1(params,
+                ALiPayConfiguration.aliPublicKry,
+                "UTF-8",
+                ALiPayConfiguration.signType);
 
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
         if (signVerified) {
@@ -134,7 +139,7 @@ public class AliPayController {
 
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
             boolean flg = false;
-            if (trade_status.equals("TRADE_FINISHED")) {
+            if ("TRADE_FINISHED".equals(tradeStatus)) {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
@@ -142,7 +147,7 @@ public class AliPayController {
                 log.debug("该订单已经做过处理");
                 //注意：
                 //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
-            } else if (trade_status.equals("TRADE_SUCCESS")) {
+            } else if ("TRADE_SUCCESS".equals(tradeStatus)) {
                 //判断该笔订单是否在商户网站中已经做过处理
                 //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
                 //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
