@@ -14,6 +14,7 @@
             <result column="gender" property="gender"/>
             <result column="phone" property="phone"/>
             <result column="email" property="email"/>
+            <result column="user_type" property="userType"/>
             <result column="profile_img" property="profileImg"/>
             <result column="create_time" property="createTime"/>
             <result column="last_edit_time" property="lastEditTime"/>
@@ -29,6 +30,7 @@
             p.name,
             p.gender,
             p.email,
+            p.user_type,
             p.profile_img,
             p.create_time,
             p.last_edit_time,
