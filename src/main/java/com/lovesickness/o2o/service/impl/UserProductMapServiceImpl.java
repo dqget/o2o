@@ -48,10 +48,15 @@ public class UserProductMapServiceImpl implements UserProductMapService {
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public UserProductMapExecution batchAddUserProductMap(List<UserProductMap> userProductMaps) {
-        int effectedNum = userProductMapDao.batchInsertUserProductMap(userProductMaps);
-        if (effectedNum != userProductMaps.size()) {
-            throw new UserProductMapOperationException("添加失败");
+        if (userProductMaps.size() > 0) {
+            int effectedNum = userProductMapDao.batchInsertUserProductMap(userProductMaps);
+            if (effectedNum != userProductMaps.size()) {
+                throw new UserProductMapOperationException("添加失败");
+            }
+            return new UserProductMapExecution(UserProductMapStateEnum.SUCCESS);
+        } else {
+            return new UserProductMapExecution(UserProductMapStateEnum.INNER_ERROR);
         }
-        return new UserProductMapExecution(UserProductMapStateEnum.SUCCESS);
+
     }
 }

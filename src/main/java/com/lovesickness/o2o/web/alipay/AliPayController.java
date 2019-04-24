@@ -175,12 +175,15 @@ public class AliPayController {
                         if (usme.getState() == UserShopMapStateEnum.SUCCESS.getState()) {
                             flg = true;
                         } else {
+                            log.error(usme.getStateInfo());
                             log.error("支付成功，添加用户积分失败");
                         }
                     } else {
+                        log.error(upme.getStateInfo());
                         log.error("支付成功，添加用户购买记录失败");
                     }
                 } else {
+                    log.error(oe.getStateInfo());
                     log.error("支付成功，修改订单失败");
 
                 }

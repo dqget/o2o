@@ -26,6 +26,7 @@ public class EntityTransformation {
             userProductMap.setCreateTime(orderProductMap.getUpdateTime());
             userProductMap.setShop(shop);
             userProductMap.setUser(user);
+            userProductMaps.add(userProductMap);
         }
         return userProductMaps;
     }

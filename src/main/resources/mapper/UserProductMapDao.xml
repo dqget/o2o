@@ -133,10 +133,10 @@
         VALUES
         <foreach collection="list" separator="," index="index" item="userProductMap">
             (
-            #{userProductMap.userId},
-            #{userProductMap.productId},
-            #{userProductMap.shopId},
-            #{userProductMap.operatorId},
+            #{userProductMap.user.userId},
+            #{userProductMap.product.productId},
+            #{userProductMap.shop.shopId},
+            #{userProductMap.operator.userId},
             #{userProductMap.createTime},
             #{userProductMap.point}
             )
