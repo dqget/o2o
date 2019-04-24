@@ -79,24 +79,12 @@ $(function () {
             success: function (data) {
                 $('#returnAli').append(data);
                 $("#returnAli script").remove();
-
-                // var bizMap = {
-                //     "body":"对一笔交易的具体描述信息",
-                //     "out_trade_no":"70501111111S001111119",
-                //     "product_code":"QUICK_WAP_PAY",
-                //     "seller_id":"2088102147948060",
-                //     "subject":"商品名",
-                //     "total_amount":9.00
-                // };
-                // var bizStr = JSON.stringify(bizMap);
                 var queryParam = '';
-                // queryParam += 'bizcontent=' + encodeURIComponent(bizStr);
                 Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
                     queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
-                _AP.pay(url);
-
+                _AP.pay(url, orderNo);
             }
         })
     });

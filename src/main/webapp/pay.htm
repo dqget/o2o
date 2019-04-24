@@ -8,7 +8,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
     <meta name="format-detection" content="telephone=no"/>
     <meta name="format-detection" content="email=no"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
     <style>
         *, :before, :after {
             -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
@@ -121,8 +122,10 @@
 <div class="J-weixin-tip-img weixin-tip-img"></div>
 
 <script type="text/javascript" src="resources/js/pay/ap.js"></script>
+<script type="text/javascript" src="resources/js/common/common.js"></script>
+
 <script>
-    debugger
+
     if (location.hash.indexOf('error') != -1) {
         alert('参数错误，请检查');
     } else {
@@ -138,39 +141,48 @@
                 tipImg.className = 'J-weixin-tip-img weixin-tip-img android'
             }
         } else {
-            var getQueryString = function (url, name) {
-                var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
-                if (reg.test(url)) return RegExp.$2.replace(/\+/g, " ");
-            };
-            var param = getQueryString(location.href, 'goto') || '';
+            var param = getQueryString(location.href, 'goto');
             location.href = param != '' ? _AP.decode(param) : 'pay.htm#error';
         }
     }
+    var t;
+    if (browser.versions.mobile) {//判断是否是移动设备打开。browser代码在下面
+        var ua = navigator.userAgent.toLowerCase();//获取判断用的对象
+        if (ua.match(/MicroMessenger/i) == "micromessenger") {
+            $(document).ready(function () {
+                t = setInterval(ajaxStatus, 3000);
+                setTimeout(function () {
+                    clearInterval(t);
+                }, 600000)
+            });
 
-//     $(document).ready(function () {
-//         setInterval("ajaxstatus()", 3000);
-//     });
-//
-//     function ajaxstatus() {
-//         if ($("#out_trade_no").val() != 0) {
-//             $.ajax({
-//                 url: "URL?tradeno=" + $("#out_trade_no").val(),
-//                 type: "GET",
-//                 dataType:"json",
-//                 data: "",
-//                 success: function (data) {
-// //                  alert(data);
-//                     if (data==1) { //订单状态为1表示支付成功
-//                         window.location.href = "wxScanSuccessUrl.action"; //页面跳转
-//                     }
-//                 },
-//                 error: function () {
-//                     alert("请求订单状态出错");
-//                 }
-//             });
-//         }
-//
-//     }
+            function ajaxStatus() {
+                var orderNo = getQueryString(location.href, 'orderNo');
+                var checkOrderPaySuccessUrl = '';
+                if (orderNo != '') {
+                    $.ajax({
+                        url: checkOrderPaySuccessUrl,
+                        type: "GET",
+                        dataType: "json",
+                        data: JSON.stringify({orderNo: orderNo}),
+                        success: function (data) {
+                            Console.log(data);
+                            if (data == 1) { //订单状态为1表示支付成功
+                                alert("即将返回首页");
+                                window.location.href = "/o2o/frontend/index"; //页面跳转
+                                clearInterval(t);
+                            }
+                        },
+                        error: function () {
+                            alert("请求订单状态出错");
+                        }
+                    });
+                }
+
+            }
+        }
+    }
+
 </script>
 </body>
 </html>

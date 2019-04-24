@@ -100,9 +100,9 @@
         }
         return c.join("")
     };
-    b.pay = function (d) {
+    b.pay = function (d, orderNo) {
         var c = encodeURIComponent(a.encode(d));
-        location.href = "/o2o/pay.htm?goto=" + c
+        location.href = "/o2o/pay.htm?orderNo=" + orderNo + "&goto=" + c
     };
     b.decode = function (c) {
         return a.decode(decodeURIComponent(c))
