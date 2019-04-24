@@ -243,7 +243,7 @@ public class AliPayController {
                 //该页面可做页面美工编辑
 
 
-                out.println("验证成功<br />");
+                out.println("验证成功<br/>请回到微信<br/>");
                 out.close();
                 //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
                 return "frontend/index";

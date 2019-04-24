@@ -1,8 +1,6 @@
 package com.lovesickness.o2o.util;
 
-import com.lovesickness.o2o.entity.Order;
-import com.lovesickness.o2o.entity.OrderProductMap;
-import com.lovesickness.o2o.entity.UserProductMap;
+import com.lovesickness.o2o.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +15,17 @@ public class EntityTransformation {
     public static List<UserProductMap> order2UserProductMaps(Order order) {
         List<OrderProductMap> orderProductMaps = order.getOrderProductMapList();
         List<UserProductMap> userProductMaps = new ArrayList<>(orderProductMaps.size());
-        userProductMaps.forEach(userProductMap -> {
-            userProductMap.setShop(order.getShop());
-            userProductMap.setUser(order.getUser());
-        });
-        for (int i = 0; i < userProductMaps.size(); i++) {
-            UserProductMap userProductMap = userProductMaps.get(i);
+        Shop shop = order.getShop();
+        PersonInfo user = order.getUser();
+
+        for (int i = 0; i < orderProductMaps.size(); i++) {
+            UserProductMap userProductMap = new UserProductMap();
             OrderProductMap orderProductMap = orderProductMaps.get(i);
             userProductMap.setProduct(orderProductMap.getProduct());
             userProductMap.setPoint(orderProductMap.getProduct().getPoint());
             userProductMap.setCreateTime(orderProductMap.getUpdateTime());
+            userProductMap.setShop(shop);
+            userProductMap.setUser(user);
         }
         return userProductMaps;
     }

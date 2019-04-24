@@ -102,6 +102,7 @@
             p.product_id,
             p.product_name,
             p.img_addr,
+            u.user_id,
             s.shop_id,
             s.shop_name,
             s.shop_desc

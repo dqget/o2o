@@ -18,10 +18,7 @@ function getQueryString(name) {
     return '';
 }
 
-// var getQueryString = function (url, name) {
-//     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
-//     if (reg.test(url)) return RegExp.$2.replace(/\+/g, " ");
-// };
+
 Date.prototype.Format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, // 月份

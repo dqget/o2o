@@ -77,6 +77,7 @@ $(function () {
             contentType: 'application/json;charset=utf-8',
             data: JSON.stringify({items: orderItems, order: order}),
             success: function (data) {
+                sessionStorage.setItem("orderNo", orderNo);
                 $('#returnAli').append(data);
                 $("#returnAli script").remove();
                 var queryParam = '';
@@ -84,7 +85,7 @@ $(function () {
                     queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                 });
                 var url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
-                _AP.pay(url, orderNo);
+                _AP.pay(url);
             }
         })
     });
