@@ -122,6 +122,7 @@
 
 <script type="text/javascript" src="resources/js/pay/ap.js"></script>
 <script>
+    debugger
     if (location.hash.indexOf('error') != -1) {
         alert('参数错误，请检查');
     } else {
@@ -145,6 +146,31 @@
             location.href = param != '' ? _AP.decode(param) : 'pay.htm#error';
         }
     }
+
+//     $(document).ready(function () {
+//         setInterval("ajaxstatus()", 3000);
+//     });
+//
+//     function ajaxstatus() {
+//         if ($("#out_trade_no").val() != 0) {
+//             $.ajax({
+//                 url: "URL?tradeno=" + $("#out_trade_no").val(),
+//                 type: "GET",
+//                 dataType:"json",
+//                 data: "",
+//                 success: function (data) {
+// //                  alert(data);
+//                     if (data==1) { //订单状态为1表示支付成功
+//                         window.location.href = "wxScanSuccessUrl.action"; //页面跳转
+//                     }
+//                 },
+//                 error: function () {
+//                     alert("请求订单状态出错");
+//                 }
+//             });
+//         }
+//
+//     }
 </script>
 </body>
 </html>

@@ -24,11 +24,11 @@ public class BuyerCartController {
 
     @PostMapping("/updateitemtobuyercart")
     @ApiOperation(value = "修改购物车", notes = "增加、删除购物车里的商品")
-    public ResultBean<?> updateItemToBuyerCart(@RequestBody BuyerCartItem buyerCartItem, HttpServletRequest request) {
-        LOGGER.debug("添加购物车入参：" + buyerCartItem);
+    public ResultBean<?> updateItemToBuyerCart(@RequestBody List<BuyerCartItem> buyerCartItems, HttpServletRequest request) {
+        LOGGER.debug("添加购物车入参：" + buyerCartItems);
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user != null) {
-            return new ResultBean<>(buyerCartService.updateItem(user.getUserId(), buyerCartItem));
+            return new ResultBean<>(buyerCartService.updateItem(user.getUserId(), buyerCartItems));
         } else {
             return new ResultBean<>(false, 0, "用户信息不存在");
         }

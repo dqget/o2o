@@ -16,6 +16,12 @@ $(function () {
     }
 
     function handleUser(data) {
+        if (data.userType == null || data.userType == 1) {
+            $.alert('您的身份不是店主', '警告!', function () {
+                $.alert('您的身份不是店主！');
+                window.location.href = "/o2o/frontend/index";
+            });
+        }
         $('#user-name').text(data.name);
     }
 

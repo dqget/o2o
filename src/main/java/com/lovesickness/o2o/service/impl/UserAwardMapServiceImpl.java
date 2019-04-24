@@ -12,6 +12,7 @@ import com.lovesickness.o2o.service.UserAwardMapService;
 import com.lovesickness.o2o.util.PageCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -38,6 +39,7 @@ public class UserAwardMapServiceImpl implements UserAwardMapService {
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public UserAwardMapExecution addUserAwardMap(UserAwardMap userAwardMap) {
         if (userAwardMap != null && userAwardMap.getAward() != null && userAwardMap.getUser() != null && userAwardMap.getShop() != null) {
             userAwardMap.setCreateTime(new Date());

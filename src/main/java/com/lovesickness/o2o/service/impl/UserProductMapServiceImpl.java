@@ -4,10 +4,12 @@ import com.lovesickness.o2o.dao.UserProductMapDao;
 import com.lovesickness.o2o.dto.UserProductMapExecution;
 import com.lovesickness.o2o.entity.UserProductMap;
 import com.lovesickness.o2o.enums.UserProductMapStateEnum;
+import com.lovesickness.o2o.exception.UserProductMapOperationException;
 import com.lovesickness.o2o.service.UserProductMapService;
 import com.lovesickness.o2o.util.PageCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,5 +33,25 @@ public class UserProductMapServiceImpl implements UserProductMapService {
             //若有空值  返回错误代码
             return new UserProductMapExecution(UserProductMapStateEnum.NULL_USERPRODUCTMAP_INFO);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public UserProductMapExecution addUserProductMap(UserProductMap userProductMap) {
+        int effectedNum = userProductMapDao.insertUserProductMap(userProductMap);
+        if (effectedNum != 1) {
+            throw new UserProductMapOperationException("添加失败");
+        }
+        return new UserProductMapExecution(UserProductMapStateEnum.SUCCESS);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public UserProductMapExecution batchAddUserProductMap(List<UserProductMap> userProductMaps) {
+        int effectedNum = userProductMapDao.batchInsertUserProductMap(userProductMaps);
+        if (effectedNum != userProductMaps.size()) {
+            throw new UserProductMapOperationException("添加失败");
+        }
+        return new UserProductMapExecution(UserProductMapStateEnum.SUCCESS);
     }
 }

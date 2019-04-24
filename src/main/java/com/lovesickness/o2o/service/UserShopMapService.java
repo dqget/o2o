@@ -2,6 +2,7 @@ package com.lovesickness.o2o.service;
 
 import com.lovesickness.o2o.dto.UserShopMapExecution;
 import com.lovesickness.o2o.entity.UserShopMap;
+import com.lovesickness.o2o.exception.UserShopMapOperationException;
 
 public interface UserShopMapService {
     /**
@@ -22,4 +23,13 @@ public interface UserShopMapService {
      * @return 积分情况
      */
     UserShopMap getUserShopMap(Long userId, Long shopId);
+
+    /**
+     * 添加用户在该店铺的积分
+     *
+     * @param userShopMap
+     * @return
+     * @throws UserShopMapOperationException
+     */
+    UserShopMapExecution addUserShopMap(UserShopMap userShopMap) throws UserShopMapOperationException;
 }

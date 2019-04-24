@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface BuyerCartService {
     /**
-     * 修改或者添加购物车
+     * 商品添加到购物车或从购物车中删除
      *
      * @param userId      用户id
-     * @param newCartItem 需要修改到购物车的订单项
+     * @param newCartItems 需要修改到购物车的订单项
      * @return 成功或失败
      */
-    boolean updateItem(Long userId, BuyerCartItem newCartItem);
+    boolean updateItem(Long userId, List<BuyerCartItem> newCartItems);
 
     /**
      * 商品总数

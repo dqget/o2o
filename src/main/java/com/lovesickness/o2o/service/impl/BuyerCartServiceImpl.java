@@ -28,9 +28,9 @@ public class BuyerCartServiceImpl implements BuyerCartService {
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public boolean updateItem(Long userId, BuyerCartItem newCartItem) {
+    public boolean updateItem(Long userId, List<BuyerCartItem> newCartItems) {
         //用户id不能为空  商品id不能为空  添加商品的数量不能为空或0
-        if (userId == null || !BuyerCartItemUtil.isRightItem(newCartItem)) {
+        if (userId == null || !BuyerCartItemUtil.isRightItem(newCartItems)) {
             return false;
         }
         String key = "cart_" + userId;
@@ -48,34 +48,40 @@ public class BuyerCartServiceImpl implements BuyerCartService {
             if (buyerCart == null) {
                 buyerCart = new ArrayList<>();
             }
+
             //2.判断购物车中是否含有想要修改的产品
-            //是否已经添加过该商品
-            //如果存在，更改产品数量
-            if (buyerCart.contains(newCartItem)) {
-                BuyerCartItem oldItem = buyerCart
-                        .stream()
-                        .filter(buyerCartItem -> buyerCartItem.equals(newCartItem))
-                        .findFirst()
-                        .get();
-                int amount = oldItem.getAmount() + newCartItem.getAmount();
-                if (amount < 0) {
-                    throw new RuntimeException("产品数量修改失败");
-                } else if (amount == 0) {
-                    buyerCart.remove(oldItem);
+            for (BuyerCartItem newCartItem : newCartItems) {
+                //是否已经添加过该商品
+                //如果存在，更改产品数量
+                if (buyerCart.contains(newCartItem)) {
+                    BuyerCartItem oldItem = buyerCart
+                            .stream()
+                            .filter(buyerCartItem -> buyerCartItem.equals(newCartItem))
+                            .findFirst()
+                            .get();
+                    int amount = oldItem.getAmount() + newCartItem.getAmount();
+                    if (amount < 0) {
+                        throw new RuntimeException("产品数量修改失败");
+                    } else if (amount == 0) {
+                        buyerCart.remove(oldItem);
+                    } else {
+                        newCartItem.setAmount(amount);
+                        buyerCart.remove(oldItem);
+                        buyerCart.add(newCartItem);
+                    }
                 } else {
-                    newCartItem.setAmount(amount);
-                    buyerCart.remove(oldItem);
+                    if (newCartItem.getAmount() <= 0) {
+                        throw new RuntimeException("产品数量修改失败");
+                    }
                     buyerCart.add(newCartItem);
                 }
-            } else {
-                if (newCartItem.getAmount() <= 0) {
-                    throw new RuntimeException("产品数量修改失败");
-                }
-                buyerCart.add(newCartItem);
             }
         } else {
-            buyerCart = new ArrayList<>();
-            buyerCart.add(newCartItem);
+            if (BuyerCartItemUtil.isRightAddItem(newCartItems)) {
+                buyerCart = newCartItems;
+            } else {
+                throw new RuntimeException("购物车内商品为空");
+            }
         }
         //添加到redis 储存时间为1天
         try {

@@ -3,6 +3,8 @@ package com.lovesickness.o2o.service;
 import com.lovesickness.o2o.dto.UserProductMapExecution;
 import com.lovesickness.o2o.entity.UserProductMap;
 
+import java.util.List;
+
 /**
  * @author 懿
  */
@@ -12,4 +14,15 @@ public interface UserProductMapService {
      */
     UserProductMapExecution listUserProductMap(UserProductMap userProductMapCondition, Integer pageIndex, Integer pageSize);
 
+    /**
+     * @param userProductMap
+     * @return
+     */
+    UserProductMapExecution addUserProductMap(UserProductMap userProductMap);
+
+    /**
+     * @param userProductMaps
+     * @return
+     */
+    UserProductMapExecution batchAddUserProductMap(List<UserProductMap> userProductMaps);
 }

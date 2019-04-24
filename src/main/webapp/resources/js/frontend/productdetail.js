@@ -45,7 +45,7 @@ $(function () {
             url: url,
             type: "post",
             contentType: 'application/json',
-            data: JSON.stringify(buyerCartItem),
+            data: JSON.stringify([buyerCartItem]),
             success: function (data) {
                 console.log(data);
             }

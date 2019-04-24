@@ -127,4 +127,19 @@
             (#{user.userId}, #{product.productId}, #{shop.shopId}, #{operator.userId},
              #{createTime}, #{point})
     </insert>
+    <insert id="batchInsertUserProductMap" parameterType="java.util.List">
+        INSERT INTO tb_user_product_map (user_id, product_id, shop_id, operator_id,
+        create_time, point)
+        VALUES
+        <foreach collection="list" separator="," index="index" item="userProductMap">
+            (
+            #{userProductMap.userId},
+            #{userProductMap.productId},
+            #{userProductMap.shopId},
+            #{userProductMap.operatorId},
+            #{userProductMap.createTime},
+            #{userProductMap.point}
+            )
+        </foreach>
+    </insert>
 </mapper>

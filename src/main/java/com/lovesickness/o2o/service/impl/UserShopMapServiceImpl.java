@@ -38,4 +38,23 @@ public class UserShopMapServiceImpl implements UserShopMapService {
             throw new UserShopMapOperationException(UserShopMapStateEnum.EMPTY.getStateInfo());
         }
     }
+
+    @Override
+    public UserShopMapExecution addUserShopMap(UserShopMap userShopMap) throws UserShopMapOperationException {
+        UserShopMap oldUserShopMap = userShopMapDao.queryUserShopMap(
+                userShopMap.getUser().getUserId(),
+                userShopMap.getShop().getShopId());
+        int effectedNum = 0;
+        if (oldUserShopMap != null) {
+            oldUserShopMap.setPoint(userShopMap.getPoint());
+            effectedNum = userShopMapDao.updateUserShopMapPoint(oldUserShopMap);
+
+        } else {
+            effectedNum = userShopMapDao.insertUserShopMap(userShopMap);
+        }
+        if (effectedNum != 1) {
+            throw new UserShopMapOperationException("添加用户积分失败");
+        }
+        return new UserShopMapExecution(UserShopMapStateEnum.SUCCESS);
+    }
 }

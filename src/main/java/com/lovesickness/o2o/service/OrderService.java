@@ -3,7 +3,6 @@ package com.lovesickness.o2o.service;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.OrderProductMap;
-import com.lovesickness.o2o.entity.PersonInfo;
 import com.lovesickness.o2o.exception.OrderOperationException;
 
 import java.util.List;
@@ -21,20 +20,18 @@ public interface OrderService {
     /**
      * 根据订单Id查询订单信息
      *
-     * @param user    用户信息
      * @param orderId 订单Id
      * @return 订单信息
      */
-    Order getOrderById(PersonInfo user, Long orderId);
+    Order getOrderById(Long orderId);
 
     /**
      * 根据订单No查询订单信息
      *
-     * @param user         用户信息
      * @param orderNumbers 订单No
      * @return 订单信息
      */
-    Order getOrderByNo(PersonInfo user, String orderNumbers);
+    Order getOrderByNo(String orderNumbers);
 
     /**
      * 订单查询 ：根据名字模糊查询  待付款  待发货   待收货  评价

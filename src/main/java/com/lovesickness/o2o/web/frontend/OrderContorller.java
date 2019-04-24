@@ -9,6 +9,7 @@ import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.*;
 import com.lovesickness.o2o.enums.OrderStateEnum;
+import com.lovesickness.o2o.service.BuyerCartService;
 import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
@@ -40,6 +41,8 @@ public class OrderContorller {
     private static Logger LOGGER = LoggerFactory.getLogger(AliPayController.class);
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private BuyerCartService buyerCartService;
 
     @PostMapping("/addorderbyuser")
     @ApiOperation(value = "添加订单记录", notes = "根据订单项和session中存在的用户添加订单")
@@ -66,6 +69,7 @@ public class OrderContorller {
         if (user == null) {
             return;
         }
+        //1.添加订单
         Order order = orderAndItems.getOrder();
         List<BuyerCartItem> items = orderAndItems.getItems();
         order.setUser(user);
@@ -75,7 +79,16 @@ public class OrderContorller {
         if (!oe.getStateInfo().equals(OrderStateEnum.SUCCESS.getStateInfo())) {
             return;
         }
-        aliPay(order, request, response);
+        //2.删除购物车所选择的商品
+        for (BuyerCartItem item : items) {
+            item.setAmount(-item.getAmount());
+        }
+        boolean isClearBuyerCart = buyerCartService.updateItem(user.getUserId(), items);
+        if (isClearBuyerCart) {
+            //3.唤起支付宝支付功能
+            aliPay(order, request, response);
+        }
+        //4.支付成功后回调接口
     }
 
     private void aliPay(Order order, HttpServletRequest request, HttpServletResponse response) {
@@ -106,7 +119,7 @@ public class OrderContorller {
             String subject = "订单名称";
             //商品描述，可空
             String body = "商品描述";
-//            HttpServletRequestUtil.getString(request, "WIDbody");
+            //HttpServletRequestUtil.getString(request, "WIDbody");
 
             model.setOutTradeNo(outTradeNo);
             model.setSubject(subject);
@@ -132,16 +145,16 @@ public class OrderContorller {
 
     @GetMapping("/getorderlistbyuser")
     @ApiOperation(value = "根据用户订单信息查询", notes = "查询用户的订单信息，status 0全部 1待付款、2待发货、3待收货 4待评价")
-    public ResultBean<?> getOrderListByUser(String keyWord, int status, HttpServletRequest request) {
+    public ResultBean<?> getOrderListByUser(String keyWord, int status, int pageIndex, int pageSize, HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null || user.getUserId() == null) {
             return new ResultBean<>(false, 0, "请重新登录");
         }
-        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-        if (pageIndex == null || pageSize == null) {
-            return new ResultBean<>(false, 0, "empty pageIndex or pageSize");
-        }
+//        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
+//        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+//        if (pageIndex == null || pageSize == null) {
+//            return new ResultBean<>(false, 0, "empty pageIndex or pageSize");
+//        }
 
         if (status == ORDER_NOT_EVA) {
             return new ResultBean<>(orderService.getOrderNotEvaList(user.getUserId(), null, keyWord, pageIndex, pageSize));
