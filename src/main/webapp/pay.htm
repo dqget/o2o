@@ -172,11 +172,12 @@
             }(),
             language: (navigator.browserLanguage || navigator.language).toLowerCase()
         };
-        if (browser.versions.mobile) {//判断是否是移动设备打开。browser代码在下面
-            var ua = navigator.userAgent.toLowerCase();//获取判断用的对象
+        //判断是否是移动设备打开。browser代码在下面
+        if (browser.versions.mobile) {
+            //获取判断用的对象
+            var ua = navigator.userAgent.toLowerCase();
             if (ua.match(/MicroMessenger/i) == "micromessenger") {
                 $(document).ready(function () {
-
                     t = setInterval(ajaxStatus, 3000);
                     setTimeout(function () {
                         clearInterval(t);
@@ -190,12 +191,13 @@
                             url: checkOrderPaySuccessUrl,
                             type: "GET",
                             dataType: "json",
-                            data: JSON.stringify({orderNo: orderNo}),
+                            data: {orderNo: orderNo},
                             success: function (data) {
-                                Console.log(data);
-                                if (data == 1) { //订单状态为1表示支付成功
-                                    alert("即将返回首页");
-                                    window.location.href = "/o2o/frontend/index"; //页面跳转
+                                //订单状态为1表示支付成功
+                                if (data == 1) {
+                                    alert("支付成功，即将返回首页");
+                                    //页面跳转
+                                    window.location.href = "/o2o/frontend/index";
                                     clearInterval(t);
                                 }
                             },

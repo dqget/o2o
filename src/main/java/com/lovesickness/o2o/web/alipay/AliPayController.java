@@ -174,6 +174,7 @@ public class AliPayController {
                         UserShopMapExecution usme = userShopMapService.addUserShopMap(userShopMap);
                         if (usme.getState() == UserShopMapStateEnum.SUCCESS.getState()) {
                             flg = true;
+                            log.info("支付成功，修改订单成功、添加用户购买记录成功、添加用户积分成功");
                         } else {
                             log.error(usme.getStateInfo());
                             log.error("支付成功，添加用户积分失败");
@@ -210,7 +211,7 @@ public class AliPayController {
 
 
     @GetMapping("/return")
-    public String returnPay(HttpServletRequest request, HttpServletResponse response) {
+    public void returnPay(HttpServletRequest request, HttpServletResponse response) {
         log.info("支付宝回调接口调用成功");
         //获取支付宝GET过来反馈信息
         Map<String, String> params = getAliBaBaReturnMap(request);
@@ -249,22 +250,19 @@ public class AliPayController {
                 out.println("验证成功<br/>请回到微信<br/>");
                 out.close();
                 //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-                return "frontend/index";
-
-                //////////////////////////////////////////////////////////////////////////////////////////
+                ///////////////////////////////////////////////
             } else {
                 //该页面可做页面美工编辑
                 log.info("验证失败");
 
                 out.println("验证失败");
                 out.close();
-                return "local/login";
+
 
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return "";
     }
 
     @GetMapping("/getorderno")

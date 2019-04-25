@@ -215,7 +215,7 @@ public class OrderContorller {
 
     @GetMapping("/checkorderpaysuccess")
     @ApiOperation(value = "判断订单是否支付成功", notes = "轮询该接口查询是否成功")
-    public int checkOrderPaySuccess(String orderNo) {
+    public int checkOrderPaySuccess(@RequestParam(value = "orderNo") String orderNo) {
         return orderService.getOrderByNo(orderNo).getIsPay();
     }
 

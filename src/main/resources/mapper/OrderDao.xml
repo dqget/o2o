@@ -46,6 +46,7 @@
                 <id column="product_id" property="productId"/>
                 <result column="product_name" property="productName"/>
                 <result column="img_addr" property="imgAddr"/>
+                <result column="point" property="point"/>
             </association>
         </collection>
     </resultMap>
@@ -149,6 +150,7 @@
             p.product_id,
             p.img_addr,
             p.product_name,
+            p.point,
             u.user_id,
             s.shop_id,
             s.shop_name,
