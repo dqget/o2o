@@ -1,5 +1,6 @@
 package com.lovesickness.o2o.web.frontend;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
@@ -12,7 +13,6 @@ import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.service.BuyerCartService;
 import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
-import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
 import com.lovesickness.o2o.web.alipay.AliPayController;
 import io.swagger.annotations.Api;
@@ -62,33 +62,58 @@ public class OrderContorller {
     }
 
     @PostMapping("/addorderandopenpay")
-    @ApiOperation(value = "添加订单并根据用户订单信息使用支付宝支付功能", notes = "测试--")
+    @ApiOperation(value = "添加订单并根据用户订单信息使用支付宝支付功能",
+            notes = "1.添加订单 2.删除购物车所选择的商品 3.唤起支付宝支付功能 4.支付成功后回调接口")
     public void aliPay(@RequestBody OrderAndItems orderAndItems, HttpServletRequest request, HttpServletResponse response) {
         //session中的用户信息
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null) {
             return;
         }
-        //1.添加订单
+        //1.添加订单///
         Order order = orderAndItems.getOrder();
+
         List<BuyerCartItem> items = orderAndItems.getItems();
         order.setUser(user);
+        //将购物车项转换为订单项
         List<OrderProductMap> orderProductMapList = BuyerCartItemUtil.buyerCartItemList2OrderProductMapList(items);
         order.setShop(items.get(0).getProduct().getShop());
+        //添加订单 和 订单项
         OrderExecution oe = orderService.addOrder(order, orderProductMapList);
         if (!oe.getStateInfo().equals(OrderStateEnum.SUCCESS.getStateInfo())) {
             return;
         }
-        //2.删除购物车所选择的商品
+        //判断是否需要删除购物车中选中的商品
+        //2.删除购物车所选择的商品///
         for (BuyerCartItem item : items) {
             item.setAmount(-item.getAmount());
         }
-        boolean isClearBuyerCart = buyerCartService.updateItem(user.getUserId(), items);
-        if (isClearBuyerCart) {
-            //3.唤起支付宝支付功能
+        boolean isSuccessClearBuyerCart = buyerCartService.updateItem(user.getUserId(), items);
+        if (isSuccessClearBuyerCart) {
+            //删除成功
+            //3.唤起支付宝支付功能////
             aliPay(order, request, response);
         }
-        //4.支付成功后回调接口
+
+        //4.支付成功后回调接口///
+    }
+
+    @PostMapping("/oldorderopenpay")
+    @ApiOperation(value = "根据已经存在的订单进行支付使用支付宝支付功能",
+            notes = "1.查询订单判断是否支付 2.未支付唤起支付宝支付功能")
+    public void oldOrderAliPay(@RequestBody JSONObject orderNoJSNO, HttpServletRequest request, HttpServletResponse response) {
+        //session中的用户信息
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+            return;
+        }
+        String orderNo = orderNoJSNO.getString("orderNo");
+        Order order = orderService.getOrderByNo(orderNo);
+        if (order.getIsPay() == 1) {
+            return;
+        }
+        aliPay(order, request, response);
+
     }
 
     private void aliPay(Order order, HttpServletRequest request, HttpServletResponse response) {
@@ -144,38 +169,37 @@ public class OrderContorller {
     }
 
     @GetMapping("/getorderlistbyuser")
-    @ApiOperation(value = "根据用户订单信息查询", notes = "查询用户的订单信息，status 0全部 1待付款、2待发货、3待收货 4待评价")
-    public ResultBean<?> getOrderListByUser(String keyWord, int status, int pageIndex, int pageSize, HttpServletRequest request) {
+    @ApiOperation(value = "根据用户订单信息查询", notes = "查询用户的订单信息，state 0全部 1待付款、2待发货、3待收货 4待评价")
+    public ResultBean<?> getOrderListByUser(@RequestParam("keyWord") String keyWord,
+                                            @RequestParam("state") int state,
+                                            @RequestParam("pageIndex") int pageIndex,
+                                            @RequestParam("pageSize") int pageSize,
+                                            HttpServletRequest request) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null || user.getUserId() == null) {
             return new ResultBean<>(false, 0, "请重新登录");
         }
-//        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-//        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-//        if (pageIndex == null || pageSize == null) {
-//            return new ResultBean<>(false, 0, "empty pageIndex or pageSize");
-//        }
-
-        if (status == ORDER_NOT_EVA) {
+        keyWord = keyWord.trim();
+        if (state == ORDER_NOT_EVA) {
             return new ResultBean<>(orderService.getOrderNotEvaList(user.getUserId(), null, keyWord, pageIndex, pageSize));
         }
-        Order order = compactOrderCondition(user, null, status);
+        Order order = compactOrderCondition(user, null, state);
         return new ResultBean<>(orderService.getOrderList(order, keyWord, pageIndex, pageSize));
     }
 
     @GetMapping("/getorderlistbyshop")
-    @ApiOperation(value = "根据店铺订单信息查询", notes = "查询该店铺下的订单信息， status 0全部 1待付款、2待发货、3待收货 4待评价")
-    public ResultBean<?> getOrderListByShop(String keyWord, int status, HttpServletRequest request) {
+    @ApiOperation(value = "根据店铺订单信息查询",
+            notes = "查询该店铺下的订单信息， state 0全部 1待付款、2待发货、3待收货 4待评价")
+    public ResultBean<?> getOrderListByShop(@RequestParam("keyWord") String keyWord,
+                                            @RequestParam("state") int state,
+                                            @RequestParam("pageIndex") int pageIndex,
+                                            @RequestParam("pageSize") int pageSize,
+                                            HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-        if (pageIndex == null || pageSize == null) {
-            return new ResultBean<>(false, 0, "empty pageIndex or pageSize");
-        }
-        if (status == ORDER_NOT_EVA) {
+        if (state == ORDER_NOT_EVA) {
             return new ResultBean<>(orderService.getOrderNotEvaList(null, currentShop.getShopId(), keyWord, pageIndex, pageSize));
         }
-        Order order = compactOrderCondition(null, currentShop, status);
+        Order order = compactOrderCondition(null, currentShop, state);
         return new ResultBean<>(orderService.getOrderList(order, keyWord, pageIndex, pageSize));
     }
 
@@ -219,14 +243,26 @@ public class OrderContorller {
         return orderService.getOrderByNo(orderNo).getIsPay();
     }
 
+    @GetMapping("/getorderdetailbyno")
+    @ResponseBody
+    @ApiOperation(value = "查询订单详细信息", notes = "根据订单号查询订单信息")
+    public ResultBean<Order> getOrderDetailByNo(@RequestParam(value = "orderNo") String orderNo, HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user != null) {
+            return new ResultBean<>(orderService.getOrderByNo(orderNo));
+
+        }
+        return new ResultBean<>(false, 0, "请重新登录");
+    }
+
     /**
-     * @param status 0全部 1待付款、2待发货、3待收货 4待评价
+     * @param state 0全部 1待付款、2待发货、3待收货 4待评价
      */
-    private Order compactOrderCondition(PersonInfo user, Shop shop, int status) {
+    private Order compactOrderCondition(PersonInfo user, Shop shop, int state) {
         Order order = new Order();
         order.setUser(user);
         order.setShop(shop);
-        switch (status) {
+        switch (state) {
             case ORDER_ALL:
                 break;
             case ORDER_NOT_PAY:

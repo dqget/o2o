@@ -43,4 +43,9 @@ public class MainManagementController {
     public String orderList() {
         return "frontend/orderlist";
     }
+
+    @GetMapping(value = "/orderdetail")
+    public String orderDetail() {
+        return "frontend/orderdetail";
+    }
 }

@@ -34,7 +34,7 @@ public interface OrderService {
     Order getOrderByNo(String orderNumbers);
 
     /**
-     * 订单查询 ：根据名字模糊查询  待付款  待发货   待收货  评价
+     * 待付款、待发货、待收货、评价订单查询 ：根据商品名字模糊查询
      *
      * @param order     订单信息
      * @param pageIndex 查询当前页数
@@ -45,7 +45,7 @@ public interface OrderService {
     OrderExecution getOrderList(Order order, String keyWord, Integer pageIndex, Integer pageSize);
 
     /**
-     * 单查询 ：根据名字模糊查询 未评价
+     * 未评价 订单查询 ：根据商品名字模糊查询
      *
      * @param userId    用户Id
      * @param pageIndex 查询当前页数

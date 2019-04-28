@@ -39,7 +39,7 @@ public class Order {
     /**
      * 收货时间
      */
-    private Integer receiptTime;
+    private Date receiptTime;
     /**
      * 是否发货 0未 1已
      */
@@ -82,6 +82,7 @@ public class Order {
      * 店铺
      */
     private Shop shop;
+
     public Order() {
     }
 
@@ -141,11 +142,12 @@ public class Order {
         this.isReceipt = isReceipt;
     }
 
-    public Integer getReceiptTime() {
+
+    public Date getReceiptTime() {
         return receiptTime;
     }
 
-    public void setReceiptTime(Integer receiptTime) {
+    public void setReceiptTime(Date receiptTime) {
         this.receiptTime = receiptTime;
     }
 

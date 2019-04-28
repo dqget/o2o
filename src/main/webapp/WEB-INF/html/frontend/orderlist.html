@@ -50,60 +50,60 @@
                 </div>
             </div>
             <div class="buttons-tab">
-                <a href="#all" class="tab-link active button">全部</a>
-                <a href="#not-pay" class="tab-link button">待付款</a>
-                <a href="#not-ship" class="tab-link button">待发货</a>
-                <a href="#not-receipt" class="tab-link button">待收货</a>
-                <a href="#not-eva" class="tab-link button">待评价</a>
+                <a href="#all" id="all_a" state="0" class="tab-link active button">全部</a>
+                <a href="#not-pay" id="not_pay_a" state="1" class="tab-link button">待付款</a>
+                <a href="#not-ship" id="not_ship_a" state="2" class="tab-link button">待发货</a>
+                <a href="#not-receipt" id="not_receipt_a" state="3" class="tab-link button">待收货</a>
+                <a href="#not-eva" id="not_eva_a" state="4" class="tab-link button">待评价</a>
             </div>
             <div class="content-block">
                 <div class="tabs">
-                    <div id="all" class="tab active">
+                    <div id="all" class="tab active" state="0">
                         <div class="content-block">
                             <!--商品列表-->
                             <div class="list-div order-list-all"></div>
                             <!-- 加载提示符 -->
-                            <div class="infinite-scroll-preloader">
+                            <div class="infinite-scroll-preloader order-list-all">
                                 <div class="preloader"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="not-pay" class="tab">
+                    <div id="not-pay" class="tab" state="1">
                         <div class="content-block">
                             <!--商品列表-->
                             <div class="list-div not-pay-order-list"></div>
                             <!-- 加载提示符 -->
-                            <div class="infinite-scroll-preloader">
+                            <div class="infinite-scroll-preloader not-pay-order-list">
                                 <div class="preloader"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="not-ship" class="tab">
+                    <div id="not-ship" class="tab" state="2">
                         <div class="content-block">
                             <!--商品列表-->
                             <div class="list-div not-ship-order-list"></div>
                             <!-- 加载提示符 -->
-                            <div class="infinite-scroll-preloader">
+                            <div class="infinite-scroll-preloader not-ship-order-list">
                                 <div class="preloader"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="not-receipt" class="tab">
+                    <div id="not-receipt" class="tab" state="3">
                         <div class="content-block">
                             <!--商品列表-->
                             <div class="list-div not-receipt-order-list"></div>
                             <!-- 加载提示符 -->
-                            <div class="infinite-scroll-preloader">
+                            <div class="infinite-scroll-preloader not-receipt-order-list">
                                 <div class="preloader"></div>
                             </div>
                         </div>
                     </div>
-                    <div id="not-eva" class="tab">
+                    <div id="not-eva" class="tab" state="4">
                         <div class="content-block">
                             <!--商品列表-->
                             <div class="list-div not-eva-order-list"></div>
                             <!-- 加载提示符 -->
-                            <div class="infinite-scroll-preloader">
+                            <div class="infinite-scroll-preloader not-eva-order-list">
                                 <div class="preloader"></div>
                             </div>
                         </div>

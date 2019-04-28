@@ -28,16 +28,16 @@ public class UserProductMapDaoTest {
     public void testAInsertUserProductMap() {
         UserProductMap userProductMap = new UserProductMap();
         userProductMap.setCreateTime(new Date());
-        userProductMap.setPoint(1);
+//        userProductMap.setPoint(1);
         PersonInfo buyer = new PersonInfo();
         buyer.setUserId(6L);
         userProductMap.setUser(buyer);
         Shop shop = new Shop();
         shop.setShopId(12L);
         userProductMap.setShop(shop);
-        PersonInfo operator = new PersonInfo();
-        operator.setUserId(1L);
-        userProductMap.setOperator(operator);
+//        PersonInfo operator = new PersonInfo();
+//        operator.setUserId(1L);
+//        userProductMap.setOperator(operator);
         Product product = new Product();
         product.setProductId(5L);
         userProductMap.setProduct(product);

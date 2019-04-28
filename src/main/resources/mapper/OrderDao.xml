@@ -47,6 +47,9 @@
                 <result column="product_name" property="productName"/>
                 <result column="img_addr" property="imgAddr"/>
                 <result column="point" property="point"/>
+                <result column="product_desc" property="productDesc"/>
+                <result column="normal_price" property="normalPrice"/>
+                <result column="promotion_price" property="promotionPrice"/>
             </association>
         </collection>
     </resultMap>
@@ -151,6 +154,9 @@
             p.img_addr,
             p.product_name,
             p.point,
+            p.product_desc,
+            p.normal_price,
+            p.promotion_price,
             u.user_id,
             s.shop_id,
             s.shop_name,
@@ -169,7 +175,24 @@
             o.order_number = #{orderNo}
     </select>
     <select id="queryOrderList" resultMap="orderMap">
-        SELECT
+        SELECT y.order_id,
+        y.order_number,
+        y.pay_price,
+        y.is_pay,
+        y.pay_time,
+        y.is_receipt,
+        y.receipt_time,
+        y.is_ship,
+        y.ship_time,
+        y.shop_id,
+        y.update_time order_update_time,
+        y.product_id,
+        y.user_id,
+        y.product_num,
+        p.product_name,
+        s.shop_name,
+        s.shop_img
+        FROM tb_product p,tb_shop s,(SELECT
         o.order_id,
         o.order_number,
         o.pay_price,
@@ -179,141 +202,154 @@
         o.receipt_time,
         o.is_ship,
         o.ship_time,
-        o.update_time order_update_time,
-        s.shop_id,
-        s.shop_name,
-        s.shop_desc,
-        s.shop_img
-        FROM tb_shop s,
-        tb_product p ,
-        tb_order o
-        LEFT JOIN
-        tb_order_product_map op
-        ON o.order_id = op.order_id
-        <where>
-            o.shop_id = s.shop_id AND p.product_id = op.product_id
-            <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
-                AND o.user_id = #{orderCondition.user.userId}
-            </if>
-            <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
-                AND o.shopId = #{orderCondition.shop.shopId}
-            </if>
-            <if test="keyWord!=null">
-                AND p.product_name LIKE '%${keyWord}%'
-            </if>
-            <if test="orderCondition.isPay!=null">
-                AND o.is_pay=#{orderCondition.isPay}
-            </if>
-            <if test="orderCondition.isReceipt!=null">
-                AND o.is_receipt=#{orderCondition.isReceipt}
-            </if>
-            <if test="orderCondition.isShip!=null">
-                AND o.is_ship=#{orderCondition.isShip}
-            </if>
-        </where>
-        ORDER BY
-        o.update_time DESC
-        LIMIT #{rowIndex},#{pageSize};
-    </select>
-    <select id="queryOrderCount" parameterType="com.lovesickness.o2o.entity.Order" resultType="int">
-        SELECT
-        COUNT(DISTINCT o.order_id)
-        FROM tb_shop s,
-        tb_product p ,
-        tb_order o
-        LEFT JOIN
-        tb_order_product_map op
-        ON o.order_id = op.order_id
-        <where>
-            o.shop_id = s.shop_id AND p.product_id = op.product_id
-            <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
-                AND o.user_id = #{orderCondition.user.userId}
-            </if>
-            <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
-                AND o.shopId = #{orderCondition.shop.shopId}
-            </if>
-            <if test="keyWord!=null">
-                AND p.product_name LIKE '%${keyWord}%'
-            </if>
-            <if test="orderCondition.isPay!=null">
-                AND o.is_pay=#{orderCondition.isPay}
-            </if>
-            <if test="orderCondition.isReceipt!=null">
-                AND o.is_receipt=#{orderCondition.isReceipt}
-            </if>
-            <if test="orderCondition.isShip!=null">
-                AND o.is_ship=#{orderCondition.isShip}
-            </if>
-        </where>
-    </select>
-    <select id="queryNotEvaOrderList" resultMap="orderMap">
-        SELECT
-        o.order_id,
-        o.order_number,
-        o.pay_price,
-        o.is_pay,
-        o.pay_time,
-        o.is_receipt,
-        o.receipt_time,
-        o.is_ship,
-        o.ship_time,
-        o.update_time order_update_time,
-        s.shop_id,
-        s.shop_name,
-        s.shop_desc,
-        s.shop_img
-        p.product_id,
-        p.product_name
-        FROM tb_shop s,
-        tb_product p,
-        tb_order o
-        LEFT JOIN
-        tb_order_product_map op
-        ON o.order_id = op.order_id
-        WHERE
-        o.shop_id = s.shop_id
-        AND op.product_id = p.product_id
+        o.shop_id,
+        o.user_id,
+        o.update_time,
+        op.product_id,
+        op.product_num
+        FROM (SELECT *
+        FROM tb_order_product_map op
+        WHERE op.order_id IN(SELECT op.order_id
+        FROM tb_order_product_map op,tb_product p
+        WHERE op.product_id = p.product_id
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>
+        AND op.is_evaluation = '0'))op LEFT JOIN tb_order o ON o.order_id = op.order_id
+        <where>
+            <if test="orderCondition.isPay!=null">
+                AND o.is_pay=#{orderCondition.isPay}
+            </if>
+
+            <if test="orderCondition.isReceipt!=null">
+                AND o.is_receipt=#{orderCondition.isReceipt}
+            </if>
+
+            <if test="orderCondition.isShip!=null">
+                AND o.is_ship=#{orderCondition.isShip}
+            </if>
+        </where>
+        ) y WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id
+        <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
+            AND y.user_id = #{orderCondition.user.userId}
+        </if>
+        <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
+            AND y.shop_id = #{orderCondition.shop.shopId}
+        </if>
+        ORDER BY
+        y.update_time DESC
+        LIMIT #{rowIndex}, #{pageSize};
+    </select>
+    <select id="queryOrderCount" parameterType="com.lovesickness.o2o.entity.Order" resultType="int">
+        SELECT COUNT(DISTINCT o.order_id)
+        FROM (SELECT *
+        FROM tb_order_product_map op
+        WHERE op.order_id IN (SELECT op.order_id
+        FROM tb_order_product_map op, tb_product p
+        WHERE op.product_id = p.product_id
+        <if test="keyWord!=null">
+            AND p.product_name LIKE '%${keyWord}%'
+        </if>
+        AND op.is_evaluation = '0')) op LEFT JOIN tb_order o
+        ON o.order_id = op.order_id
+        <where>
+            <if test="orderCondition.isPay!=null">
+                AND o.is_pay=#{orderCondition.isPay}
+            </if>
+
+            <if test="orderCondition.isReceipt!=null">
+                AND o.is_receipt=#{orderCondition.isReceipt}
+            </if>
+
+            <if test="orderCondition.isShip!=null">
+                AND o.is_ship=#{orderCondition.isShip}
+            </if>
+            <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
+                AND o.user_id = #{orderCondition.user.userId}
+            </if>
+            <if test="orderCondition.shop!=null and orderCondition.shop.shopId!=null ">
+                AND o.shop_id = #{orderCondition.shop.shopId}
+            </if>
+        </where>
+
+    </select>
+    <select id="queryNotEvaOrderList" resultMap="orderMap">
+        SELECT y.order_id,
+        y.order_number,
+        y.pay_price,
+        y.is_pay,
+        y.pay_time,
+        y.is_receipt,
+        y.receipt_time,
+        y.is_ship,
+        y.ship_time,
+        y.shop_id,
+        y.update_time order_update_time,
+        y.product_id,
+        y.user_id,
+
+        y.product_num,
+        p.product_name,
+        s.shop_name,
+        s.shop_img
+        FROM tb_product p,tb_shop s,(SELECT
+        o.order_id,
+        o.order_number,
+        o.pay_price,
+        o.is_pay,
+        o.pay_time,
+        o.is_receipt,
+        o.receipt_time,
+        o.is_ship,
+        o.ship_time,
+        o.shop_id,
+        o.user_id,
+        o.update_time,
+        op.product_id,
+        op.product_num
+        FROM (SELECT *
+        FROM tb_order_product_map op
+        WHERE op.order_id IN(SELECT op.order_id
+        FROM tb_order_product_map op,tb_product p
+        WHERE op.product_id = p.product_id
+        <if test="keyWord!=null">
+            AND p.product_name LIKE '%${keyWord}%'
+        </if>
+        AND op.is_evaluation = '0'))op LEFT JOIN tb_order o ON o.order_id = op.order_id
+        WHERE o.is_pay = '1'
+        AND o.is_receipt = '1'
+        AND o.is_ship = '1') y WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id
         <if test="shopId!=null">
-            AND o.shop_id = #{shopId}
+            AND y.shop_id = #{shopId}
         </if>
         <if test="userId!=null">
-            AND o.user_id = #{userId}
+            AND y.user_id = #{userId}
         </if>
-        AND o.is_pay = '1'
-        AND o.is_receipt = '1'
-        AND o.is_ship = '1'
-        AND op.is_evaluation = '0'
         ORDER BY
-        o.update_time DESC
+        y.update_time DESC
         LIMIT #{rowIndex}, #{pageSize};
     </select>
     <select id="queryNotEvaOrderCount" resultType="int">
         SELECT COUNT(DISTINCT o.order_id)
-        FROM tb_product p,
-        tb_shop,
-        tb_order o
-        LEFT JOIN
-        tb_order_product_map op
-        ON o.order_id = op.order_id
-        WHERE
-        p.product_id = op.product_id
-        AND op.product_id = p.product_id
+        FROM (SELECT *
+        FROM tb_order_product_map op
+        WHERE op.order_id IN (SELECT op.order_id
+        FROM tb_order_product_map op, tb_product p
+        WHERE op.product_id = p.product_id
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>
+        AND op.is_evaluation = '0')) op LEFT JOIN tb_order o
+        ON o.order_id = op.order_id
+        WHERE o.is_pay = '1'
+        AND o.is_receipt = '1'
+        AND o.is_ship = '1'
         <if test="shopId!=null">
             AND o.shop_id = #{shopId}
         </if>
         <if test="userId!=null">
             AND o.user_id = #{userId}
         </if>
-        AND o.is_pay = '1'
-        AND o.is_receipt = '1'
-        AND o.is_ship = '1'
-        AND op.is_evaluation = '0'
     </select>
     <update id="updateOrder" parameterType="com.lovesickness.o2o.entity.Order">
         UPDATE tb_order

@@ -85,13 +85,14 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = OrderOperationException.class)
     public OrderExecution modifyOrderByUser(Order order) throws OrderOperationException {
         Long userId;
-        if (order.getOrderId() == null || order.getUser() == null || (userId = order.getUser().getUserId()) == null) {
+        if ((userId = order.getUser().getUserId()) == null || order.getOrderId() == null || order.getUser() == null) {
             return new OrderExecution(OrderStateEnum.EMPTY);
         }
         Order oldOrder = orderDao.queryOrderById(order.getOrderId());
         if (!oldOrder.getUser().getUserId().equals(userId)) {
             return new OrderExecution(OrderStateEnum.INNER_ERROR);
         }
+        order.setUpdateTime(new Date());
         int effectedNum = orderDao.updateOrder(order);
         if (effectedNum != 1) {
             throw new OrderOperationException("修改订单失败");
@@ -110,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
         if (!oldOrder.getShop().getShopId().equals(shopId)) {
             return new OrderExecution(OrderStateEnum.INNER_ERROR);
         }
+        order.setUpdateTime(new Date());
         int effectedNum = orderDao.updateOrder(order);
         if (effectedNum != 1) {
             throw new OrderOperationException("修改订单失败");

@@ -132,7 +132,7 @@ public class AliPayController {
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
         if (signVerified) {
             //验证成功
-            //////////////////////////////////////////////////////////////////////////////////////////
+            ////////////////////////////////////////////////////////////////////
             //请在这里加上商户的业务逻辑程序代码
             //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
             boolean flg = false;
@@ -218,14 +218,12 @@ public class AliPayController {
 
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
         //商户订单号
-
         String outTradeNo = HttpServletRequestUtil.getString(request, "out_trade_no");
 
         //支付宝交易号
-
         String tradeNo = HttpServletRequestUtil.getString(request, "trade_no");
 
-        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)
         //计算得出通知验证结果
         //boolean AlipaySignature.rsaCheckV1(Map<String, String> params, String publicKey, String charset, String sign_type)
         boolean verifyResult = false;
@@ -242,10 +240,9 @@ public class AliPayController {
             PrintWriter out = response.getWriter();
             if (verifyResult) {
                 //验证成功
-                //////////////////////////////////////////////////////////////////////////////////////////
+                /////////////////////////////////////////////////////////////
                 //请在这里加上商户的业务逻辑程序代码
                 //该页面可做页面美工编辑
-
 
                 out.println("验证成功<br/>请回到微信<br/>");
                 out.close();
@@ -254,11 +251,8 @@ public class AliPayController {
             } else {
                 //该页面可做页面美工编辑
                 log.info("验证失败");
-
                 out.println("验证失败");
                 out.close();
-
-
             }
         } catch (IOException e) {
             e.printStackTrace();

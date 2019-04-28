@@ -36,7 +36,7 @@ public class UserProductMapServiceTest {
         userProductMap1.setShop(shop1);
         PersonInfo operator1 = new PersonInfo();
         operator1.setUserId(1L);
-        userProductMap1.setOperator(operator1);
+//        userProductMap1.setOperator(operator1);
         Product product1 = new Product();
         product1.setProductId(5L);
         userProductMap1.setProduct(product1);
@@ -51,7 +51,7 @@ public class UserProductMapServiceTest {
         userProductMap.setShop(shop);
         PersonInfo operator = new PersonInfo();
         operator.setUserId(1L);
-        userProductMap.setOperator(operator);
+//        userProductMap.setOperator(operator);
         Product product = new Product();
         product.setProductId(5L);
         userProductMap.setProduct(product);

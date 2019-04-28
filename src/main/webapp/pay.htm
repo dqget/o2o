@@ -181,7 +181,8 @@
                     t = setInterval(ajaxStatus, 3000);
                     setTimeout(function () {
                         clearInterval(t);
-                    }, 1000000)
+                        console.log("清楚");
+                    }, 60 * 1000)
                 });
 
                 function ajaxStatus() {

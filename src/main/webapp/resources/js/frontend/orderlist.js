@@ -1,35 +1,104 @@
 $(function () {
-    var loading = false;
-    var maxItems = 20;
-    var pageSize = 99;
+    let loading = false;
+    let maxItems = 20;
+    let pageSize = 99;
 
-    var listUrl = '/o2o/frontend/getorderlistbyuser';
+    const listUrl = '/o2o/frontend/getorderlistbyuser';
 
-    var pageNum = 1;
-    var keyWord = '';
-    var status = 0;
-    //加载10条商品信息
-    addItems(pageSize, pageNum);
+    let pageNum = 1;
+    let keyWord = '';
+    let activeTab;
 
-    function addItems(pageSize, pageIndex) {
-        // 生成新条目的HTML
-        var url = listUrl + '?' + 'pageIndex=' + pageIndex + '&pageSize='
-            + pageSize  + '&keyWord=' + keyWord + '&status=' + status;
+    $("#all_a").click(function (e) {
+        $("#all_a").css("pointer-events", "none");
+        $("#not_pay_a").css("pointer-events", "auto");
+        $("#not_ship_a").css("pointer-events", "auto");
+        $("#not_receipt_a").css("pointer-events", "auto");
+        $("#not_eva_a").css("pointer-events", "auto");
+
+        pageNum = 1;
+        activeTab = e.target;
+        $(activeTab.getAttribute("href") + " .list-div").html("");
+        setTimeout(function () {
+            getOrderList(activeTab, keyWord);
+        }, 0)
+
+    });
+    $("#all_a").click();
+
+    $("#not_pay_a").click(function (e) {
+        $("#all_a").css("pointer-events", "auto");
+        $("#not_pay_a").css("pointer-events", "none");
+        $("#not_ship_a").css("pointer-events", "auto");
+        $("#not_receipt_a").css("pointer-events", "auto");
+        $("#not_eva_a").css("pointer-events", "auto");
+        pageNum = 1;
+        activeTab = e.target;
+        $(activeTab.getAttribute("href") + " .list-div").html("");
+        setTimeout(function () {
+            getOrderList(activeTab, keyWord);
+        }, 0)
+    });
+    $("#not_ship_a").click(function (e) {
+        $("#all_a").css("pointer-events", "auto");
+        $("#not_pay_a").css("pointer-events", "auto");
+        $("#not_ship_a").css("pointer-events", "none");
+        $("#not_receipt_a").css("pointer-events", "auto");
+        $("#not_eva_a").css("pointer-events", "auto");
+        pageNum = 1;
+        activeTab = e.target;
+        $(activeTab.getAttribute("href") + " .list-div").html("");
+        setTimeout(function () {
+            getOrderList(activeTab, keyWord);
+        }, 0)
+    });
+    $("#not_receipt_a").click(function (e) {
+        $("#all_a").css("pointer-events", "auto");
+        $("#not_pay_a").css("pointer-events", "auto");
+        $("#not_ship_a").css("pointer-events", "auto");
+        $("#not_receipt_a").css("pointer-events", "none");
+        $("#not_eva_a").css("pointer-events", "auto");
+        pageNum = 1;
+        activeTab = e.target;
+        $(activeTab.getAttribute("href") + " .list-div").html("");
+        setTimeout(function () {
+            getOrderList(activeTab, keyWord);
+        }, 0)
+    });
+    $("#not_eva_a").click(function (e) {
+        $("#all_a").css("pointer-events", "auto");
+        $("#not_pay_a").css("pointer-events", "auto");
+        $("#not_ship_a").css("pointer-events", "auto");
+        $("#not_receipt_a").css("pointer-events", "auto");
+        $("#not_eva_a").css("pointer-events", "none");
+        pageNum = 1;
+        activeTab = e.target;
+        $(activeTab.getAttribute("href") + " .list-div").html("");
+        setTimeout(function () {
+            getOrderList(activeTab, keyWord);
+        }, 0)
+    });
+
+    //获取全部订单信息
+    function getOrderList(activeTab, keyWord) {
+        var url = listUrl + '?' + 'pageIndex=' + pageNum + '&pageSize='
+            + pageSize + '&keyWord=' + keyWord + '&state=' + activeTab.getAttribute("state");
         loading = true;
         $.getJSON(url, function (data) {
             if (data.success) {
-                console.log(data);
-
-
-                var total = $('.list-div .card').length;
+                let html = '';
+                html = getOrderHtml(data);
+                let activeTabId = activeTab.getAttribute("href");
+                $(activeTabId + " .list-div").append(html);
+                let total = $(activeTabId + ' .list-div .card').length;
                 maxItems = data.data.count;
                 if (total >= maxItems) {
                     // 加载完毕，则注销无限加载事件，以防不必要的加载
-                    // $.detachInfiniteScroll($('.infinite-scroll'));
+                    $.detachInfiniteScroll($('.infinite-scroll'));
                     // 隐藏加载提示符
-                    $('.infinite-scroll-preloader').hide();
+                    $(activeTabId + ' .infinite-scroll-preloader').hide();
                 } else {
-                    $('.infinite-scroll-preloader').show();
+                    $(activeTabId + ' .infinite-scroll-preloader').show();
                 }
                 pageNum += 1;
                 loading = false;
@@ -38,11 +107,39 @@ $(function () {
         });
     }
 
+    function getOrderHtml(data) {
+        let html = '';
+        data.data.orderList.map(function (item, index) {
+            let productHtml = '';
+            //商品列表
+            item.orderProductMapList.map(function (item, index) {
+                productHtml += '<div class="item-subtitle">' + item.product.productName
+                    + ' ×' + item.productNum + '</div>';
+            });
+            //
+            html += '' + '<div class="card" data-order-id="'
+                + item.orderId + '" data-order-no="' + item.orderNumber + '">'
+                + '<div class="card-header">'
+                + item.shop.shopName + new Date(item.updateTime).Format("yyyy-MM-dd") + '</div>'
+                + '<div class="card-content">'
+                + '<div class="list-block media-list">'
+                + '<ul>' + '<li class="item-content">'
+                + '<div class="item-media">'
+                + '<img src="' + getContextPath() + item.shop.shopImg + '" width="44">' + '</div>'
+                + '<div class="item-inner">'
+                + productHtml
+                + '</div>' + '</li>' + '</ul>' + '</div>' + '</div>'
+                + '<div class="card-footer">'
+                + '<p class="color-gray">共计 ' + item.payPrice + '￥</p>'
+                + '<span>查看订单</span>' + '</div>' + '</div>';
+        });
+        return html;
+    }
 
     $(document).on('infinite', '.infinite-scroll-bottom', function () {
         if (loading)
             return;
-        addItems(pageSize, pageNum);
+        getOrderList(activeTab, keyWord);
     });
 
     $('#shopdetail-button-div').on('click', '.button', function (e) {
@@ -61,28 +158,18 @@ $(function () {
         }
     });
 
-    $('.list-div')
-        .on(
-            'click',
-            '.card',
-            function (e) {
-                var productId = e.currentTarget.dataset.productId;
-                window.location.href = '/o2o/frontend/productdetail?productId='
-                    + productId;
-            });
+    $('.list-div').on('click', '.card', function (e) {
+        let orderNo = e.currentTarget.dataset.orderNo;
+        window.location.href = '/o2o/frontend/orderdetail?orderNo=' + orderNo;
+    });
 
-    // $('#search').on('change', function (e) {
-    //     productName = e.target.value;
-    //     $('.list-div').empty();
-    //     pageNum = 1;
-    //     addItems(pageSize, pageNum);
-    // });
+
     //失去焦点时执行
     $('#search').blur(function (e) {
         keyWord = e.target.value;
         $('.list-div').empty();
         pageNum = 1;
-        addItems(pageSize, pageNum);
+        getOrderList(activeTab, keyWord);
     });
     $('#me').click(function () {
         $.openPanel('#panel-js-demo');
