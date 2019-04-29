@@ -241,7 +241,7 @@ public class ShopManagementController {
     @ResponseBody
     @ApiOperation(value = "将点击的店铺信息添加到session", notes = "将点击的店铺信息添加到session")
     private Map<String, Object> getShopManagementInfo(HttpServletRequest request) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(8);
         Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
         if (shopId == null) {
             Object currentShopObj = request.getSession().getAttribute("currentShop");

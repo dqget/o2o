@@ -10,18 +10,19 @@ $(function () {
         //访问后台，获取该店铺的购买信息列表
         $.getJSON(listUrl, function (data) {
             if (data.success) {
-                console.log(data);
                 var userProductMapList = data.data.userProductMapList;
+                console.log(userProductMapList);
+
                 var tempHtml = '';
                 //遍历购买信息，拼接处列信息
                 userProductMapList.map(function (item, index) {
-                    tempHtml += '' + '<div class="row row-productbuycheck">'
+                    tempHtml += '<div class="row row-productbuycheck">'
                         + '<div class="col-10">' + item.product.productName + '</div>'
                         + '<div class="col-40 productbuycheck-time">'
                         + new Date(item.createTime).Format("yyyy-MM-dd hh:mm:ss") + '</div>'
                         + '<div class="col-20">' + item.user.name + '</div>'
                         + '<div class="col-10">' + item.point + '</div>'
-                        + '<div class="col-20">' + item.operator.name + '</div></div>'
+                        + '<div class="col-20">' + (item.operator != null ? item.operator.name : '线上支付') + '</div></div>'
                 });
                 $(".productbuycheck-wrap").html(tempHtml);
             }

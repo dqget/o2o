@@ -42,19 +42,16 @@
         operator.user_id AS operator_id,
         operator.name AS operator_name
         FROM
-        tb_user_product_map upm,
         tb_shop s ,
         tb_person_info buyer,
-        tb_person_info operator,
-        tb_product p
+        tb_product p,
+        tb_user_product_map upm LEFT JOIN tb_person_info operator ON upm.operator_id = operator.user_id
         <where>
             upm.shop_id = s.shop_id
             AND
             upm.user_id = buyer.user_id
             AND
             upm.product_id = p.product_id
-            AND
-            upm.operator_id = operator.user_id
             <if test="userProductCondition.user!=null
             and userProductCondition.user.userId!=null">
                 and upm.user_id = #{userProductCondition.user.userId}
@@ -83,19 +80,16 @@
         SELECT
         count(1)
         FROM
-        tb_user_product_map upm,
         tb_shop s ,
         tb_person_info buyer,
-        tb_person_info operator,
-        tb_product p
+        tb_product p,
+        tb_user_product_map upm LEFT JOIN tb_person_info operator ON upm.operator_id = operator.user_id
         <where>
             upm.shop_id = s.shop_id
             AND
             upm.user_id = buyer.user_id
             AND
             upm.product_id = p.product_id
-            AND
-            upm.operator_id = operator.user_id
             <if test="userProductCondition.user!=null
             and userProductCondition.user.userId!=null ">
                 and upm.user_id = #{userProductCondition.user.userId}

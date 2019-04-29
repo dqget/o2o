@@ -19,10 +19,11 @@
         <result column="receive_phone" property="receivePhone"/>
         <result column="receive_addr" property="receiveAddr"/>
         <result column="receive_name" property="receiveName"/>
-        <result column="track_number" property="receiveName"/>
+        <result column="track_number" property="trackNumber"/>
         <association property="user" column="user_id"
                      javaType="com.lovesickness.o2o.entity.PersonInfo">
             <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
         </association>
         <association property="shop" column="shop_id"
                      javaType="com.lovesickness.o2o.entity.Shop">
@@ -107,6 +108,7 @@
             p.product_name,
             p.img_addr,
             u.user_id,
+            u.name,
             s.shop_id,
             s.shop_name,
             s.shop_desc
@@ -158,6 +160,7 @@
             p.normal_price,
             p.promotion_price,
             u.user_id,
+            u.name,
             s.shop_id,
             s.shop_name,
             s.shop_desc
@@ -187,12 +190,13 @@
         y.shop_id,
         y.update_time order_update_time,
         y.product_id,
-        y.user_id,
+        u.user_id,
+        u.name,
         y.product_num,
         p.product_name,
         s.shop_name,
         s.shop_img
-        FROM tb_product p,tb_shop s,(SELECT
+        FROM tb_product p,tb_shop s,tb_person_info u,(SELECT
         o.order_id,
         o.order_number,
         o.pay_price,
@@ -229,7 +233,7 @@
                 AND o.is_ship=#{orderCondition.isShip}
             </if>
         </where>
-        ) y WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id
+        ) y WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id AND u.user_id = y.user_id
         <if test="orderCondition.user!=null and orderCondition.user.userId!=null ">
             AND y.user_id = #{orderCondition.user.userId}
         </if>
@@ -286,13 +290,13 @@
         y.shop_id,
         y.update_time order_update_time,
         y.product_id,
-        y.user_id,
-
+        u.user_id,
+        u.name,
         y.product_num,
         p.product_name,
         s.shop_name,
         s.shop_img
-        FROM tb_product p,tb_shop s,(SELECT
+        FROM tb_product p,tb_shop s,tb_person_info u,(SELECT
         o.order_id,
         o.order_number,
         o.pay_price,
@@ -318,11 +322,12 @@
         AND op.is_evaluation = '0'))op LEFT JOIN tb_order o ON o.order_id = op.order_id
         WHERE o.is_pay = '1'
         AND o.is_receipt = '1'
-        AND o.is_ship = '1') y WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id
-        <if test="shopId!=null">
+        AND o.is_ship = '1') y
+        WHERE p.product_id = y.product_id AND s.shop_id = y.shop_id AND y.user_id = u.user_id
+        <if test="shopId!=null and userId==null">
             AND y.shop_id = #{shopId}
         </if>
-        <if test="userId!=null">
+        <if test="userId!=null and shopId==null ">
             AND y.user_id = #{userId}
         </if>
         ORDER BY
@@ -344,10 +349,10 @@
         WHERE o.is_pay = '1'
         AND o.is_receipt = '1'
         AND o.is_ship = '1'
-        <if test="shopId!=null">
+        <if test="shopId!=null and userId==null">
             AND o.shop_id = #{shopId}
         </if>
-        <if test="userId!=null">
+        <if test="userId!=null and shopId==null ">
             AND o.user_id = #{userId}
         </if>
     </select>

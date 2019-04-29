@@ -58,6 +58,16 @@ public class ShopAdminController {
         return "shop/productbuycheck";
     }
 
+    @GetMapping(value = "/shoporderlist")
+    public String shopOrderList() {
+        return "shop/shoporderlist";
+    }
+
+    @GetMapping(value = "/shoporderoperation")
+    public String shopOrderOperation() {
+        return "shop/shoporderoperation";
+    }
+
     /**
      * 转发到操作成功页面
      *

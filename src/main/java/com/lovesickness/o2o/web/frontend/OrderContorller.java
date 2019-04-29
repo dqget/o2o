@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/frontend")
+@RequestMapping("/order")
 @Api(tags = "OrderContorller|订单操作控制器")
 public class OrderContorller {
     private static final int ORDER_ALL = 0;
@@ -38,6 +38,7 @@ public class OrderContorller {
     private static final int ORDER_NOT_SHIP = 2;
     private static final int ORDER_NOT_RECEIPT = 3;
     private static final int ORDER_NOT_EVA = 4;
+    private static final int ORDER_BUSINESS_SUCCESS = 5;
     private static Logger LOGGER = LoggerFactory.getLogger(AliPayController.class);
     @Autowired
     private OrderService orderService;
@@ -187,7 +188,7 @@ public class OrderContorller {
         return new ResultBean<>(orderService.getOrderList(order, keyWord, pageIndex, pageSize));
     }
 
-    @GetMapping("/getorderlistbyshop")
+    @GetMapping("/shopadmin/getorderlistbyshop")
     @ApiOperation(value = "根据店铺订单信息查询",
             notes = "查询该店铺下的订单信息， state 0全部 1待付款、2待发货、3待收货 4待评价")
     public ResultBean<?> getOrderListByShop(@RequestParam("keyWord") String keyWord,
@@ -196,6 +197,9 @@ public class OrderContorller {
                                             @RequestParam("pageSize") int pageSize,
                                             HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
+        if (currentShop == null || currentShop.getShopId() == null) {
+            return new ResultBean<>(false, 0, "请重新登录");
+        }
         if (state == ORDER_NOT_EVA) {
             return new ResultBean<>(orderService.getOrderNotEvaList(null, currentShop.getShopId(), keyWord, pageIndex, pageSize));
         }
@@ -220,7 +224,7 @@ public class OrderContorller {
         }
     }
 
-    @PostMapping("/modifyorderbyshop")
+    @PostMapping("/shopadmin/modifyorderbyshop")
     @ApiOperation(value = "店家修改订单", notes = "店家修改订单信息，包括发货")
     public ResultBean<?> modifyOrderByShop(@RequestBody Order order, HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
@@ -279,6 +283,11 @@ public class OrderContorller {
                 order.setIsPay(1);
                 order.setIsShip(1);
                 order.setIsReceipt(0);
+                break;
+            case ORDER_BUSINESS_SUCCESS:
+                order.setIsPay(1);
+                order.setIsShip(1);
+                order.setIsReceipt(1);
                 break;
             default:
                 break;

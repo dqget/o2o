@@ -111,6 +111,7 @@ public class OrderServiceImpl implements OrderService {
         if (!oldOrder.getShop().getShopId().equals(shopId)) {
             return new OrderExecution(OrderStateEnum.INNER_ERROR);
         }
+        order.setUser(oldOrder.getUser());
         order.setUpdateTime(new Date());
         int effectedNum = orderDao.updateOrder(order);
         if (effectedNum != 1) {
