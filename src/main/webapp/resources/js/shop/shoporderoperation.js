@@ -6,7 +6,7 @@ $(function () {
     let order;
 
     function getOrderDetailByNo() {
-        var url = getOrderDetailByNoUrl + '?orderNo=' + orderNo;
+        let url = getOrderDetailByNoUrl + '?orderNo=' + orderNo;
         $.getJSON(url, function (data) {
             if (data.success) {
                 order = data.data;

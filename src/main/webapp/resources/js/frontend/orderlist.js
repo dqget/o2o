@@ -81,7 +81,7 @@ $(function () {
 
     //获取全部订单信息
     function getOrderList(activeTab, keyWord) {
-        var url = listUrl + '?' + 'pageIndex=' + pageNum + '&pageSize='
+        let url = listUrl + '?' + 'pageIndex=' + pageNum + '&pageSize='
             + pageSize + '&keyWord=' + keyWord + '&state=' + activeTab.getAttribute("state");
         loading = true;
         $.getJSON(url, function (data) {
