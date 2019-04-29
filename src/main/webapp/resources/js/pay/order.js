@@ -15,7 +15,6 @@ $(function () {
             type: "get",
             success: function (data) {
                 orderNo = data + '';
-                console.log(orderNo)
             }
         });
     }
