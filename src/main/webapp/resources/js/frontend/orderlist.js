@@ -3,7 +3,7 @@ $(function () {
     let maxItems = 20;
     let pageSize = 99;
 
-    const listUrl = '/o2o/frontend/getorderlistbyuser';
+    const listUrl = '/o2o/order/getorderlistbyuser';
 
     let pageNum = 1;
     let keyWord = '';
