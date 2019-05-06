@@ -1,6 +1,6 @@
 $(function () {
-    const getOrderDetailByNoUrl = '/o2o/order/getorderdetailbyno';
-    const modifyOrderBySHopUrl = '/o2o/order/shopadmin/modifyorderbyshop';
+    const getOrderDetailByNoUrl = '/o2o/shopadmin/getorderdetailbyno';
+    const modifyOrderBySHopUrl = '/o2o/shopadmin/modifyorderbyshop';
     const orderNo = getQueryString('orderNo');
     getOrderDetailByNo();
     let order;

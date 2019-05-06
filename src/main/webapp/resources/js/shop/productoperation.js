@@ -93,7 +93,7 @@ $(function () {
         $.ajax({
             url: productUrl,
             type: 'POST',
-            data: ``,
+            data: formData,
             contentType: false,
             processData: false,
             cache: false,

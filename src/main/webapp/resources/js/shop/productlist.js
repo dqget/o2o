@@ -71,8 +71,7 @@ $(function () {
             //TODO
             changeItemStatus(e.currentTarget.dataset.id, e.currentTarget.dataset.status, e.currentTarget.innerText);
         } else if (target.hasClass('preview')) {
-            // window.location.href = '/o2o/frontend/productdetail?productId='
-            //     + e.currentTarget.dataset.id;
+            window.location.href = '/o2o/frontend/productdetail?productId=' + e.currentTarget.dataset.id;
         }
     });
 

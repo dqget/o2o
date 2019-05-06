@@ -11,10 +11,11 @@ import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.*;
 import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.service.BuyerCartService;
+import com.lovesickness.o2o.service.EvaluationService;
 import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
+import com.lovesickness.o2o.util.OrderUtil;
 import com.lovesickness.o2o.util.ResultBean;
-import com.lovesickness.o2o.web.alipay.AliPayController;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -30,20 +31,16 @@ import java.io.Serializable;
 import java.util.List;
 
 @RestController
-@RequestMapping("/order")
-@Api(tags = "OrderContorller|订单操作控制器")
+@RequestMapping("/frontend")
+@Api(tags = "OrderContorller|前端展示系统订单操作控制器")
 public class OrderContorller {
-    private static final int ORDER_ALL = 0;
-    private static final int ORDER_NOT_PAY = 1;
-    private static final int ORDER_NOT_SHIP = 2;
-    private static final int ORDER_NOT_RECEIPT = 3;
-    private static final int ORDER_NOT_EVA = 4;
-    private static final int ORDER_BUSINESS_SUCCESS = 5;
-    private static Logger LOGGER = LoggerFactory.getLogger(AliPayController.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(OrderContorller.class);
     @Autowired
     private OrderService orderService;
     @Autowired
     private BuyerCartService buyerCartService;
+    @Autowired
+    private EvaluationService evaluationService;
 
     @PostMapping("/addorderbyuser")
     @ApiOperation(value = "添加订单记录", notes = "根据订单项和session中存在的用户添加订单")
@@ -181,31 +178,13 @@ public class OrderContorller {
             return new ResultBean<>(false, 0, "请重新登录");
         }
         keyWord = keyWord.trim();
-        if (state == ORDER_NOT_EVA) {
+        if (state == OrderUtil.ORDER_NOT_EVA) {
             return new ResultBean<>(orderService.getOrderNotEvaList(user.getUserId(), null, keyWord, pageIndex, pageSize));
         }
-        Order order = compactOrderCondition(user, null, state);
+        Order order = OrderUtil.compactOrderCondition(user, null, state);
         return new ResultBean<>(orderService.getOrderList(order, keyWord, pageIndex, pageSize));
     }
 
-    @GetMapping("/shopadmin/getorderlistbyshop")
-    @ApiOperation(value = "根据店铺订单信息查询",
-            notes = "查询该店铺下的订单信息， state 0全部 1待付款、2待发货、3待收货 4待评价")
-    public ResultBean<?> getOrderListByShop(@RequestParam("keyWord") String keyWord,
-                                            @RequestParam("state") int state,
-                                            @RequestParam("pageIndex") int pageIndex,
-                                            @RequestParam("pageSize") int pageSize,
-                                            HttpServletRequest request) {
-        Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-        if (currentShop == null || currentShop.getShopId() == null) {
-            return new ResultBean<>(false, 0, "请重新登录");
-        }
-        if (state == ORDER_NOT_EVA) {
-            return new ResultBean<>(orderService.getOrderNotEvaList(null, currentShop.getShopId(), keyWord, pageIndex, pageSize));
-        }
-        Order order = compactOrderCondition(null, currentShop, state);
-        return new ResultBean<>(orderService.getOrderList(order, keyWord, pageIndex, pageSize));
-    }
 
     @PostMapping("/modifyorderbyuser")
     @ApiOperation(value = "用户修改订单", notes = "用户修改订单信息，包括确认收货")
@@ -224,22 +203,6 @@ public class OrderContorller {
         }
     }
 
-    @PostMapping("/shopadmin/modifyorderbyshop")
-    @ApiOperation(value = "店家修改订单", notes = "店家修改订单信息，包括发货")
-    public ResultBean<?> modifyOrderByShop(@RequestBody Order order, HttpServletRequest request) {
-        Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
-        if (currentShop == null || currentShop.getShopId() == null) {
-            return new ResultBean<>(false, 0, "请重新登录");
-        }
-        order.setShop(currentShop);
-        OrderExecution oe = orderService.modifyOrderByShop(order);
-        if (oe.getState() == OrderStateEnum.SUCCESS.getState()) {
-            return new ResultBean<>(true, 1, "修改成功");
-        } else {
-            return new ResultBean<>(false, 0, oe.getStateInfo());
-
-        }
-    }
 
     @GetMapping("/checkorderpaysuccess")
     @ApiOperation(value = "判断订单是否支付成功", notes = "轮询该接口查询是否成功")
@@ -259,41 +222,31 @@ public class OrderContorller {
         return new ResultBean<>(false, 0, "请重新登录");
     }
 
-    /**
-     * @param state 0全部 1待付款、2待发货、3待收货 4待评价
-     */
-    private Order compactOrderCondition(PersonInfo user, Shop shop, int state) {
-        Order order = new Order();
-        order.setUser(user);
-        order.setShop(shop);
-        switch (state) {
-            case ORDER_ALL:
-                break;
-            case ORDER_NOT_PAY:
-                order.setIsPay(0);
-                order.setIsShip(0);
-                order.setIsReceipt(0);
-                break;
-            case ORDER_NOT_SHIP:
-                order.setIsPay(1);
-                order.setIsShip(0);
-                order.setIsReceipt(0);
-                break;
-            case ORDER_NOT_RECEIPT:
-                order.setIsPay(1);
-                order.setIsShip(1);
-                order.setIsReceipt(0);
-                break;
-            case ORDER_BUSINESS_SUCCESS:
-                order.setIsPay(1);
-                order.setIsShip(1);
-                order.setIsReceipt(1);
-                break;
-            default:
-                break;
+    @GetMapping("/getorderproductmapbyid")
+    @ResponseBody
+    @ApiOperation(value = "查询订单项详细信息", notes = "根据订单项号查询订单信息")
+    public ResultBean<OrderProductMap> getOrderProductMapById(@RequestParam(value = "orderProductMapId") Long orderProductMapId, HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user != null) {
+            return new ResultBean<>(orderService.getOrderProductMapById(orderProductMapId));
+
         }
-        return order;
+        return new ResultBean<>(false, 0, "请重新登录");
     }
+
+    @PostMapping("/addevaandmodifyorderproductmap")
+    @ResponseBody
+    @ApiOperation(value = "添加一条评论并添加到对应的订单项", notes = "插入的评论相当于一穿评论的根评论")
+    public ResultBean<?> addEvaAndModifyOrderProductMap(@RequestBody Evaluation evaluation, long orderProductMapId, long starLevel, HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+            return new ResultBean<>(false, 0, "请重新登录");
+        }
+        evaluation.setFromUid(user.getUserId());
+        evaluation.setFromName(user.getName());
+        return new ResultBean<>(orderService.addEvaAndModifyOrderProductMap(orderProductMapId, starLevel, evaluation));
+    }
+
 
     private static class OrderAndItems implements Serializable {
         private static final long serialVersionUID = 6382508072308942795L;

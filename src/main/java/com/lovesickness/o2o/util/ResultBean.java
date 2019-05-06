@@ -3,6 +3,9 @@ package com.lovesickness.o2o.util;
 import java.io.Serializable;
 
 public class ResultBean<T> implements Serializable {
+    public static final int SUCCESS = 1;
+
+    public static final int FAIL = 0;
 
     private static final long serialVersionUID = 1L;
 
@@ -10,7 +13,32 @@ public class ResultBean<T> implements Serializable {
 
     private boolean success = true;
 
-    private int code = 1;
+    private int code = SUCCESS;
+    private T data;
+
+    public ResultBean() {
+        super();
+    }
+
+    public ResultBean(T data) {
+        super();
+        this.data = data;
+
+    }
+
+    public ResultBean(Throwable e) {
+        super();
+        this.msg = e.toString();
+        this.success = false;
+        this.code = FAIL;
+        e.printStackTrace();
+    }
+
+    public ResultBean(boolean success, int code, String msg) {
+        this.msg = msg;
+        this.success = success;
+        this.code = code;
+    }
 
     public String getMsg() {
         return msg;
@@ -42,31 +70,5 @@ public class ResultBean<T> implements Serializable {
 
     public void setData(T data) {
         this.data = data;
-    }
-
-    private T data;
-
-    public ResultBean() {
-        super();
-    }
-
-    public ResultBean(T data) {
-        super();
-        this.data = data;
-
-    }
-
-    public ResultBean(Throwable e) {
-        super();
-        this.msg = e.toString();
-        this.success = false;
-        this.code = 0;
-        e.printStackTrace();
-    }
-
-    public ResultBean(boolean success, int code, String msg) {
-        this.msg = msg;
-        this.success = success;
-        this.code = code;
     }
 }

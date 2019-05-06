@@ -1,8 +1,8 @@
 $(function () {
 
-    var url = '/o2o/frontend/getbuyercartbyuser';
+    let url = '/o2o/frontend/getbuyercartbyuser';
     getBuyerCart();
-    var buyerCart;
+    let buyerCart;
 
     function getBuyerCart() {
         $.getJSON(url, function (data) {
@@ -10,9 +10,9 @@ $(function () {
                 buyerCart = data.data;
                 //当前查询条件总数
                 maxItems = data.count;
-                var html = '';
+                let html = '';
                 buyerCart.map(function (item, index) {
-                    var product = item.product;
+                    let product = item.product;
                     html += '' + '<div class="card" data-shop-id="'
                         + product.productId + '">'
                         + '<div class="card-content">'
@@ -30,7 +30,7 @@ $(function () {
                         + '</div>';
                 });
                 $('.buyercart-list').append(html);
-                var total = $('.list-div .card').length;
+                let total = $('.list-div .card').length;
                 maxItems = data.count;
                 if (total >= maxItems) {
                     // 加载完毕，则注销无限加载事件，以防不必要的加载
@@ -40,8 +40,6 @@ $(function () {
                 } else {
                     $('.infinite-scroll-preloader').show();
                 }
-                pageNum += 1;
-                loading = false;
                 $.refreshScroller();
             }
         });

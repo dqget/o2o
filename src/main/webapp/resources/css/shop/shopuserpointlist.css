@@ -1,0 +1,16 @@
+/*.row-shop-user-point:last-child {*/
+    /*border-bottom: 1px solid #999;*/
+/*}*/
+.row-shop-user-point {
+    border: 1px solid #999;
+    padding: .5rem;
+    border-top: none;
+}
+.row-shop-user-point:first-child {
+    border-top: 1px solid #999;
+}
+.shop-user-point-list .row-shop-user-point:first-child {
+    border-top: none;
+}
+
+

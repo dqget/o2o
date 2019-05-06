@@ -5,13 +5,13 @@ import com.lovesickness.o2o.entity.Award;
 import com.lovesickness.o2o.entity.Shop;
 import com.lovesickness.o2o.entity.UserAwardMap;
 import com.lovesickness.o2o.service.UserAwardMapService;
-import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,18 +28,18 @@ public class UserAwardManagementController {
      * 可根据奖品名称进行模糊查询
      */
     @GetMapping("/getuserawardmaplistbyshop")
-    @ApiOperation(value = "获取该店铺的用户兑换奖品记录列表",notes = "可根据奖品名称进行模糊查询")
-    public ResultBean<UserAwardMapExecution> getUserAwardMapListByShop(HttpServletRequest request) {
+    @ApiOperation(value = "获取该店铺的用户兑换奖品记录列表", notes = "可根据奖品名称进行模糊查询")
+    public ResultBean<UserAwardMapExecution> getUserAwardMapListByShop(@RequestParam(value = "awardName") String awardName,
+                                                                       @RequestParam("pageIndex") int pageIndex,
+                                                                       @RequestParam("pageSize") int pageSize,
+                                                                       HttpServletRequest request) {
         Shop shop = (Shop) request.getSession().getAttribute("currentShop");
         //分页信息
-        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
-        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
         //
         if (shop != null && shop.getShopId() != null) {
             UserAwardMap userAwardMap = new UserAwardMap();
             userAwardMap.setShop(shop);
-            String awardName = HttpServletRequestUtil.getString(request, "awardName");
-            if (awardName != null) {
+            if (awardName != null && !"".equals(awardName)) {
                 Award award = new Award();
                 award.setAwardName(awardName);
                 userAwardMap.setAward(award);
@@ -49,6 +49,5 @@ public class UserAwardManagementController {
             return new ResultBean<>(false, 0, "empty shopId");
         }
     }
-
 
 }

@@ -14,9 +14,28 @@
           href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
     <link rel="stylesheet"
           href="../resources/css/frontend/productdetail.css">
+    <link href="../resources/css/frontend/mubu.css">
 </head>
 <body>
+<!--<div id="mubu"-->
+<!--style="height:100%;width:100%;background-color: rgba(0,0,0,.7);position:absolute;z-index:999999;display:none;top:-667px;">-->
+<!--<div id="mubu_el" class=""-->
+<!--style="box-shadow:0 -20px 100px black;display:none;width:90%;height:200px; background-color:rgb(239,239,244);position:absolute;top:0;left:0;right: 0;bottom:0;margin: auto;border-radius:8px;">-->
+<!--<textarea class="mubu_msg"-->
+<!--style="display:block;width:80%;height:120px;background-color: rgb(255,255,255);padding:15px;margin: 30px auto;text-indent: 10px;overflow-y: auto;text-indent:10px;border-radius:8px;">-->
+<!--</textarea>-->
+<!--<div class="btn btn-save"-->
+<!--style="font-size:14px;color:rgb(8,148,236);text-align:center;line-height:25px;width:70px;height:25px;position:absolute;bottom:10px;left:60px;border:2px solid rgb(8,148,236);border-radius: 5px;"-->
+<!--onclick="save()">回复-->
+<!--</div>-->
+<!--<div class="btn btn-calce"-->
+<!--style="font-size:14px;color:rgb(8,148,236);text-align:center;line-height:25px;width:70px;height:25px;position:absolute;bottom:10px;right:60px;border:2px solid rgb(8,148,236);border-radius: 5px;"-->
+<!--onclick="calce()">取消-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
 <div class="page-group">
+
     <div class="page">
         <header class="bar bar-nav">
             <a class="button button-link button-nav pull-left external" external href="#"
@@ -44,32 +63,39 @@
             <!-- 这里是页面内容区 -->
             <div class="shop-detail-dev">
                 <div class="card">
-                    <div valign="bottom"
-                         class="card-header color-white no-border no-padding">
+                    <div valign="bottom" class="card-header color-white no-border no-padding">
                         <img id="product-img" class='card-cover' src="" alt="">
                     </div>
                     <div class="card-content">
                         <div class="card-content-inner">
                             <p class="color-gray">
-                                <span id="product-time">2015/01/15</span>
+                                <span id="product-time"></span>
                                 <span class="pull-right" id="product-point"></span>
                             </p>
                             <p id="price" hidden="true">
                                 <span class="color-gray" id="normalPrice"></span>
                                 <span id="promotionPrice" style="color: red; font-size: medium; "></span>
-                            <div class="button" id="additem">加入购物车</div>
                             </p>
                             <p id="product-desc"></p>
+                            <div class="row">
+                                <div class="col-50"><a href="#" class="button pb-popup">查看更多商品图片</a></div>
+                                <div class="col-50"><a href="#" class="button" id="additem">加入购物车</a></div>
+                            </div>
                         </div>
                     </div>
 
                 </div>
 
             </div>
-            <div class="card" id="imgList">
-                <!-- <a href="#" class="link">赞</a> -->
-                <!-- <a href="#" class="link">更多</a> -->
+            <div class="list-block cards-list">
+                <ul id="eva-list">
+
+                </ul>
             </div>
+            <!--<div class="card" id="imgList">-->
+            <!--<a href="#" class="link">赞</a> -->
+            <!--<a href="#" class="link">更多</a> -->
+            <!--</div>-->
 
             <div class="list-div"></div>
         </div>

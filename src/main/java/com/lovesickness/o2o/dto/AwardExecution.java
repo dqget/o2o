@@ -18,6 +18,8 @@ public class AwardExecution {
 
     private List<Award> awardList;
 
+    private Integer totalPoint;
+
     public AwardExecution() {
     }
 
@@ -38,6 +40,14 @@ public class AwardExecution {
         this.state = awardStateEnum.getState();
         this.stateInfo = awardStateEnum.getStateInfo();
         this.awardList = awardList;
+    }
+
+    public Integer getTotalPoint() {
+        return totalPoint;
+    }
+
+    public void setTotalPoint(Integer totalPoint) {
+        this.totalPoint = totalPoint;
     }
 
     public int getState() {

@@ -2,14 +2,8 @@ package com.lovesickness.o2o.web.frontend;
 
 import com.lovesickness.o2o.dto.AwardExecution;
 import com.lovesickness.o2o.dto.ProductExecution;
-import com.lovesickness.o2o.entity.Award;
-import com.lovesickness.o2o.entity.Product;
-import com.lovesickness.o2o.entity.ProductCategory;
-import com.lovesickness.o2o.entity.Shop;
-import com.lovesickness.o2o.service.AwardService;
-import com.lovesickness.o2o.service.ProductCategoryService;
-import com.lovesickness.o2o.service.ProductService;
-import com.lovesickness.o2o.service.ShopService;
+import com.lovesickness.o2o.entity.*;
+import com.lovesickness.o2o.service.*;
 import com.lovesickness.o2o.util.HttpServletRequestUtil;
 import com.lovesickness.o2o.util.ResultBean;
 import io.swagger.annotations.Api;
@@ -17,6 +11,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/frontend")
-@Api(tags = "ShopDetailController|前端展示系统查询店铺信息控制器")
+@Api(tags = "ShopDetailController|前端展示系统查询店铺商品奖品等信息控制器")
 public class ShopDetailController {
     @Autowired
     private ShopService shopService;
@@ -36,6 +31,8 @@ public class ShopDetailController {
     private ProductCategoryService productCategoryService;
     @Autowired
     private AwardService awardService;
+    @Autowired
+    private UserShopMapService userShopMapService;
 
     /**
      * 根据shopid查询店铺信息及店铺下的productCategory列表信息
@@ -84,17 +81,27 @@ public class ShopDetailController {
 
     @GetMapping("/getawardlistbyshopid")
     @ApiOperation(value = "根据店铺查询奖品列表", notes = "查询店铺下积分可兑换的奖品列表")
-    public ResultBean<AwardExecution> getAwardListByShopId(HttpServletRequest request) {
-        Long shopId = HttpServletRequestUtil.getLong(request, "shopId");
-        Integer pageIndex = HttpServletRequestUtil.getInt(request, "pageIndex");
-        Integer pageSize = HttpServletRequestUtil.getInt(request, "pageSize");
+    public ResultBean<AwardExecution> getAwardListByShopId(
+            @RequestParam(value = "awardName", required = false) String awardName,
+            @RequestParam("shopId") long shopId,
+            @RequestParam("pageIndex") int pageIndex,
+            @RequestParam("pageSize") int pageSize,
+            HttpServletRequest request) {
         Award award = new Award();
         award.setShopId(shopId);
-        String awardName = HttpServletRequestUtil.getString(request, "awardName");
         if (awardName != null) {
             award.setAwardName(awardName);
         }
-        return new ResultBean<>(awardService.queryAwardList(award, pageIndex, pageSize));
+        AwardExecution ae = awardService.queryAwardList(award, pageIndex, pageSize);
+        //取出当前用户,查询该用户在该店铺的积分
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user != null && user.getUserId() != null) {
+            UserShopMap userShopMap = userShopMapService.getUserShopMap(user.getUserId(), shopId);
+            if (userShopMap != null) {
+                ae.setTotalPoint(userShopMap.getPoint());
+            }
+        }
+        return new ResultBean<>(ae);
     }
 
     private Product compactProductCondition(Long shopId, Long productCategoryId, String productName) {

@@ -68,6 +68,26 @@ public class ShopAdminController {
         return "shop/shoporderoperation";
     }
 
+    @GetMapping(value = "/shopuserpointlist")
+    public String shopUserPointList() {
+        return "shop/shopuserpointlist";
+    }
+
+    @GetMapping(value = "/shopuserawardlist")
+    public String shopUserAwardList() {
+        return "shop/shopuserawardlist";
+    }
+
+    @GetMapping(value = "/awardmanage")
+    public String awardManage() {
+        return "shop/awardmanage";
+    }
+
+    @GetMapping(value = "/awardoperation")
+    public String awardOperation() {
+        return "shop/awardoperation";
+    }
+
     /**
      * 转发到操作成功页面
      *

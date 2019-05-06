@@ -8,13 +8,10 @@ import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.dto.UserProductMapExecution;
-import com.lovesickness.o2o.dto.UserShopMapExecution;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.UserProductMap;
-import com.lovesickness.o2o.entity.UserShopMap;
 import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.enums.UserProductMapStateEnum;
-import com.lovesickness.o2o.enums.UserShopMapStateEnum;
 import com.lovesickness.o2o.service.OrderService;
 import com.lovesickness.o2o.service.UserProductMapService;
 import com.lovesickness.o2o.service.UserShopMapService;
@@ -158,27 +155,9 @@ public class AliPayController {
                     List<UserProductMap> userProductMaps =
                             EntityTransformation.order2UserProductMaps(order);
                     //3.添加用户购买记录
-                    UserProductMapExecution upme = userProductMapService
-                            .batchAddUserProductMap(userProductMaps);
+                    UserProductMapExecution upme = userProductMapService.batchAddUserProductMap(userProductMaps);
                     if (upme.getState() == UserProductMapStateEnum.SUCCESS.getState()) {
-                        //4.添加用户积分
-                        UserShopMap userShopMap = new UserShopMap();
-                        userShopMap.setCreateTime(new Date());
-                        userShopMap.setUser(order.getUser());
-                        userShopMap.setShop(order.getShop());
-                        int pointCount = userProductMaps
-                                .stream()
-                                .mapToInt(UserProductMap::getPoint)
-                                .sum();
-                        userShopMap.setPoint(pointCount);
-                        UserShopMapExecution usme = userShopMapService.addUserShopMap(userShopMap);
-                        if (usme.getState() == UserShopMapStateEnum.SUCCESS.getState()) {
-                            flg = true;
-                            log.info("支付成功，修改订单成功、添加用户购买记录成功、添加用户积分成功");
-                        } else {
-                            log.error(usme.getStateInfo());
-                            log.error("支付成功，添加用户积分失败");
-                        }
+                        log.info("支付成功，修改订单成功、添加用户购买记录成功、添加用户积分成功");
                     } else {
                         log.error(upme.getStateInfo());
                         log.error("支付成功，添加用户购买记录失败");

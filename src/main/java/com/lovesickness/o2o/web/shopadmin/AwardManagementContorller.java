@@ -1,5 +1,6 @@
 package com.lovesickness.o2o.web.shopadmin;
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovesickness.o2o.dto.AwardExecution;
 import com.lovesickness.o2o.dto.ImageHolder;
@@ -79,25 +80,25 @@ public class AwardManagementContorller {
 
     @PostMapping("/modifyaward")
     @ApiOperation(value = "修改奖品", notes = "修改奖品信息")
-    public ResultBean<AwardExecution> modifyAward(@RequestParam(value = "thumbnail") MultipartFile file, HttpServletRequest request) {
+    public ResultBean<AwardExecution> modifyAward(
+            @RequestParam(value = "thumbnail", required = false) MultipartFile file,
+            HttpServletRequest request) {
         boolean statusChange = HttpServletRequestUtil.getBoolean(request, "statusChange");
         if (!statusChange && !CodeUtil.checkVerifyCode(request)) {
             return new ResultBean<>(false, 0, "输入了错误的验证码");
         }
-        ImageHolder thumbnail;
-        try {
-            thumbnail = new ImageHolder(file.getInputStream(), file.getOriginalFilename());
-        } catch (IOException e) {
-            return new ResultBean<>(e);
+        ImageHolder thumbnail = null;
+        if (file != null) {
+            try {
+                thumbnail = new ImageHolder(file.getInputStream(), file.getOriginalFilename());
+            } catch (IOException e) {
+                return new ResultBean<>(e);
+            }
         }
+
         String awardStr = HttpServletRequestUtil.getString(request, "awardStr");
-        ObjectMapper mapper = new ObjectMapper();
         Award award;
-        try {
-            award = mapper.readValue(awardStr, Award.class);
-        } catch (IOException e) {
-            return new ResultBean<>(e);
-        }
+        award = JSON.parseObject(awardStr, Award.class);
         if (award != null) {
             Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
             award.setShopId(currentShop.getShopId());
@@ -105,5 +106,6 @@ public class AwardManagementContorller {
         } else {
             return new ResultBean<>(false, 0, "请输入奖品信息");
         }
+
     }
 }

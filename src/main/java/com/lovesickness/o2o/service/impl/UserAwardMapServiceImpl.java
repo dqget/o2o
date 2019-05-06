@@ -49,7 +49,7 @@ public class UserAwardMapServiceImpl implements UserAwardMapService {
             if (userAwardMap.getPoint() != null && userAwardMap.getPoint() > 0) {
                 UserShopMap userShopMap = userShopMapDao.queryUserShopMap(userAwardMap.getUser().getUserId(), userAwardMap.getShop().getShopId());
                 //本用户在该店铺有积分，且兑换奖品需要的积分需要大于所拥有的积分
-                if (userShopMap != null && userShopMap.getPoint() > userAwardMap.getPoint()) {
+                if (userShopMap != null && userShopMap.getPoint() >= userAwardMap.getPoint()) {
                     //积分抵扣
                     userShopMap.setPoint(userShopMap.getPoint() - userAwardMap.getPoint());
                     effectedNum = userShopMapDao.updateUserShopMapPoint(userShopMap);

@@ -48,4 +48,14 @@ public class MainManagementController {
     public String orderDetail() {
         return "frontend/orderdetail";
     }
+
+    @GetMapping(value = "/commentproduct")
+    public String commentProduct() {
+        return "frontend/commentproduct";
+    }
+
+    @GetMapping(value = "/pointrecord")
+    public String pointRecord() {
+        return "frontend/pointrecord";
+    }
 }

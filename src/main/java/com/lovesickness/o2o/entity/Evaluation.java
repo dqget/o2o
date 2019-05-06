@@ -1,5 +1,7 @@
 package com.lovesickness.o2o.entity;
 
+import java.util.Date;
+
 /**
  * 商品评论对象
  */
@@ -33,6 +35,15 @@ public class Evaluation {
      */
     private String toName;
 
+    private Date createTime;
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public Long getEvaluationId() {
         return evaluationId;
@@ -100,6 +111,7 @@ public class Evaluation {
                 ", fromName='" + fromName + '\'' +
                 ", toUid=" + toUid +
                 ", toName='" + toName + '\'' +
+                ", createTime=" + createTime +
                 '}';
     }
 }

@@ -8,13 +8,14 @@
         <result column="point" property="point"/>
         <association property="user" column="user_id"
                      javaType="com.lovesickness.o2o.entity.PersonInfo">
-            <id column="user_id" property="userId"/>
-            <result column="name" property="name"/>
+            <id column="buyer_id" property="userId"/>
+            <result column="buyer_name" property="name"/>
         </association>
         <association property="award" column="award_id"
                      javaType="com.lovesickness.o2o.entity.Award">
             <id column="award_id" property="awardId"/>
             <result column="award_name" property="awardName"/>
+            <result column="award_img" property="awardImg"/>
         </association>
         <association property="shop" column="shop_id"
                      javaType="com.lovesickness.o2o.entity.Shop">
@@ -33,28 +34,27 @@
         uam.create_time,
         uam.used_status,
         uam.point,
-        buyer.user_id,
-        buyer.name,
+        buyer.user_id buyer_id,
+        buyer.name buyer_name,
         s.shop_id,
         s.shop_name,
         a.award_id,
         a.award_name,
+        a.award_img,
         operator.user_id operator_id,
         operator.name operator_name
         FROM
-        tb_user_award_map uam,
         tb_person_info buyer,
         tb_shop s,
         tb_award a,
-        tb_person_info operator
+        tb_user_award_map uam LEFT JOIN tb_person_info operator
+        ON uam.operator_id = operator.user_id
         <where>
             uam.user_id = buyer.user_id
             AND
             uam.shop_id = s.shop_id
             AND
             uam.award_id = a.award_id
-            AND
-            uam.operator_id = operator.user_id
             <if test="userAwardCondition.user!=null
             and userAwardCondition.user.userId!=null">
                 and uam.user_id = #{userAwardCondition.user.userId}
@@ -82,19 +82,17 @@
         SELECT
         count(1)
         FROM
-        tb_user_award_map uam,
         tb_person_info buyer,
         tb_shop s,
         tb_award a,
-        tb_person_info operator
+        tb_user_award_map uam LEFT JOIN tb_person_info operator
+        ON uam.operator_id = operator.user_id
         <where>
             uam.user_id = buyer.user_id
             AND
             uam.shop_id = s.shop_id
             AND
             uam.award_id = a.award_id
-            AND
-            uam.operator_id = operator.user_id
             <if test="userAwardCondition.user!=null
             and userAwardCondition.user.userId!=null">
                 and uam.user_id = #{userAwardCondition.user.userId}

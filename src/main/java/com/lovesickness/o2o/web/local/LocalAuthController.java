@@ -39,12 +39,14 @@ import java.util.Map;
 @Api(tags = "LocalAuthController|本地账户管理控制器")
 public class LocalAuthController {
     private static Logger logger = LoggerFactory.getLogger(LocalAuthController.class);
+
     @Autowired
     private LocalAuthService localAuthService;
 
+
     @PostMapping(value = "/logincheck")
     @ApiOperation(value = "用户登录", notes = "根据用户名和密码进行登录，needVerify表示是否需要验证码校验")
-    private Map<String, Object> loginCheck(HttpServletRequest request) {
+    public Map<String, Object> loginCheck(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(8);
         boolean needVerify = HttpServletRequestUtil.getBoolean(request, "needVerify");
         if (needVerify && !CodeUtil.checkVerifyCode(request)) {
@@ -73,7 +75,7 @@ public class LocalAuthController {
 
     @RequestMapping(value = "/ownerregister", method = RequestMethod.POST)
     @ApiOperation(value = "用户注册", notes = "非微信进行注册")
-    private Map<String, Object> ownerRegister(HttpServletRequest request) {
+    public Map<String, Object> ownerRegister(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
@@ -137,7 +139,7 @@ public class LocalAuthController {
 
     @PostMapping(value = "/bindlocalauth")
     @ApiOperation(value = "微信用户绑定", notes = "微信用户可绑定本地账户")
-    private Map<String, Object> bindLocalAuth(HttpServletRequest request) {
+    public Map<String, Object> bindLocalAuth(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(8);
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
@@ -171,7 +173,7 @@ public class LocalAuthController {
 
     @PostMapping(value = "/changelocalpwd")
     @ApiOperation(value = "更改本地账户密码", notes = "根据用户名和原密码更改新密码")
-    private Map<String, Object> changeLocalPwd(HttpServletRequest request) {
+    public Map<String, Object> changeLocalPwd(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         if (!CodeUtil.checkVerifyCode(request)) {
             modelMap.put("success", false);
@@ -243,7 +245,7 @@ public class LocalAuthController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ApiOperation(value = "退出登录", notes = "退出登录")
-    private Map<String, Object> logoutCheck(HttpServletRequest request) {
+    public Map<String, Object> logoutCheck(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         request.getSession().setAttribute("user", null);
         request.getSession().setAttribute("shopList", null);

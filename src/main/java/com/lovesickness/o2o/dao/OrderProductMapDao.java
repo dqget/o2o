@@ -49,5 +49,5 @@ public interface OrderProductMapDao {
      * @param orderProductMap 添加商品评论、评价星级
      * @return 修改行数
      */
-    int updateOrderProductMap(@Param("orderProductMap") OrderProductMap orderProductMap);
+    int updateOrderProductMap(OrderProductMap orderProductMap);
 }

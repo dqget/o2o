@@ -38,6 +38,7 @@
             <result column="product_num" property="productNum"/>
             <result column="product_price" property="productPrice"/>
             <result column="star_level" property="starLevel"/>
+            <result column="is_evaluation" property="isEvaluation"/>
             <result column="evaluation_id" property="evaluationId"/>
             <result column="op_status" property="status"/>
             <result column="op_create_time" property="createTime"/>
@@ -101,6 +102,7 @@
             op.product_price,
             op.star_level,
             op.evaluation_id,
+            op.is_evaluation,
             op.status      op_status,
             op.create_time op_create_time,
             op.update_time op_update_time,
@@ -149,6 +151,7 @@
             op.product_price,
             op.star_level,
             op.evaluation_id,
+            op.is_evaluation,
             op.status      op_status,
             op.create_time op_create_time,
             op.update_time op_update_time,

@@ -3,7 +3,7 @@ $(function () {
     let maxItems = 20;
     let pageSize = 99;
 
-    const getOrderListByShopUrl = '/o2o/order/shopadmin/getorderlistbyshop';
+    const getOrderListByShopUrl = '/o2o/shopadmin/getorderlistbyshop';
 
     let pageNum = 1;
     let keyWord = '';

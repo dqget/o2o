@@ -1,7 +1,7 @@
 $(function () {
-    const getOrderDetailByNoUrl = '/o2o/order/getorderdetailbyno';
-    const oldOrderOpenPayUrl = '/o2o/order/oldorderopenpay';
-    const modifyOrderByUserUrl = '/o2o/order/modifyorderbyuser';
+    const getOrderDetailByNoUrl = '/o2o/frontend/getorderdetailbyno';
+    const oldOrderOpenPayUrl = '/o2o/frontend/oldorderopenpay';
+    const modifyOrderByUserUrl = '/o2o/frontend/modifyorderbyuser';
     const orderNo = getQueryString('orderNo');
     getOrderDetailByNo();
     let order;
@@ -17,6 +17,8 @@ $(function () {
                 let html = '';
                 let productPriceCount = 0;
                 let productPointCount = 0;
+                //评论地址
+                const evaUrl = '/o2o/frontend/commentproduct?orderProductMapId='
                 orderProductMapList.map(function (item, index) {
                     productPriceCount += parseInt(item.product.normalPrice);
                     productPointCount += item.product.point;
@@ -26,10 +28,16 @@ $(function () {
                         + '<div class="item-title">' + item.product.productName + '</div>' +
                         '<div class="item-after"><del>￥' + item.product.normalPrice + '</del> ￥'
                         + item.product.promotionPrice
-                        + '</div></div><div class="item-title-row">' +
-                        '<div class="item-subtitle ">' + item.product.productDesc + '</div>' +
-                        '<div class="item-after">×' + item.productNum + '</div>' +
-                        '</div></div></li>';
+                        + '</div></div><div class="item-title-row">'
+                        + '<div class="item-subtitle ">' + item.product.productDesc + '</div>'
+                        + '<div class="item-after">×' + item.productNum + '</div>'
+                        + '</div></div></li>';
+                    if (order.isPay == 1 && order.isShip == 1 && order.isReceipt == 1 && item.isEvaluation != 1) {
+                        html += '<li class="item-content">' +
+                            '<div class="item-after">' +
+                            '<a href="' + evaUrl + item.orderProductId + '" class="external">去评价</a>' +
+                            '</div></li>';
+                    }
                 });
                 $("#product-list").html(html);
                 $("#product-price").html('商品总价:￥' + productPriceCount);

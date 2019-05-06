@@ -1,6 +1,7 @@
 package com.lovesickness.o2o.service;
 
 import com.lovesickness.o2o.dto.OrderExecution;
+import com.lovesickness.o2o.entity.Evaluation;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.OrderProductMap;
 import com.lovesickness.o2o.exception.OrderOperationException;
@@ -58,4 +59,8 @@ public interface OrderService {
     OrderExecution modifyOrderByUser(Order order) throws OrderOperationException;
 
     OrderExecution modifyOrderByShop(Order order) throws OrderOperationException;
+
+    OrderProductMap getOrderProductMapById(Long orderProductMapId);
+
+    OrderExecution addEvaAndModifyOrderProductMap(long orderProductMapId, long starLevel, Evaluation evaluation) throws RuntimeException;
 }

@@ -46,7 +46,7 @@ public class UserShopMapServiceImpl implements UserShopMapService {
                 userShopMap.getShop().getShopId());
         int effectedNum = 0;
         if (oldUserShopMap != null) {
-            oldUserShopMap.setPoint(userShopMap.getPoint());
+            oldUserShopMap.setPoint(userShopMap.getPoint() + oldUserShopMap.getPoint());
             effectedNum = userShopMapDao.updateUserShopMapPoint(oldUserShopMap);
 
         } else {

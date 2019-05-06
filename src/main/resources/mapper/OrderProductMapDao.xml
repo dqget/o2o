@@ -56,10 +56,10 @@
     <update id="updateOrderProductMap" parameterType="com.lovesickness.o2o.entity.OrderProductMap">
         UPDATE tb_order_product_map op
         SET
-            op.is_evaluation = 1
-                               AND op.evaluation_id = #{evaluationId}
-                               AND op.star_level = #{star_level}
-                               AND op.update_time = #{updateTime}
+            op.is_evaluation   = #{isEvaluation}
+            , op.evaluation_id = #{evaluationId}
+            , op.star_level    = #{starLevel}
+            , op.update_time   = #{updateTime}
         WHERE op.order_product_id = #{orderProductId}
     </update>
 </mapper>

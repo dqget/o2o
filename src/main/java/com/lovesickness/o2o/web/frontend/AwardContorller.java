@@ -12,10 +12,7 @@ import com.lovesickness.o2o.util.ResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,11 +30,11 @@ public class AwardContorller {
      */
     @PostMapping("/adduserawardmap")
     @ApiOperation(value = "添加用户兑换奖品记录", notes = "用户使用积分兑换奖品")
-    public ResultBean<?> addUserAwardMap(HttpServletRequest request) {
-        PersonInfo currentUser = (PersonInfo) request.getSession().getAttribute("user");
-        Long awardId = HttpServletRequestUtil.getLong(request, "awardId");
+    public ResultBean<?> addUserAwardMap(@RequestParam(value = "awardId") long awardId,
+                                         HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         //构建用户兑换积分记录对象
-        UserAwardMap userAwardMap = compactUserAwardMap4Add(currentUser, awardId);
+        UserAwardMap userAwardMap = compactUserAwardMap4Add(user, awardId);
         return new ResultBean<>(userAwardMapService.addUserAwardMap(userAwardMap));
     }
 
@@ -83,6 +80,8 @@ public class AwardContorller {
         if (awardId != null) {
             try {
                 award = awardService.getAwardById(awardId);
+                userAwardMap.setAward(award);
+                userAwardMap.setPoint(award.getPoint());
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
@@ -93,6 +92,7 @@ public class AwardContorller {
         Shop shop = new Shop();
         shop.setShopId(award.getShopId());
         userAwardMap.setShop(shop);
+
         return userAwardMap;
     }
 }

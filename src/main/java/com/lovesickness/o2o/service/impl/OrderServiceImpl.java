@@ -1,11 +1,14 @@
 package com.lovesickness.o2o.service.impl;
 
+import com.lovesickness.o2o.dao.EvaluationDao;
 import com.lovesickness.o2o.dao.OrderDao;
 import com.lovesickness.o2o.dao.OrderProductMapDao;
 import com.lovesickness.o2o.dto.OrderExecution;
+import com.lovesickness.o2o.entity.Evaluation;
 import com.lovesickness.o2o.entity.Order;
 import com.lovesickness.o2o.entity.OrderProductMap;
 import com.lovesickness.o2o.enums.OrderStateEnum;
+import com.lovesickness.o2o.exception.EvaluationOperationException;
 import com.lovesickness.o2o.exception.OrderOperationException;
 import com.lovesickness.o2o.exception.OrderProductMapOperationException;
 import com.lovesickness.o2o.service.OrderService;
@@ -23,6 +26,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderProductMapDao orderProductMapDao;
     @Autowired
     private OrderDao orderDao;
+    @Autowired
+    private EvaluationDao evaluationDao;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -116,6 +121,33 @@ public class OrderServiceImpl implements OrderService {
         int effectedNum = orderDao.updateOrder(order);
         if (effectedNum != 1) {
             throw new OrderOperationException("修改订单失败");
+        }
+        return new OrderExecution(OrderStateEnum.SUCCESS);
+    }
+
+    @Override
+    public OrderProductMap getOrderProductMapById(Long orderProductMapId) {
+        return orderProductMapDao.queryOrderProductMapById(orderProductMapId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public OrderExecution addEvaAndModifyOrderProductMap(long orderProductMapId, long starLevel, Evaluation evaluation) throws RuntimeException {
+        OrderProductMap orderProductMap = orderProductMapDao.queryOrderProductMapById(orderProductMapId);
+        if (orderProductMap.getIsEvaluation() == 1 || orderProductMap.getEvaluationId() != null) {
+            throw new RuntimeException("重复评论");
+        }
+        orderProductMap.setStarLevel(starLevel);
+        orderProductMap.setIsEvaluation(1L);
+        int effectedNum = evaluationDao.insertEvaluation(evaluation);
+        if (effectedNum != 1) {
+            throw new EvaluationOperationException("评论插入失败");
+        }
+        orderProductMap.setEvaluationId(evaluation.getEvaluationId());
+        orderProductMap.setUpdateTime(new Date());
+        effectedNum = orderProductMapDao.updateOrderProductMap(orderProductMap);
+        if (effectedNum != 1) {
+            throw new RuntimeException("订单项修改失败");
         }
         return new OrderExecution(OrderStateEnum.SUCCESS);
     }

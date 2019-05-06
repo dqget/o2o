@@ -10,6 +10,7 @@
         <result column="from_name" property="fromName"/>
         <result column="to_name" property="toName"/>
         <result column="to_uid" property="toUid"/>
+        <result column="create_time" property="createTime"/>
         <association property="product" column="product_id" javaType="com.lovesickness.o2o.entity.Product">
             <id column="product_id" property="productId"/>
         </association>
@@ -18,8 +19,8 @@
             parameterType="com.lovesickness.o2o.entity.Evaluation" useGeneratedKeys="true"
             keyProperty="evaluationId" keyColumn="evaluation_id">
         INSERT INTO
-            tb_evaluation (product_id, content, from_uid, from_name, to_uid, to_name)
-        VALUES (#{product.productId}, #{content}, #{fromUid}, #{fromName}, #{toUid}, #{toName})
+            tb_evaluation (product_id, content, from_uid, from_name, to_uid, to_name, create_time)
+        VALUES (#{product.productId}, #{content}, #{fromUid}, #{fromName}, #{toUid}, #{toName}, #{createTime})
     </insert>
     <select id="queryEvaluation" resultMap="evaluationMap">
         SELECT
