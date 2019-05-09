@@ -26,13 +26,14 @@ public class BuyerCartItemUtil {
             }
             Product p = item.getProduct();
             //产品id、原价、姓名、折扣价、所属商铺、购买得到的积分、商品缩略图不能为空
-            if (p.getProductId() == null ||
-                    p.getNormalPrice() == null ||
-                    p.getProductName() == null ||
-                    p.getPromotionPrice() == null ||
-                    p.getShop() == null ||
-                    p.getPoint() == null ||
-                    p.getImgAddr() == null) {
+            if (p.getProductId() == null
+//                    || p.getNormalPrice() == null ||
+//                    p.getProductName() == null ||
+//                    p.getPromotionPrice() == null ||
+//                    p.getShop() == null ||
+//                    p.getPoint() == null ||
+//                    p.getImgAddr() == null
+                    ) {
                 return false;
 
             }
@@ -43,6 +44,7 @@ public class BuyerCartItemUtil {
 
     /**
      * 判断订单项的商品数是否都>0
+     *
      * @param items
      * @return
      */

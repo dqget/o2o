@@ -78,11 +78,12 @@ public class WechatLoginController {
                 PersonInfo personInfo = WechatUtil.getPersonInfoFromRequest(user);
                 wechatAuth = new WechatAuth();
                 wechatAuth.setOpenId(user.getOpenId());
-                if (FRONTEND.equals(userType)) {
+//                if (FRONTEND.equals(userType)) {
+                //不允许用户创建店家身份
                     personInfo.setUserType(1);
-                } else {
-                    personInfo.setUserType(2);
-                }
+//                } else {
+//                    personInfo.setUserType(2);
+//                }
                 wechatAuth.setPersonInfo(personInfo);
                 WechatAuthExecution we = wechatAuthService.register(wechatAuth);
                 if (we.getState() != WechatAuthStateEnum.SUCCESS.getState()) {

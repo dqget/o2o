@@ -1,18 +1,21 @@
 $(function () {
-    var getOrderNoNrl = '/o2o/pay/getorderno';
-    var addOrderAndOpenPayUrl = '/o2o/frontend/addorderandopenpay';
+    let getOrderNoNrl = '/o2o/pay/getorderno';
+    let addOrderAndOpenPayUrl = '/o2o/frontend/addorderandopenpay';
     let orderNo = '';
-    var localStorage = window.localStorage;
-    var orderItems = JSON.parse(localStorage.getItem('orderItems'));
+    let sessionStorage = window.sessionStorage;
+    let orderItems;
     //商品总价值
-    var price = 0;
+    let price = 0;
 
     init();
 
+
+    //获取订单编号
     function getOrderNo() {
         $.ajax({
             url: getOrderNoNrl,
             type: "get",
+            async: false,
             success: function (data) {
                 orderNo = data + '';
             }
@@ -20,15 +23,18 @@ $(function () {
     }
 
     function init() {
-
+        if (sessionStorage.getItem('orderItems') == null) {
+            window.location.href = '/o2o/frontend/orderlist';
+        }
+        orderItems = JSON.parse(sessionStorage.getItem('orderItems'));
         //商品总数
-        var productAmount = 0;
-        var html = '';
+        let productAmount = 0;
+        let html = '';
         //获取订单号
-        getOrderNo();
+
 
         orderItems.map(function (item, index) {
-            var product = item.product;
+            let product = item.product;
             price += item.amount * parseInt(product.promotionPrice);
             productAmount += item.amount;
             html += '' + '<div class="card" data-shop-id="'
@@ -60,6 +66,7 @@ $(function () {
     }
 
     function addOrder() {
+        getOrderNo();
         order.orderNumber = orderNo;
         order.payPrice = price;
         order.receivePhone = $('#receivePhone').val();
@@ -68,25 +75,31 @@ $(function () {
         return order;
     }
 
+    let isClickPay = true;
     $('#pay').on('click', function () {
-        const order = addOrder();
-        $.ajax({
-            url: addOrderAndOpenPayUrl,
-            type: 'POST',
-            contentType: 'application/json;charset=utf-8',
-            data: JSON.stringify({items: orderItems, order: order}),
-            success: function (data) {
-                sessionStorage.setItem("orderNo", orderNo);
-                $('#returnAli').append(data);
-                $("#returnAli script").remove();
-                var queryParam = '';
-                Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
-                    queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
-                });
-                var url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
-                _AP.pay(url);
-            }
-        })
+        if (isClickPay) {
+            isClickPay = false;
+            const order = addOrder();
+            $.ajax({
+                url: addOrderAndOpenPayUrl,
+                type: 'POST',
+                contentType: 'application/json;charset=utf-8',
+                data: JSON.stringify({items: orderItems, order: order}),
+                success: function (data) {
+                    sessionStorage.setItem("orderNo", orderNo);
+                    $('#returnAli').append(data);
+                    $("#returnAli script").remove();
+                    let queryParam = '';
+                    Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                        queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
+                    });
+                    let url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
+                    _AP.pay(url);
+                }
+            });
+            sessionStorage.removeItem('orderItems');
+        }
+
     });
 });
 

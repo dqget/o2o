@@ -80,8 +80,5 @@ $(function () {
         pageNum = 1;
         addItems(pageSize, pageNum);
     });
-    $('#me').click(function () {
-        $.openPanel('#panel-js-demo');
-    });
     $.init();
 });

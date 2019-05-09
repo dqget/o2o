@@ -137,12 +137,13 @@ public class OrderServiceImpl implements OrderService {
         if (orderProductMap.getIsEvaluation() == 1 || orderProductMap.getEvaluationId() != null) {
             throw new RuntimeException("重复评论");
         }
-        orderProductMap.setStarLevel(starLevel);
-        orderProductMap.setIsEvaluation(1L);
+        evaluation.setCreateTime(new Date());
         int effectedNum = evaluationDao.insertEvaluation(evaluation);
         if (effectedNum != 1) {
             throw new EvaluationOperationException("评论插入失败");
         }
+        orderProductMap.setStarLevel(starLevel);
+        orderProductMap.setIsEvaluation(1L);
         orderProductMap.setEvaluationId(evaluation.getEvaluationId());
         orderProductMap.setUpdateTime(new Date());
         effectedNum = orderProductMapDao.updateOrderProductMap(orderProductMap);

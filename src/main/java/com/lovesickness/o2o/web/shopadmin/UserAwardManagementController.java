@@ -2,17 +2,16 @@ package com.lovesickness.o2o.web.shopadmin;
 
 import com.lovesickness.o2o.dto.UserAwardMapExecution;
 import com.lovesickness.o2o.entity.Award;
+import com.lovesickness.o2o.entity.PersonInfo;
 import com.lovesickness.o2o.entity.Shop;
 import com.lovesickness.o2o.entity.UserAwardMap;
+import com.lovesickness.o2o.enums.UserAwardMapStateEnum;
 import com.lovesickness.o2o.service.UserAwardMapService;
 import com.lovesickness.o2o.util.ResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -44,10 +43,42 @@ public class UserAwardManagementController {
                 award.setAwardName(awardName);
                 userAwardMap.setAward(award);
             }
+
             return new ResultBean<>(userAwardMapService.queryUserAwardMapList(userAwardMap, pageIndex, pageSize));
         } else {
             return new ResultBean<>(false, 0, "empty shopId");
         }
     }
 
+    @PostMapping("/modifyuserawardmap")
+    @ApiOperation(value = "店家修改用户兑换奖品记录", notes = "修改兑换记录")
+    public ResultBean<String> modifyUserAwardMap(@RequestBody UserAwardMap userAwardMap,
+                                                 HttpServletRequest request) {
+        Shop shop = (Shop) request.getSession().getAttribute("currentShop");
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        //分页信息
+        if (shop != null && shop.getShopId() != null) {
+            if (userAwardMap != null && userAwardMap.getUserAwardId() != null) {
+                userAwardMap.setOperator(user);
+                UserAwardMap oldUserAwardMap = userAwardMapService.queryUserAwardMapById(userAwardMap.getUserAwardId());
+                assert oldUserAwardMap != null;
+                if (shop.getShopId().equals(oldUserAwardMap.getShop().getShopId())) {
+                    UserAwardMapExecution uame = userAwardMapService.modifyUserAwardMap(userAwardMap);
+                    if (uame.getState() == UserAwardMapStateEnum.SUCCESS.getState()) {
+                        return new ResultBean<>(true, ResultBean.SUCCESS, UserAwardMapStateEnum.SUCCESS.getStateInfo());
+                    } else {
+                        return new ResultBean<>(false, ResultBean.FAIL, uame.getStateInfo());
+
+                    }
+                } else {
+                    return new ResultBean<>(false, ResultBean.FAIL, UserAwardMapStateEnum.OFFLINE.getStateInfo());
+                }
+
+            } else {
+                return new ResultBean<>(false, ResultBean.FAIL, UserAwardMapStateEnum.EMPTY.getStateInfo());
+            }
+        } else {
+            return new ResultBean<>(false, 0, "empty shopId");
+        }
+    }
 }

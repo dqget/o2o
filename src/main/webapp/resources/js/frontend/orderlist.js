@@ -171,8 +171,5 @@ $(function () {
         pageNum = 1;
         getOrderList(activeTab, keyWord);
     });
-    $('#me').click(function () {
-        $.openPanel('#panel-js-demo');
-    });
     $.init();
 });

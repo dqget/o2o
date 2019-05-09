@@ -125,6 +125,7 @@
 <script type="text/javascript" src="resources/js/common/jquery.js"></script>
 
 <script>
+    const orderNo = sessionStorage.getItem('orderNo');
     // debugger
     try {
         if (location.hash.indexOf('error') != -1) {
@@ -152,7 +153,6 @@
         }
 
         var t;
-        const orderNo = sessionStorage.getItem('orderNo');
         sessionStorage.removeItem('orderNo');
         var browser = {
             versions: function () {

@@ -32,24 +32,19 @@ $(function () {
                     console.log(data);
                     $.toast('登录成功！');
                     console.log(userType);
-
                     if (data.user.userType === 1) {
-                        if (!window.localStorage) {
-                            alert("浏览器不支持localstorage");
-                            return false;
-                        } else {
-                            var storage = window.localStorage;
-                            storage.setItem('user', JSON.stringify(data.user));
-                        }
+                        let storage = window.sessionStorage;
+                        storage.setItem('user', JSON.stringify(data.user));
                         window.location.href = '/o2o/frontend/index';
+                        // window.location.href = '/o2o/shopadmin/shoplist';
                     } else {
                         if (userType === '1') {
-                            var storage = window.localStorage;
+                            let storage = window.sessionStorage;
                             storage.setItem('user', JSON.stringify(data.user));
                             window.location.href = '/o2o/frontend/index';
                         } else if (userType === '2') {
                             window.location.href = '/o2o/shopadmin/shoplist';
-                        }else {
+                        } else {
                             window.location.href = '/o2o/frontend/index';
                         }
                     }

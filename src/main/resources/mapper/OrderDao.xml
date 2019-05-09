@@ -222,7 +222,7 @@
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>
-        AND op.is_evaluation = '0'))op LEFT JOIN tb_order o ON o.order_id = op.order_id
+        ))op LEFT JOIN tb_order o ON o.order_id = op.order_id
         <where>
             <if test="orderCondition.isPay!=null">
                 AND o.is_pay=#{orderCondition.isPay}
@@ -257,7 +257,7 @@
         <if test="keyWord!=null">
             AND p.product_name LIKE '%${keyWord}%'
         </if>
-        AND op.is_evaluation = '0')) op LEFT JOIN tb_order o
+        )) op LEFT JOIN tb_order o
         ON o.order_id = op.order_id
         <where>
             <if test="orderCondition.isPay!=null">

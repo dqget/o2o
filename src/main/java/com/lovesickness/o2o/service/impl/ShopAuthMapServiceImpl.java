@@ -1,7 +1,9 @@
 package com.lovesickness.o2o.service.impl;
 
 import com.lovesickness.o2o.dao.ShopAuthMapDao;
+import com.lovesickness.o2o.dao.ShopDao;
 import com.lovesickness.o2o.dto.ShopAuthMapExecution;
+import com.lovesickness.o2o.entity.Shop;
 import com.lovesickness.o2o.entity.ShopAuthMap;
 import com.lovesickness.o2o.enums.ShopAuthStateEnum;
 import com.lovesickness.o2o.exception.ShopAuthMapOperationException;
@@ -21,6 +23,8 @@ import java.util.List;
 public class ShopAuthMapServiceImpl implements ShopAuthMapService {
     @Autowired
     private ShopAuthMapDao shopAuthMapDao;
+    @Autowired
+    private ShopDao shopDao;
 
     @Override
     public ShopAuthMapExecution getShopAuthMapListByShopId(Long shopId, Integer pageIndex, Integer pageSize) {
@@ -49,7 +53,15 @@ public class ShopAuthMapServiceImpl implements ShopAuthMapService {
             shopAuthMap.setCreateTime(new Date());
             shopAuthMap.setLastEditTime(new Date());
             shopAuthMap.setEnableStatus(1);
-            shopAuthMap.setTitleFlag(1);
+            Shop shop = shopDao.queryByShopId(shopAuthMap.getShop().getShopId());
+            if (shop.getOwner().getUserId().equals(shopAuthMap.getEmployee().getUserId())) {
+                shopAuthMap.setTitle("老板");
+                shopAuthMap.setTitleFlag(0);
+            } else {
+                shopAuthMap.setTitle("员工");
+                shopAuthMap.setTitleFlag(1);
+            }
+
             try {
                 int effectedNum = shopAuthMapDao.insertShopAuthMap(shopAuthMap);
                 if (effectedNum != 1) {

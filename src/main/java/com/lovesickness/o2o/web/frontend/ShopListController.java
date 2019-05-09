@@ -121,7 +121,7 @@ public class ShopListController {
         if (shopName != null) {
             shopCondition.setShopName(shopName);
         }
-        shopCondition.setEnableStatus(2);
+        shopCondition.setEnableStatus(1);
         return shopCondition;
     }
 }

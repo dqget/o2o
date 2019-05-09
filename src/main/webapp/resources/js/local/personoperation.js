@@ -1,11 +1,30 @@
 $(function () {
-    var storage = window.localStorage;
-    var user = storage.getItem('user');
+    let storage = window.sessionStorage;
+    let user = storage.getItem('user');
+    let getUserInfoUrl = '/o2o/local/islogin';
     if (user == null) {
+        getUserInfo()
         //跳转到登录界面
-        window.location.href = '';
+    } else {
+        init();
+
     }
-    init();
+
+    function getUserInfo() {
+        $.getJSON(getUserInfoUrl, function (data) {
+            console.log(data);
+            if (data.success) {
+                // let userJSON = JSON.parse(user);
+                storage.setItem("user", JSON.parse(data.data));
+                init();
+
+            } else {
+                // $('#right').html(notLoginHtml);
+                $.toast("请重新登录");
+            }
+        })
+    }
+
 
     function init() {
         var userJSON = JSON.parse(user);

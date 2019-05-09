@@ -195,6 +195,7 @@ public class ProductManagementController {
         Product productCondition = new Product();
         Shop shop = new Shop();
         shop.setShopId(shopId);
+        productCondition.setShop(shop);
         if (productCategoryId != null) {
             ProductCategory productCategory = new ProductCategory();
             productCategory.setProductCategoryId(productCategoryId);

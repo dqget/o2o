@@ -21,4 +21,14 @@ public interface UserAwardMapService {
      * @return 用户奖品映射DTO
      */
     UserAwardMapExecution addUserAwardMap(UserAwardMap userAwardMap);
+
+    /**
+     * 修改用户兑换奖品记录
+     *
+     * @param userAwardMap 兑换信息映射对象
+     * @return 兑换信息映射对象
+     */
+    UserAwardMapExecution modifyUserAwardMap(UserAwardMap userAwardMap);
+
+    UserAwardMap queryUserAwardMapById(Long userAwardMapId);
 }

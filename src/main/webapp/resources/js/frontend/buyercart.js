@@ -21,12 +21,12 @@ $(function () {
                         + '<div class="item-media">' + '<img src="'
                         + getContextPath() + product.imgAddr + '" width="44">' + '</div>'
                         + '<div class="item-inner">'
-                        + '<div class="item-subtitle">' + product.productName
-                        + '</div>' + '</div>' + '</li>' + '</ul>'
-                        + '</div>' + '</div>' + '<div class="card-footer">'
-                        + '<p class="color-gray">'
-                        + product.normalPrice + '   ' + product.promotionPrice
-                        + '</p>' + '<span>' + item.amount + '</span>' + '</div>'
+                        + '<div class="item-subtitle">' + product.productName + '</div>'
+                        + '<div class="item-subtitle">' + product.productDesc + '</div>'
+                        + '</div></li></ul></div></div>'
+                        + '<div class="card-footer">' + '<p class="color-gray">'
+                        + '<del>￥' + product.normalPrice + '</del> ￥' + product.promotionPrice + '</p>'
+                        + '<span>' + item.amount + '</span>' + '</div>'
                         + '</div>';
                 });
                 $('.buyercart-list').append(html);
@@ -46,8 +46,8 @@ $(function () {
     }
 
     $('#settleAccounts').click(function () {
-        var localStorage = window.localStorage;
-        localStorage.setItem('orderItems', JSON.stringify(buyerCart));
+        let sessionStorage = window.sessionStorage;
+        sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
         window.location.href = '/o2o/pay/order';
     });
 });

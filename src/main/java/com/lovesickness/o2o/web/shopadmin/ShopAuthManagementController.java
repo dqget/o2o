@@ -211,13 +211,14 @@ public class ShopAuthManagementController {
                 }
             }
             try {
+                Shop shop = new Shop();
+
                 //添加授权信息
                 ShopAuthMap shopAuthMap = new ShopAuthMap();
-                Shop shop = new Shop();
                 shop.setShopId(wechatInfo.getShopId());
                 shopAuthMap.setShop(shop);
                 shopAuthMap.setEmployee(user);
-                shopAuthMap.setTitle("员工");
+
                 ShopAuthMapExecution se = shopAuthMapService.addShopAuthMap(shopAuthMap);
                 if (se.getState() == ShopAuthStateEnum.SUCCESS.getState()) {
                     return "local/operationsuccess";

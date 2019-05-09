@@ -7,7 +7,7 @@ $(function () {
     let order;
 
     function getOrderDetailByNo() {
-        var url = getOrderDetailByNoUrl + '?orderNo=' + orderNo;
+        let url = getOrderDetailByNoUrl + '?orderNo=' + orderNo;
         $.getJSON(url, function (data) {
             if (data.success) {
                 order = data.data;
@@ -50,7 +50,9 @@ $(function () {
                 $("#pay-time").val(order.payTime != null ? new Date(order.payTime).Format("yyyy-MM-dd hh:mm:ss") : "待支付");
                 $("#ship-time").val(order.shipTime != null ? new Date(order.shipTime).Format("yyyy-MM-dd hh:mm:ss") : "待发货");
                 $("#receipt-time").val(order.receiptTime != null ? new Date(order.receiptTime).Format("yyyy-MM-dd hh:mm:ss") : "未成功");
-                $("#point").val(productPriceCount);
+                $("#point").val(productPointCount);
+                $("#track-number").val(order.trackNumber);
+
                 if (order.isPay == 0) {
                     $("#order-operation").html("支付");
                     $("#order-operation").on('click', function (e) {
@@ -67,7 +69,7 @@ $(function () {
                                 Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
                                     queryParam += ele.name + "=" + encodeURIComponent(ele.value) + '&';
                                 });
-                                var url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
+                                let url = document.getElementsByName("punchout_form")[0].action + '&' + queryParam;
                                 _AP.pay(url);
                             }
                         });

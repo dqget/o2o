@@ -1,16 +1,16 @@
 $(function () {
-    var loading = false;
-    var maxItems = 20;
-    var pageSize = 2;
+    let loading = false;
+    let maxItems = 20;
+    let pageSize = 2;
 
-    var listUrl = '/o2o/frontend/listproductbyshop';
+    let listUrl = '/o2o/frontend/listproductbyshop';
 
-    var pageNum = 1;
-    var shopId = getQueryString('shopId');
-    var productCategoryId = '';
-    var productName = '';
+    let pageNum = 1;
+    let shopId = getQueryString('shopId');
+    let productCategoryId = '';
+    let productName = '';
 
-    var searchDivUrl = '/o2o/frontend/listshopdetailpageinfo?shopId=' + shopId;
+    let searchDivUrl = '/o2o/frontend/listshopdetailpageinfo?shopId=' + shopId;
     $('#exchangelist').attr('href', '/o2o/frontend/awardlist?shopId=' + shopId);
 
     getSearchDivData();
@@ -19,29 +19,24 @@ $(function () {
 
 
     function getSearchDivData() {
-        var url = searchDivUrl;
-        $.getJSON(url, function (data) {
+        // let url = searchDivUrl;
+        $.getJSON(searchDivUrl, function (data) {
 
             if (data.success) {
-                var shop = data.shop;
+                let shop = data.shop;
                 $('#shop-cover-pic').attr('src', getContextPath() + shop.shopImg);
-                $('#shop-update-time').html(
-                    new Date(shop.lastEditTime)
-                        .Format("yyyy-MM-dd"));
+                $('#shop-update-time').html(new Date(shop.lastEditTime).Format("yyyy-MM-dd"));
                 $('#shop-name').html(shop.shopName);
                 $('#shop-desc').html(shop.shopDesc);
                 $('#shop-addr').html(shop.shopAddr);
                 $('#shop-phone').html(shop.phone);
 
-                var productCategoryList = data.productCategoryList;
-                var html = '';
+                let productCategoryList = data.productCategoryList;
+                let html = '';
                 productCategoryList
                     .map(function (item, index) {
                         html += '<a href="#" class="button" data-product-search-id='
-                            + item.productCategoryId
-                            + '>'
-                            + item.productCategoryName
-                            + '</a>';
+                            + item.productCategoryId+ '>'+ item.productCategoryName+ '</a>';
                     });
                 $('#shopdetail-button-div').html(html);
             }
@@ -51,15 +46,14 @@ $(function () {
 
     function addItems(pageSize, pageIndex) {
         // 生成新条目的HTML
-        var url = listUrl + '?' + 'pageIndex=' + pageIndex + '&pageSize='
-            + pageSize + '&productCategoryId=' + productCategoryId
-            + '&productName=' + productName + '&shopId=' + shopId;
+        let url = listUrl + '?pageIndex=' + pageIndex + '&pageSize=' + pageSize +
+            '&productCategoryId=' + productCategoryId + '&productName=' + productName + '&shopId=' + shopId;
         loading = true;
         $.getJSON(url, function (data) {
             if (data.success) {
                 // console.log(data);
                 maxItems = data.count;
-                var html = '';
+                let html = '';
                 data.data.productList.map(function (item, index) {
                     html += '' + '<div class="card" data-product-id='
                         + item.productId + '>'
@@ -79,13 +73,15 @@ $(function () {
                         + '</div>';
                 });
                 $('.list-div').append(html);
-                var total = $('.list-div .card').length;
+                let total = $('.list-div .card').length;
                 maxItems = data.data.count;
                 if (total >= maxItems) {
+
                     // 加载完毕，则注销无限加载事件，以防不必要的加载
-                    // $.detachInfiniteScroll($('.infinite-scroll'));
+                    $.detachInfiniteScroll($('.infinite-scroll'));
                     // 隐藏加载提示符
-                    $('.infinite-scroll-preloader').hide();
+                    // console.log("111111111")
+                    $('.infinite-scroll-preloader').remove();
                 } else {
                     $('.infinite-scroll-preloader').show();
                 }
@@ -110,8 +106,7 @@ $(function () {
                 $(e.target).removeClass('button-fill');
                 productCategoryId = '';
             } else {
-                $(e.target).addClass('button-fill').siblings()
-                    .removeClass('button-fill');
+                $(e.target).addClass('button-fill').siblings().removeClass('button-fill');
             }
             $('.list-div').empty();
             pageNum = 1;
@@ -119,15 +114,10 @@ $(function () {
         }
     });
 
-    $('.list-div')
-        .on(
-            'click',
-            '.card',
-            function (e) {
-                var productId = e.currentTarget.dataset.productId;
-                window.location.href = '/o2o/frontend/productdetail?productId='
-                    + productId;
-            });
+    $('.list-div').on('click', '.card', function (e) {
+        let productId = e.currentTarget.dataset.productId;
+        window.location.href = '/o2o/frontend/productdetail?productId=' + productId;
+    });
 
     // $('#search').on('change', function (e) {
     //     productName = e.target.value;
@@ -142,8 +132,6 @@ $(function () {
         pageNum = 1;
         addItems(pageSize, pageNum);
     });
-    $('#me').click(function () {
-        $.openPanel('#panel-js-demo');
-    });
+
     $.init();
 });

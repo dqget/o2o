@@ -1,6 +1,7 @@
 package com.lovesickness.o2o.util.weixin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lovesickness.o2o.config.wechat.WechatConfiguration;
 import com.lovesickness.o2o.dto.UserAccessToken;
 import com.lovesickness.o2o.dto.WechatUser;
 import com.lovesickness.o2o.entity.PersonInfo;
@@ -32,10 +33,10 @@ public class WechatUtil {
      */
     public static UserAccessToken getUserAccessToken(String code) {
         // 测试号信息里的appId
-        String appId = "wx2f51d86feea57077";
+        String appId = WechatConfiguration.appId;
         log.debug("appId:" + appId);
         // 测试号信息里的appsecret
-        String appsecret = "21b4919b2427d3f824553a4dea61e43c";
+        String appsecret = WechatConfiguration.appsecret;
         log.debug("appSecret:" + appsecret);
         // 根据传入的code,拼接出访问微信定义好的接口的URL
         String url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + appId + "&secret=" + appsecret

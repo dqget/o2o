@@ -2,7 +2,9 @@ $(function () {
     let productId = getQueryString('productId');
     let addEvaUrl = '/o2o/evaluation/addevaluationByUser';
     const productUrl = '/o2o/frontend/listproductdetailpageinfo?productId=' + productId;
-    let getEvaUrl = '/o2o/evaluation/getevaluation';
+    const getEvaUrl = '/o2o/evaluation/getevaluation';
+    const updateBuyerCarturl = '/o2o/frontend/updateitemtobuyercart';
+
     let product;
     let pageIndex = 1;
     let pageSize = 999;
@@ -21,6 +23,7 @@ $(function () {
                     + '<span class="pull-right">'
                     + new Date(item.createTime).Format("yyyy-MM-dd hh:mm")
                     + '</span></div></div><div class="card-footer" style="display:block;">' +
+                    (item.starLevel != null ? '<span> ' + item.starLevel + '星</span>' : "") +
                     '<a href="#" fromName="' + item.fromName + '" fromUid="' + item.fromUid + '"' +
                     ' class="prompt-title-ok" style="float:right;">回复</a></div></li>';
             });
@@ -31,7 +34,7 @@ $(function () {
     $(document).on('click', '.prompt-title-ok', function (e) {
         let fromName = this.getAttribute("fromName");
         let fromUid = this.getAttribute("fromUid");
-        console.log(this.value);
+        // console.log(this.value);
         $.prompt('请输入回复内容', '回复评论', function (value) {
             $.ajax({
                 url: addEvaUrl,
@@ -76,9 +79,7 @@ $(function () {
             product = data.product;
             getProductEva();
             $('#product-img').attr('src', getContextPath() + product.imgAddr);
-            $('#product-time').text(
-                new Date(product.lastEditTime)
-                    .Format("yyyy-MM-dd"));
+            $('#product-time').text(new Date(product.lastEditTime).Format("yyyy-MM-dd"));
             if (product.point !== undefined) {
                 $('#product-point').text('购买可获得' + product.point + '积分');
             }
@@ -102,9 +103,6 @@ $(function () {
             // $('#imgList').html(imgListHtml);
         }
     });
-    $('#me').click(function () {
-        $.openPanel('#panel-left-demo');
-    });
 
     function imgInit() {
         /*=== Popup ===*/
@@ -118,15 +116,14 @@ $(function () {
     }
 
     $('#additem').click(function () {
-        var url = '/o2o/frontend/updateitemtobuyercart';
-        var buyerCartItem = {
-            product: product,
+        let buyerCartItem = {
+            product: {productId: product.productId},
             amount: 1
         };
-        console.log(buyerCartItem);
+        // console.log(buyerCartItem);
 
         $.ajax({
-            url: url,
+            url: updateBuyerCarturl,
             type: "post",
             contentType: 'application/json',
             data: JSON.stringify([buyerCartItem]),
@@ -136,6 +133,8 @@ $(function () {
                 } else {
                     $.toast(data.msg);
                 }
+            }, error: function (data) {
+
             }
         });
     });

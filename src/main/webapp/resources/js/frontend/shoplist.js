@@ -164,10 +164,7 @@ $(function () {
         pageNum = 1;
         addItems(pageSize, pageNum);
     });
-    //侧栏
-    $('#me').click(function () {
-        $.openPanel('#panel-js-demo');
-    });
+
 
     $.init();
 });

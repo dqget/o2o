@@ -1,6 +1,8 @@
 package com.lovesickness.o2o.config.web;
 
 import com.google.code.kaptcha.servlet.KaptchaServlet;
+import com.lovesickness.o2o.interceptor.shopadmin.ShopLoginInterceptor;
+import com.lovesickness.o2o.interceptor.shopadmin.ShopPermissionInterceptor;
 import com.lovesickness.o2o.util.PathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -131,7 +133,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter implements Applica
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
- /*       //拦截路径
+        //拦截路径
         String interceptPath = "/shopadmin/**";
         //生成拦截器对象
         InterceptorRegistration loginIR = registry.addInterceptor(new ShopLoginInterceptor());
@@ -143,6 +145,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter implements Applica
         InterceptorRegistration permissionIR = registry.addInterceptor(new ShopPermissionInterceptor());
         permissionIR.addPathPatterns(interceptPath);
         //配置不拦截路径
+
         //店铺列表界面
         permissionIR.excludePathPatterns("/shopadmin/shoplist", "/shopadmin/getshoplist");
         //新增店铺
@@ -151,7 +154,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter implements Applica
         permissionIR.excludePathPatterns("/shopadmin/shopmanage", "/shopadmin/getshopmanagementinfo");
         //店铺授权管理添加界面
         permissionIR.excludePathPatterns("/shopadmin/addshopauthmap");
-*/
+
     }
 }
 

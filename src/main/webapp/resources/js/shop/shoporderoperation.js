@@ -32,8 +32,9 @@ $(function () {
                 $("#product-price").html('商品总价:￥' + productPriceCount);
                 $("#order-price").html('订单总价:￥' + order.payPrice);
                 $("#pay").html('实付款:￥' + order.payPrice);
-                $("#name-and-phone").html(order.receiveName + ' ' + order.receivePhone);
-                $("#addr").html(order.receiveAddr);
+                // $("#name-and-phone").html(order.receiveName + ' ' + order.receivePhone);
+                // $("#addr").html(order.receiveAddr);
+
                 $("#orderNo").val(orderNo);
                 $("#order-create-time").val(new Date(order.createTime).Format("yyyy-MM-dd hh:mm:ss"));
                 $("#pay-time").val(order.payTime != null ? new Date(order.payTime).Format("yyyy-MM-dd hh:mm:ss") : "待支付");
@@ -44,15 +45,16 @@ $(function () {
                 $("#receive-name").val(order.receiveName);
                 $("#receive-addr").val(order.receiveAddr);
                 $("#track-number").val(order.trackNumber);
+                $("#receive-phone").val(order.receivePhone);
 
-                console.log(order.user.name);
+                // console.log(order.user.name);
 
                 if (order.isPay == 0) {
                     $("#order-operation").html("支付");
                     $("#order-operation").css("pointer-events", "none");
-
                 } else if (order.isShip == 0) {
                     $("#order-operation").html("确认发货");
+                    $("#track-number").removeAttr('readonly');
                     $("#order-operation").on('click', function (e) {
                         let trackNumber = $("#track-number").val().trim();
                         if (trackNumber == null || trackNumber == "") {

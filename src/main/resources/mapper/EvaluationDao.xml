@@ -11,6 +11,7 @@
         <result column="to_name" property="toName"/>
         <result column="to_uid" property="toUid"/>
         <result column="create_time" property="createTime"/>
+        <result column="star_level" property="starLevel"/>
         <association property="product" column="product_id" javaType="com.lovesickness.o2o.entity.Product">
             <id column="product_id" property="productId"/>
         </association>
@@ -31,8 +32,9 @@
             e.from_name,
             e.to_uid,
             e.to_name,
-            e.create_time
-        FROM tb_evaluation e
+            e.create_time,
+            opm.star_level
+        FROM tb_evaluation e LEFT JOIN tb_order_product_map opm ON e.evaluation_id = opm.evaluation_id
         WHERE e.product_id = #{evaluationCondition.product.productId}
         ORDER BY create_time
         LIMIT #{rowIndex}, #{pageSize};

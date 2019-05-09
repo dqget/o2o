@@ -9,20 +9,19 @@ $(function () {
             success: function (data) {
                 if (data.success) {
                     handleList(data.shopList);
-                    handleUser(data.user);
                 }
+            },
+            error: function () {
+                handleUser();
             }
         });
+
     }
 
-    function handleUser(data) {
-        if (data.userType == null || data.userType == 1) {
-            $.alert('您的身份不是店主', '警告!', function () {
-                $.alert('您的身份不是店主！');
-                window.location.href = "/o2o/frontend/index";
-            });
-        }
-        $('#user-name').text(data.name);
+    function handleUser() {
+        $.alert('请回到首页', '您的身份或许不是店主', function () {
+            window.location.href = "/o2o/frontend/index";
+        });
     }
 
     function handleList(data) {

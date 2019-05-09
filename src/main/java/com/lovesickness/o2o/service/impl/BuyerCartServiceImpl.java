@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lovesickness.o2o.cache.JedisUtil;
+import com.lovesickness.o2o.dao.ProductDao;
 import com.lovesickness.o2o.entity.BuyerCartItem;
 import com.lovesickness.o2o.entity.Product;
 import com.lovesickness.o2o.service.BuyerCartService;
@@ -25,6 +26,8 @@ public class BuyerCartServiceImpl implements BuyerCartService {
     private static Logger logger = LoggerFactory.getLogger(BuyerCartServiceImpl.class);
     @Autowired
     private JedisUtil jedisUtil;
+    @Autowired
+    private ProductDao productDao;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -33,6 +36,14 @@ public class BuyerCartServiceImpl implements BuyerCartService {
         if (userId == null || !BuyerCartItemUtil.isRightItem(newCartItems)) {
             return false;
         }
+        //判断商品ID是存在，不存在即非法操作
+        newCartItems.forEach(newCartItem -> {
+            Product product = productDao.queryProductByProductId(newCartItem.getProduct().getProductId());
+            if (product == null) {
+                throw new RuntimeException("购物车：商品信息不存在");
+            }
+            newCartItem.setProduct(product);
+        });
         String key = "cart_" + userId;
         Jedis jedis = jedisUtil.getJedis();
         ObjectMapper mapper = new ObjectMapper();
@@ -51,6 +62,7 @@ public class BuyerCartServiceImpl implements BuyerCartService {
 
             //2.判断购物车中是否含有想要修改的产品
             for (BuyerCartItem newCartItem : newCartItems) {
+
                 //是否已经添加过该商品
                 //如果存在，更改产品数量
                 if (buyerCart.contains(newCartItem)) {

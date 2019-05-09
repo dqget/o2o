@@ -2,10 +2,14 @@
     border: 1px solid #999;
     padding: .5rem;
     border-top: none;
+    margin-left: auto;
+
 }
+
 .row-shop-user-award:first-child {
     border-top: 1px solid #999;
 }
+
 .shop-user-award-list .row-shop-user-point:first-child {
     border-top: none;
 }

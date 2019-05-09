@@ -70,4 +70,25 @@ public class UserAwardMapServiceImpl implements UserAwardMapService {
         }
 
     }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public UserAwardMapExecution modifyUserAwardMap(UserAwardMap userAwardMap) {
+        if (userAwardMap != null && userAwardMap.getUserAwardId() != null) {
+            int effectedNum = userAwardMapDao.updateUserAwardMap(userAwardMap);
+
+            if (effectedNum <= 0) {
+                throw new UserAwardMapOperationException("奖品修改失败");
+            }
+            return new UserAwardMapExecution(UserAwardMapStateEnum.SUCCESS);
+        } else {
+            return new UserAwardMapExecution(UserAwardMapStateEnum.EMPTY);
+
+        }
+    }
+
+    @Override
+    public UserAwardMap queryUserAwardMapById(Long userAwardMapId) {
+        return userAwardMapDao.queryUserAwardMapById(userAwardMapId);
+    }
 }

@@ -2,17 +2,21 @@
     border: 1px solid #999;
     padding: .5rem;
     border-bottom: none;
+    margin-left: auto;
 }
 
 .row-product:last-child {
     border-bottom: 1px solid #999;
-}
 
+}
+.content-block{
+    padding:0;
+}
 .product-name {
     white-space: nowrap;
     overflow-x: scroll;
 }
 
 .product-wrap a {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
 }

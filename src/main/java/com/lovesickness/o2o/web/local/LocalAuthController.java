@@ -254,6 +254,18 @@ public class LocalAuthController {
         return modelMap;
     }
 
+    @RequestMapping(value = "/islogin")
+    @ApiOperation(value = "判断是否登录", notes = "退出登录")
+    public ResultBean<?> isLogin(HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user != null && user.getUserId() != null) {
+            return new ResultBean<>(user);
+        } else {
+            return new ResultBean<>(false, ResultBean.FAIL, "未登录");
+
+        }
+    }
+
     @GetMapping("/testlogin")
     @ApiOperation(value = "登录测试", notes = "模拟登录前端展示系统")
     public ResultBean<?> testLogin(HttpServletRequest request) {

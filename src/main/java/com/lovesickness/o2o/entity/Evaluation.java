@@ -37,6 +37,16 @@ public class Evaluation {
 
     private Date createTime;
 
+    private Long starLevel;
+
+    public Long getStarLevel() {
+        return starLevel;
+    }
+
+    public void setStarLevel(Long starLevel) {
+        this.starLevel = starLevel;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }

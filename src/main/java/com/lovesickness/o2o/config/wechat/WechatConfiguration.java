@@ -29,6 +29,24 @@ public class WechatConfiguration {
      * 微信登录的URL
      */
     public static String loginUrl;
+    /**
+     * 微信开发者ID
+     */
+    public static String appId;
+    /**
+     * 微信开发者密码
+     */
+    public static String appsecret;
+
+    @Value("${wechat.appid}")
+    public void setAppId(String appId) {
+        WechatConfiguration.appId = appId;
+    }
+
+    @Value("${wechat.appsecret}")
+    public void setAppsecret(String appsecret) {
+        WechatConfiguration.appsecret = appsecret;
+    }
 
     @Value("${wechat.prefix}")
     public void setUrlPrefix(String urlPrefix) {

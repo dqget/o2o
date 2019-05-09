@@ -36,7 +36,7 @@ public class ProductCategoryManagementController {
 
     @PostMapping(value = "/addproductcategory")
     @ApiOperation(value = "添加商品分类", notes = "向该店铺下批量添加商品分类")
-    private ResultBean<ProductCategoryExecution> addProductCategory(@RequestBody List<ProductCategory> productCategoryList, HttpServletRequest request) {
+    public ResultBean<ProductCategoryExecution> addProductCategory(@RequestBody List<ProductCategory> productCategoryList, HttpServletRequest request) {
         Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
         if (productCategoryList == null || productCategoryList.size() == 0) {
             return new ResultBean<>(new ProductCategoryOperationException("商品类别为空"));
@@ -49,7 +49,7 @@ public class ProductCategoryManagementController {
 
     @PostMapping(value = "/removeproductcategory")
     @ApiOperation(value = "删除商品分类", notes = "向该店铺下删除商品分类")
-    private ResultBean<com.lovesickness.o2o.dto.ProductCategoryExecution> removeProductCategory(Long productCategoryId, HttpServletRequest request) {
+    public ResultBean<com.lovesickness.o2o.dto.ProductCategoryExecution> removeProductCategory(Long productCategoryId, HttpServletRequest request) {
         request.getSession().invalidate();
         if (productCategoryId == null || productCategoryId < 0) {
             return new ResultBean<>(false, 0, "商品类别错误");
