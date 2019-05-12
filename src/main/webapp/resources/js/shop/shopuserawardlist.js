@@ -16,8 +16,7 @@ $(function () {
                         '<div class="col-20">' + item.award.awardName + '</div>' +
                         '<div class="col-15">' + item.user.name + '</div>' +
                         '<div class="col-15">' + item.point + '</div>' +
-                        '<div class="col-20">' + usedStatusHtml(item) + '</div>'
-                    ;
+                        '<div class="col-20">' + usedStatusHtml(item) + '</div></div>';
                 });
                 $(".shop-user-award-list").html(html);
             } else {

@@ -81,10 +81,10 @@ public class UserProductMapController {
             //指定日期格式
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             //商品名列表，保证唯一性
-            HashSet<String> legendData = new HashSet<>();
-            //x周数组
-            HashSet<String> xData = new HashSet<>();
-            //定义series
+            Set<String> legendData = new HashSet<>();
+            //x轴数组
+            HashSet<String> xData = new LinkedHashSet<>();
+            //定义series  每组数据的数值
             List<EchartSeries> series = new ArrayList<>();
             //日销量列表
             List<Integer> totalList = new ArrayList<>();

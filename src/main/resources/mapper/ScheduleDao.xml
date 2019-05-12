@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.ScheduleDao">
+    <resultMap id="scheduleMap" type="com.lovesickness.o2o.entity.Schedule">
+        <id column="schedule_id" property="scheduleId"/>
+        <result column="product_price" property="productPrice"/>
+        <result column="daily_quantity" property="dailyQuantity"/>
+        <result column="amount_day" property="amountDay"/>
+        <result column="is_pay" property="isPay"/>
+        <result column="pay_price" property="payPrice"/>
+        <result column="pay_time" property="payTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="enable_status" property="enableStatus"/>
+        <association property="shop" column="shop_id"
+                     javaType="com.lovesickness.o2o.entity.Shop">
+            <id column="shop_id" property="shopId"/>
+            <result column="shop_name" property="shopName"/>
+        </association>
+        <association property="product" column="product_id"
+                     javaType="com.lovesickness.o2o.entity.Product">
+            <id column="product_id" property="productId"/>
+            <result column="product_name" property="productName"/>
+        </association>
+        <association property="user" column="user_id"
+                     javaType="com.lovesickness.o2o.entity.PersonInfo">
+            <id column="user_id" property="userId"/>
+            <result column="name" property="name"/>
+        </association>
+        <collection property="scheduleDistributionList" column="schedule_id"
+                    ofType="com.lovesickness.o2o.entity.ScheduleDistribution">
+            <id column="schedule_distribution_id" property="scheduleDistributionId"/>
+            <result column="receive_name" property="receiveName"/>
+            <result column="receive_phone" property="receivePhone"/>
+            <result column="receive_addr" property="receiveAddr"/>
+            <result column="receipt_time" property="receiptTime"/>
+            <result column="is_receipt" property="isReceipt"/>
+            <result column="distribution_update_time" property="updateTime"/>
+            <association property="operator" column="operator_id"
+                         javaType="com.lovesickness.o2o.entity.PersonInfo">
+                <id column="user_id" property="userId"/>
+                <result column="operator_name" property="name"/>
+            </association>
+        </collection>
+    </resultMap>
+    <insert id="insertSchedule" parameterType="com.lovesickness.o2o.entity.Schedule"
+            useGeneratedKeys="true" keyProperty="scheduleId" keyColumn="schedule_id">
+        INSERT INTO tb_schedule (user_id, shop_id, product_id, product_price,
+                                 daily_quantity, amount_day, pay_price, pay_time,
+                                 create_time, update_time)
+        VALUES (#{user.userId}, #{shop.shopId}, #{product.productId}, #{productPrice},
+                #{dailyQuantity}, #{amountDay}, #{payPrice},
+                #{payTime}, #{createTime}, #{updateTime})
+    </insert>
+    <select id="queryScheduleById" resultMap="scheduleMap">
+        SELECT
+            sd.schedule_id,
+            sd.create_time,
+            sd.update_time,
+            sd.product_price,
+            sd.pay_price,
+            sd.is_pay,
+            sd.pay_time,
+            sd.amount_day,
+            sd.daily_quantity,
+            sd.enable_status,
+            p.product_id,
+            p.product_name,
+            s.shop_id,
+            s.shop_name,
+            u.user_id,
+            u.name,
+            sdd.schedule_distribution_id,
+            sdd.update_time distribution_update_time,
+            sdd.receive_name,
+            sdd.receipt_time,
+            sdd.receive_addr,
+            sdd.receive_phone,
+            sdd.is_receipt,
+            sdd.operator_id,
+            sdd.name        operator_name
+        FROM
+            tb_shop s,
+            tb_person_info u,
+            tb_person_info operator,
+            tb_product p,
+            tb_schedule sd LEFT JOIN (
+                                         SELECT
+                                             sdd.schedule_distribution_id,
+                                             sdd.schedule_id,
+                                             sdd.operator_id,
+                                             sdd.is_receipt,
+                                             sdd.receipt_time,
+                                             sdd.receive_addr,
+                                             sdd.receive_name,
+                                             sdd.receive_phone,
+                                             sdd.update_time,
+                                             operator.`name`
+                                         FROM tb_schedule_distribution sdd
+                                             LEFT JOIN tb_person_info operator
+                                                 ON sdd.operator_id = operator.user_id
+                                     ) sdd
+                ON sd.schedule_id = sdd.schedule_id
+        WHERE
+            sd.user_id = u.user_id
+            AND
+            sd.shop_id = s.shop_id
+            AND
+            sd.product_id = p.product_id
+            AND
+            sd.schedule_id = #{scheduleId}
+        ORDER BY sdd.receipt_time
+
+    </select>
+    <update id="updateSchedule" parameterType="com.lovesickness.o2o.entity.Schedule">
+        UPDATE tb_schedule
+        <set>
+            <if test="enableStatus!=null">enable_status = #{enableStatus},</if>
+            <if test="updateTime!=null">update_time = #{updateTime},</if>
+            <if test="isPay!=null">is_pay = #{isPay},</if>
+            <if test="payTime!=null ">pay_time = #{payTime},</if>
+            <if test="dailyQuantity!=null ">daily_quantity=#{dailyQuantity},</if>
+            <if test="amountDay!=null ">amount_day=#{amountDay},</if>
+            <if test="productPrice!=null ">product_price=#{productPrice},</if>
+        </set>
+        WHERE schedule_id = #{scheduleId}
+    </update>
+    <select id="queryScheduleList" resultMap="scheduleMap">
+        SELECT
+        sd.schedule_id,
+        sd.create_time,
+        sd.update_time,
+        sd.product_price,
+        sd.pay_price,
+        sd.is_pay,
+        sd.pay_time,
+        sd.amount_day,
+        sd.daily_quantity,
+        sd.enable_status,
+        p.product_id,
+        p.product_name,
+        s.shop_id,
+        s.shop_name,
+        u.user_id,
+        u.name,
+        sdd.schedule_distribution_id,
+        sdd.update_time distribution_update_time,
+        sdd.receive_name,
+        sdd.receipt_time,
+        sdd.receive_addr,
+        sdd.receive_phone,
+        sdd.is_receipt,
+        sdd.operator_id,
+        sdd.name operator_name
+        FROM tb_shop s,
+        tb_person_info u,
+        tb_product p,
+        tb_schedule sd LEFT JOIN (
+        SELECT
+        sdd.schedule_distribution_id,
+        sdd.schedule_id,
+        sdd.operator_id,
+        sdd.is_receipt,
+        sdd.receipt_time,
+        sdd.receive_addr,
+        sdd.receive_name,
+        sdd.receive_phone,
+        sdd.update_time,
+        operator.`name`
+        FROM tb_schedule_distribution sdd
+        LEFT JOIN
+        tb_person_info operator
+        ON sdd.operator_id = operator.user_id
+        ORDER BY sdd.receipt_time
+        ) sdd
+        ON sd.schedule_id = sdd.schedule_id
+        <where>
+            sd.user_id = u.user_id
+            AND
+            sd.shop_id = s.shop_id
+            AND
+            sd.product_id = p.product_id
+            <if test="scheduleCondition.product!=null
+            and scheduleCondition.product.productName!=null ">
+                AND p.product_name like '%${scheduleCondition.product.productName}%'
+            </if>
+            <if test="scheduleCondition.user!=null and scheduleCondition.user.userId != null">
+                AND u.user_id = #{scheduleCondition.user.userId}
+            </if>
+            <if test="scheduleCondition.user!=null and scheduleCondition.user.name != null">
+                AND u.name like '%${scheduleCondition.user.name}%'
+            </if>
+            <if test="scheduleCondition.shop!=null and scheduleCondition.shop.shopId != null">
+                AND s.shop_id = #{scheduleCondition.shop.shopId}
+            </if>
+            <if test="scheduleCondition.enableStatus!=null">
+                and enable_status = #{scheduleCondition.enableStatus}
+            </if>
+        </where>
+        ORDER BY
+        sd.update_time DESC, sdd.receipt_time
+        LIMIT #{rowIndex},#{pageSize};
+    </select>
+    <select id="queryScheduleCount" parameterType="com.lovesickness.o2o.entity.Product" resultType="int">
+        SELECT
+        COUNT(DISTINCT sd.schedule_id)
+        FROM tb_shop s,
+        tb_person_info u,
+        tb_product p,
+        tb_schedule sd
+        LEFT JOIN tb_schedule_distribution sdd
+        ON sd.schedule_id = sdd.schedule_id
+        <where>
+            sd.user_id = u.user_id
+            AND
+            sd.shop_id = s.shop_id
+            AND
+            sd.product_id = p.product_id
+            <if test="scheduleCondition.product!=null
+            and scheduleCondition.product.productName!=null ">
+                AND p.product_name like '%${scheduleCondition.product.productName}%'
+            </if>
+            <if test="scheduleCondition.user!=null and scheduleCondition.user.userId != null">
+                AND u.user_id = #{scheduleCondition.user.userId}
+            </if>
+            <if test="scheduleCondition.user!=null and scheduleCondition.user.name != null">
+                AND u.name like '%${scheduleCondition.user.name}%'
+            </if>
+            <if test="scheduleCondition.shop!=null and scheduleCondition.shop.shopId != null">
+                AND s.shop_id = #{scheduleCondition.shop.shopId}
+            </if>
+            <if test="scheduleCondition.enableStatus!=null">
+                and enable_status = #{scheduleCondition.enableStatus}
+            </if>
+        </where>
+    </select>
+</mapper>

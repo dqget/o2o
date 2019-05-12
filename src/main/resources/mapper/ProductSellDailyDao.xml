@@ -52,7 +52,7 @@
                 AND DATE_FORMAT(psd.create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{endTime},'%Y-%m-%d')
             </if>
         </where>
-        ORDER BY psd.product_id,create_time
+        ORDER BY psd.product_id,create_time ASC
     </select>
     <insert id="insertProductSellDaily"
             parameterType="com.lovesickness.o2o.entity.ProductSellDaily">

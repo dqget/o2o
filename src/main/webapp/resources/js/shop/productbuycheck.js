@@ -17,12 +17,13 @@ $(function () {
                 //遍历购买信息，拼接处列信息
                 userProductMapList.map(function (item, index) {
                     tempHtml += '<div class="row row-productbuycheck">'
-                        + '<div class="col-10">' + item.product.productName + '</div>'
-                        + '<div class="col-40 productbuycheck-time">'
-                        + new Date(item.createTime).Format("yyyy-MM-dd hh:mm:ss") + '</div>'
+                        + '<div class="col-33">' + item.product.productName + '</div>'
+                        + '<div class="col-30 productbuycheck-time">'
+                        + new Date(item.createTime).Format("yy-MM-dd") + '</div>'
                         + '<div class="col-20">' + item.user.name + '</div>'
-                        + '<div class="col-10">' + item.point + '</div>'
-                        + '<div class="col-20">' + (item.operator != null ? item.operator.name : '线上支付') + '</div></div>'
+                        + '<div class="col-20">' + item.point + '</div></div>';
+
+                    // + '<div class="col-20">' + (item.operator != null ? item.operator.name : '线上') + '</div>'
                 });
                 $(".productbuycheck-wrap").html(tempHtml);
             }
@@ -49,7 +50,8 @@ $(function () {
                 option.legend.data = data.legendData;
                 option.xAxis = data.xAxis;
                 option.series = data.series;
-                myChart.setOption(option)
+                myChart.setOption(option);
+                // window.onresize = myChart.resize;
             }
         });
     }

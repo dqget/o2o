@@ -1,18 +1,13 @@
 package com.lovesickness.o2o.web.frontend;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alipay.api.AlipayApiException;
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
-import com.alipay.api.domain.AlipayTradeWapPayModel;
-import com.alipay.api.request.AlipayTradeWapPayRequest;
-import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.dto.OrderExecution;
 import com.lovesickness.o2o.entity.*;
 import com.lovesickness.o2o.enums.OrderStateEnum;
 import com.lovesickness.o2o.service.BuyerCartService;
 import com.lovesickness.o2o.service.EvaluationService;
 import com.lovesickness.o2o.service.OrderService;
+import com.lovesickness.o2o.util.ALiPayUtil;
 import com.lovesickness.o2o.util.BuyerCartItemUtil;
 import com.lovesickness.o2o.util.OrderUtil;
 import com.lovesickness.o2o.util.ResultBean;
@@ -25,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.List;
 
@@ -90,7 +83,7 @@ public class OrderContorller {
         if (isSuccessClearBuyerCart) {
             //删除成功
             //3.唤起支付宝支付功能////
-            aliPay(order, request, response);
+            ALiPayUtil.aliPay4Order(order, request, response);
         }
 
         //4.支付成功后回调接口///
@@ -110,61 +103,61 @@ public class OrderContorller {
         if (order.getIsPay() == 1) {
             return;
         }
-        aliPay(order, request, response);
+        ALiPayUtil.aliPay4Order(order, request, response);
 
     }
 
-    private void aliPay(Order order, HttpServletRequest request, HttpServletResponse response) {
-        //获得初始化的AlipayClient
-        AlipayClient alipayClient = new DefaultAlipayClient(ALiPayConfiguration.gateWayUrl,
-                ALiPayConfiguration.appId,
-                ALiPayConfiguration.merchantPrivateKey,
-                "json",
-                ALiPayConfiguration.charset,
-                ALiPayConfiguration.aliPublicKry,
-                ALiPayConfiguration.signType);
-
-        //设置请求参数
-        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
-
-        alipayRequest.setReturnUrl(ALiPayConfiguration.returnUrl);
-        alipayRequest.setNotifyUrl(ALiPayConfiguration.notifyUrl);
-
-        // 封装请求支付信息
-        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
-        //商户订单号，商户网站订单系统中唯一订单号，必填
-        String outTradeNo;
-        try {
-            outTradeNo = order.getOrderNumber();
-            //付款金额，必填
-            String totalAmount = order.getPayPrice();
-            //订单名称，必填
-            String subject = "订单名称";
-            //商品描述，可空
-            String body = "商品描述";
-            //HttpServletRequestUtil.getString(request, "WIDbody");
-
-            model.setOutTradeNo(outTradeNo);
-            model.setSubject(subject);
-            model.setTotalAmount(totalAmount);
-            model.setBody(body);
-            model.setProductCode("QUICK_WAP_WAY");
-            alipayRequest.setBizModel(model);
-
-            //请求
-            String result = alipayClient.pageExecute(alipayRequest).getBody();
-            LOGGER.info(result);
-            response.setContentType("text/html;charset=utf-8");
-            //输出
-            PrintWriter writer = response.getWriter();
-            //直接将完整的表单html输出到页面
-            writer.println(result);
-            writer.flush();
-            writer.close();
-        } catch (AlipayApiException | IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void aliPay(Order order, HttpServletRequest request, HttpServletResponse response) {
+//        //获得初始化的AlipayClient
+//        AlipayClient alipayClient = new DefaultAlipayClient(ALiPayConfiguration.gateWayUrl,
+//                ALiPayConfiguration.appId,
+//                ALiPayConfiguration.merchantPrivateKey,
+//                "json",
+//                ALiPayConfiguration.charset,
+//                ALiPayConfiguration.aliPublicKry,
+//                ALiPayConfiguration.signType);
+//
+//        //设置请求参数
+//        AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
+//
+//        alipayRequest.setReturnUrl(ALiPayConfiguration.returnUrl);
+//        alipayRequest.setNotifyUrl(ALiPayConfiguration.notifyUrl);
+//
+//        // 封装请求支付信息
+//        AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();
+//        //商户订单号，商户网站订单系统中唯一订单号，必填
+//        String outTradeNo;
+//        try {
+//            outTradeNo = order.getOrderNumber();
+//            //付款金额，必填
+//            String totalAmount = order.getPayPrice();
+//            //订单名称，必填
+//            String subject = "订单名称";
+//            //商品描述，可空
+//            String body = "商品描述";
+//            //HttpServletRequestUtil.getString(request, "WIDbody");
+//
+//            model.setOutTradeNo(outTradeNo);
+//            model.setSubject(subject);
+//            model.setTotalAmount(totalAmount);
+//            model.setBody(body);
+//            model.setProductCode("QUICK_WAP_WAY");
+//            alipayRequest.setBizModel(model);
+//
+//            //请求
+//            String result = alipayClient.pageExecute(alipayRequest).getBody();
+//            LOGGER.info(result);
+//            response.setContentType("text/html;charset=utf-8");
+//            //输出
+//            PrintWriter writer = response.getWriter();
+//            //直接将完整的表单html输出到页面
+//            writer.println(result);
+//            writer.flush();
+//            writer.close();
+//        } catch (AlipayApiException | IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @GetMapping("/getorderlistbyuser")
     @ApiOperation(value = "根据用户订单信息查询", notes = "查询用户的订单信息，state 0全部 1待付款、2待发货、3待收货 4待评价")

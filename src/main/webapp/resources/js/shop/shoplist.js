@@ -9,6 +9,7 @@ $(function () {
             success: function (data) {
                 if (data.success) {
                     handleList(data.shopList);
+                    $("#user-name").text(data.user.name);
                 }
             },
             error: function () {

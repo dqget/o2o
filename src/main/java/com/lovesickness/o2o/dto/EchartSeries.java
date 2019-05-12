@@ -9,6 +9,7 @@ import java.util.List;
 public class EchartSeries {
     private String name;
     private String type = "bar";
+//    private String type = "pie";
     private List<Integer> data;
 
     public String getName() {

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lovesickness.o2o.dao.ScheduleDistributionDao">
+    <insert id="batchInsertScheduleDistribution" parameterType="java.util.List">
+        INSERT INTO tb_schedule_distribution (schedule_id, receive_name,
+        receive_phone, receive_addr,receipt_time)
+        VALUES
+        <foreach collection="list" separator="," index="index" item="scheduleDistribution">
+            (
+            #{scheduleDistribution.scheduleId},
+            #{scheduleDistribution.receiveName},
+            #{scheduleDistribution.receivePhone},
+            #{scheduleDistribution.receiveAddr},
+            #{scheduleDistribution.receiptTime}
+            )
+        </foreach>
+    </insert>
+    <update id="updateScheduleDistribution"
+            parameterType="com.lovesickness.o2o.entity.ScheduleDistribution">
+        UPDATE tb_schedule_distribution
+        <set>
+            <if test="operator!=null and operator.userId!=null">
+                operator_id = #{operator.operatorId},
+            </if>
+            <if test="receiveName!=null ">receive_name = #{receiveName},</if>
+            <if test="receivePhone!=null ">receive_phone = #{receivePhone},</if>
+            <if test="receiveAddr!=null ">receive_addr = #{receiveAddr},</if>
+            <if test="receiptTime!=null ">receipt_time = #{receiptTime},</if>
+            <if test="isReceipt!=null ">is_receipt = #{isReceipt},</if>
+            <if test="updateTime!=null ">update_time = #{updateTime},</if>
+        </set>
+    </update>
+    <select id="queryScheduleDistribution" resultType="com.lovesickness.o2o.entity.ScheduleDistribution">
+        SELECT
+            schedule_distribution_id,
+            schedule_id,
+            operator_id,
+            receive_phone,
+            receive_name,
+            receive_addr,
+            receipt_time,
+            is_receipt,
+            update_time
+        FROM tb_schedule_distribution
+        WHERE schedule_id = #{scheduleId}
+        ORDER BY
+            schedule_distribution_id ASC
+    </select>
+</mapper>
