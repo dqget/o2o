@@ -108,7 +108,7 @@ public class AliPayController {
 
     @PostMapping("/notify")
     @ResponseBody
-    @ApiOperation(value = "支付异步接口", notes = "开发未完成")
+    @ApiOperation(value = "支付异步接口", notes = "支付成功之后支付宝回调用此接口")
     public String notify(HttpServletRequest request) throws AlipayApiException {
         log.info("支付宝异步接口调用成功");
         //获取支付宝POST过来反馈信息
@@ -157,6 +157,7 @@ public class AliPayController {
                     //3.添加用户购买记录
                     UserProductMapExecution upme = userProductMapService.batchAddUserProductMap(userProductMaps);
                     if (upme.getState() == UserProductMapStateEnum.SUCCESS.getState()) {
+                        flg = true;
                         log.info("支付成功，修改订单成功、添加用户购买记录成功、添加用户积分成功");
                     } else {
                         log.error(upme.getStateInfo());
