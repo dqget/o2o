@@ -1,5 +1,24 @@
 .bar{
     background-color: #fff;
+    position: fixed;
+    width: 100%;
+    z-index: 100;
+}
+.header_m{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #3d4145;
+    font-size: .85rem;
+}
+.header_r{
+    position: absolute;
+    top: 50%;
+    right: 0%;
+    transform: translate(-50%, -50%);
+    margin-left: 6%;
+    font-size: 0.7rem;
 }
 .index-banner {
     height: 35%;
@@ -90,4 +109,110 @@
     margin: 0;
     width: 50%;
     padding: 3px 10px;
+}
+
+
+.clearfix{
+    overflow: hidden;
+}
+.fl{
+    float: left;
+}
+.fr{
+    float: right;
+}
+input[type='checkbox'] {
+    display: none;
+}
+.card{
+    background-color: #fff;
+    box-shadow: 0 0.05rem 0.1rem rgba(0,0,0,.3);
+    margin: 12px;
+    border-radius: 12px;
+    padding: 11px 15px;
+}
+.left {
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 35px;
+}
+.labcheck{
+    min-height: 10px;
+    height: auto !important;
+    background: url(../../../resources/img/checkbox_0.png) no-repeat left 0px;
+    padding-left: 24px;
+    padding-top: 4px;
+    margin-bottom: 26px;
+    font-size: .12rem;
+    cursor: pointer;
+}
+.checkBox{
+    background: url(../../../resources/img/checkbox_1.png) no-repeat left 0px;
+}
+.goods {
+    display: inline-block;
+    width: 89.6%;
+}
+.goods img {
+    width: 22%;
+    margin-right: 10px;
+    padding: 12px 0;
+}
+.goods .goods_details {
+    width: 74%;
+    padding: 12px 0;
+}
+.goods .goods_details .name{
+    font-size: .7rem;
+    color: #3e3e3e;
+}
+.goods .goods_details .describe{
+    font-size: .6rem;
+    color: #3e3e3e;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 100%;
+    text-overflow: ellipsis;
+}
+.goods .goods_details .price{
+    padding-top: 12px;
+    font-size: 0.65rem;
+}
+.goods .goods_details .price .money .new {
+    color: #ff6600;
+    display: inline-block;
+}
+.goods .goods_details .price .money .old {
+    color: #b8b8b8;
+    text-decoration: line-through;
+    display: inline-block;
+    margin-left: 7px;
+}
+.goods .goods_details .price .kuang {
+    border: 1px solid #dbdbdb;
+    height: 0.95rem;
+    line-height: 0.9rem;
+}
+.goods .goods_details .price .kuang span {
+    text-align: center;
+    height: 0.9rem;
+    color: #a7a7a7;
+    display: inline-block;
+    width: 0.9rem;
+}
+.goods .goods_details .price .kuang .one {
+    border-right: 1px solid #dbdbdb;
+}
+.goods .goods_details .price .kuang .two {
+    border-left: 1px solid #dbdbdb;
+}
+.goods .goods_details .price .kuang .middle {
+    border: none;
+    width: 1.3rem;
+    height: 0.9rem;
+    font-size: 0.12rem;
+    margin-bottom: 0;
+    text-align: center;
+    padding: 0;
+    color: #3e3e3e;
 }
