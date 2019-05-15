@@ -4,9 +4,6 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>商铺助手</title>
-    <meta name="description"
-          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
-    <meta name="author" content="阿里巴巴国际UED前端">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1">
     <link rel="shortcut icon" href="#">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,17 +13,20 @@
           href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
     <link rel="stylesheet"
           href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
-    <link rel="stylesheet" href="../resources/css/frontend/index.css"
+    <link rel="stylesheet" href="../resources/css/frontend/shopdetail.css"
           type="text/css">
 </head>
 <body>
 <div class="page-group">
-    <div class="page">
+    <div id="page" class="page">
         <header class="bar bar-nav">
-            <div class="title">小卖铺</div>
+            <a class="button button-link button-nav pull-left back"
+               href="#" onclick="window.history.back(-1);"> <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">预定记录</h1>
         </header>
         <nav class="bar bar-tab">
-            <a class="tab-item external">
+            <a class="tab-item external" href="/o2o/frontend/index">
                 <span class="icon icon-home"></span>
                 <span class="tab-label">首页</span>
             </a>
@@ -40,21 +40,19 @@
             </a>
         </nav>
 
-        <div class="content">
-            <!-- 这里是页面内容区 -->
-            <div class="swiper-container index-banner" data-space-between='10' data-loop=true
-                 data-autoplay-disable-on-interaction=false>
-                <div class="swiper-wrapper">
+        <!-- 添加 class infinite-scroll 和 data-distance  向下无限滚动可不加infinite-scroll-bottom类，这里加上是为了和下面的向上无限滚动区分-->
+        <div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
+            <div class="searchbar">
+                <a class="searchbar-cancel">取消</a>
+                <div class="search-input">
+                    <label class="icon icon-search" for="search"></label>
+                    <input type="search" id='search' placeholder='输入关键字...'/>
                 </div>
-                <div class="swiper-pagination"></div>
             </div>
-            <div class='total-shop-button'>
-                <a href="/o2o/frontend/shoplist" external>全部商店</a>
-            </div>
-            <div class="row">
 
-            </div>
+            <div class="list-div schedule-list"></div>
         </div>
+
     </div>
     <!-- 右侧栏 -->
     <div class="panel-overlay"></div>
@@ -63,15 +61,13 @@
         </div>
     </div>
 </div>
+</div>
 <!--<script type="text/javascript" src="../resources/js/common/jquery.js"></script>-->
-<script type='text/javascript'
-        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
-<script type='text/javascript'
-        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
-<script type='text/javascript'
-        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
-<script type="text/javascript" src="../resources/js/frontend/index.js"></script>
-<script type="text/javascript" src="../resources/js/common/common.js"></script>
+<script type='text/javascript' src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+<script type='text/javascript' src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+<script type="text/javascript" src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src="../resources/js/frontend/schedulelist.js"></script>
 <script type="text/javascript" src="../resources/js/frontend/rightsidebar.js"></script>
 <script type="text/javascript" src="../resources/js/local/logout.js"></script>
 </body>

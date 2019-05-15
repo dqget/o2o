@@ -4,12 +4,13 @@ $(function () {
     getBuyerCart();
     let buyerCart;
 
-    $('.card').on('click','.labcheck',function(event) {
-        if(!$(this).hasClass('checkBox')) {
-            $(this).addClass('checkBox');
+    $('.buyercart-list').on('click', 'label', function (event) {
+        let target = $(event.currentTarget);
+        if (!target.hasClass('checkBox')) {
+            target.addClass('checkBox');
             event.preventDefault();
         } else {
-            $(this).removeClass('checkBox');
+            target.removeClass('checkBox');
             event.preventDefault();
         }
     });
@@ -43,26 +44,25 @@ $(function () {
                         + '<span class="middle">' + item.amount + '</span>'
                         + '<span class="two" id="add">+' + '</span>'
                         + '</div></div></div></div></div>';
-                        /*+ '<div class="card-content">'
-                        + '<div class="list-block media-list" >' + '<ul>'
-                        + '<li class="item-content">'
-                        + '<div class="item-media">' + '<img src="'
-                        + getContextPath() + product.imgAddr + '" width="70">' + '</div>'
-                        + '<div class="item-inner">'
-                        + '<div class="item-subtitle">' + product.productName + '</div>'
-                        + '<div class="item-subtitle">' + product.productDesc + '</div>'
-                        + '</div></li></ul></div></div>'
-                        + '<div class="card-footer">' + '<p class="color-gray">'
-                        + '<del>￥' + product.normalPrice + '</del> ￥' + product.promotionPrice + '</p>'
-                        + '<span>' + item.amount + '</span>' + '</div>'
-                        + '</div>';*/
+                    /*+ '<div class="card-content">'
+                    + '<div class="list-block media-list" >' + '<ul>'
+                    + '<li class="item-content">'
+                    + '<div class="item-media">' + '<img src="'
+                    + getContextPath() + product.imgAddr + '" width="70">' + '</div>'
+                    + '<div class="item-inner">'
+                    + '<div class="item-subtitle">' + product.productName + '</div>'
+                    + '<div class="item-subtitle">' + product.productDesc + '</div>'
+                    + '</div></li></ul></div></div>'
+                    + '<div class="card-footer">' + '<p class="color-gray">'
+                    + '<del>￥' + product.normalPrice + '</del> ￥' + product.promotionPrice + '</p>'
+                    + '<span>' + item.amount + '</span>' + '</div>'
+                    + '</div>';*/
                 });
                 $('.buyercart-list').append(html);
                 let total = $('.list-div .card').length;
                 maxItems = data.count;
                 if (total >= maxItems) {
                     // 加载完毕，则注销无限加载事件，以防不必要的加载
-                    $.init();
                     $.detachInfiniteScroll($('.infinite-scroll'));
                     // 隐藏加载提示符
                     //$('.infinite-scroll-preloader').hide();
@@ -75,13 +75,11 @@ $(function () {
     }
 
 
-
     $('#settleAccounts').click(function () {
         let sessionStorage = window.sessionStorage;
         sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
         window.location.href = '/o2o/pay/order';
     });
-
 
 
     /*$.ajax({
@@ -107,4 +105,6 @@ $(function () {
 
         }
     });*/
+    $.init();
+
 });

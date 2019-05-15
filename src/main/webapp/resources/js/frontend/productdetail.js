@@ -9,6 +9,8 @@ $(function () {
     let pageIndex = 1;
     let pageSize = 999;
     let imgList = [];
+    //跳转到 增加每日一花
+    $('#add-schedule').attr('href', '/o2o/frontend/addschedule?productId=' + productId);
 
     function getProductEva() {
         let url = getEvaUrl + "?productId=" + product.productId + "&pageIndex=" + pageIndex + "&pageSize=" + pageSize;

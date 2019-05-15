@@ -6,6 +6,7 @@ $(function () {
         '<p></p><a class="in external" href=/o2o/local/accountbind?usertype=1>绑定账号</a></p>'
         + '<p></p><a class="in external" href=/o2o/local/personoperation>个人信息</a></p>'
         + '<p></p><a class="in external" href=/o2o/frontend/orderlist>订单列表</a></p>'
+        + '<p></p><a class="in external" href=/o2o/frontend/schedulelist>预定记录</a></p>'
         + '<p></p><a class="in external" href=/o2o/frontend/pointrecord>兑换记录</a></p>'
         + '<p></p><a class="in external" href=/o2o/local/changepwd?usertype=1>修改密码</a></p>'
         + '<p></p><a class="in external" id="log-out" href=# usertype="1">退出登录</a></p>';
@@ -19,6 +20,7 @@ $(function () {
 
     function checkUserLogin() {
         let user = storage.getItem('user');
+
         if (user != null && user !== undefined) {
             $('#right').html(loginHtml);
         } else {
@@ -29,7 +31,6 @@ $(function () {
                     storage.setItem("user", JSON.stringify(data.data))
                 } else {
                     $('#right').html(notLoginHtml);
-
                 }
             })
         }

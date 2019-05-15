@@ -92,4 +92,21 @@ public class ScheduleController {
         }
     }
 
+    @GetMapping("/checkschedulepaysuccess")
+    @ApiOperation(value = "判断预定记录是否支付成功", notes = "轮询该接口查询是否成功")
+    public int checkSchedulePaySuccess(@RequestParam(value = "scheduleId") long scheduleId) {
+        return scheduleService.getScheduleById(scheduleId).getIsPay();
+    }
+
+    @GetMapping("/getscheduledistribution")
+    @ApiOperation(value = "顾客根据Id查询预定配送记录", notes = "根据预Id查询预定配送记录")
+    public ResultBean<ScheduleDistribution> getScheduleDistribution(
+            @RequestParam(value = "scheduleDistributionId") Long scheduleDistributionId,
+            HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null || user.getUserId() == null) {
+            return new ResultBean<>(false, 0, "请重新登录");
+        }
+        return new ResultBean<>(scheduleService.getScheduleDistributionById(scheduleDistributionId));
+    }
 }
