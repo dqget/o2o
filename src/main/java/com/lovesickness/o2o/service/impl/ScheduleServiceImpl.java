@@ -118,7 +118,72 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public Schedule getScheduleById(Integer scheduleId) {
+    public Schedule getScheduleById(long scheduleId) {
         return scheduleDao.queryScheduleById(scheduleId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public ScheduleExecution modifySchedule(Schedule schedule) throws ScheduleOperationException {
+        if (schedule != null && schedule.getScheduleId() != null) {
+            int effectedNum = scheduleDao.updateSchedule(schedule);
+            if (effectedNum != 1) {
+                throw new ScheduleOperationException("修改失败");
+            }
+            return new ScheduleExecution(ScheduleStateEnum.SUCCESS);
+        } else {
+            return new ScheduleExecution(ScheduleStateEnum.EMPTY);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public ScheduleExecution modifyScheduleDistributionByUser(ScheduleDistribution scheduleDistribution) throws ScheduleOperationException {
+
+        if (scheduleDistribution != null && scheduleDistribution.getScheduleDistributionId() != null) {
+            ScheduleDistribution oldDistribution = scheduleDistributionDao.queryScheduleDistributionById(scheduleDistribution.getScheduleDistributionId());
+            if (oldDistribution.getIsReceipt() == 0) {
+                //将用户输入的信息 填到oldDistribution里
+                compactScheduleDistribution4modifyByUser(oldDistribution, scheduleDistribution);
+                int effectedNum = scheduleDistributionDao.updateScheduleDistribution(oldDistribution);
+                if (effectedNum != 1) {
+                    throw new ScheduleOperationException("修改配送记录失败");
+                }
+                return new ScheduleExecution(ScheduleStateEnum.SUCCESS);
+            } else {
+                throw new ScheduleOperationException("不可以更改已配送的记录");
+            }
+
+        } else {
+            return new ScheduleExecution(ScheduleStateEnum.EMPTY);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public ScheduleExecution modifyScheduleDistributionByShop(ScheduleDistribution scheduleDistribution) throws ScheduleOperationException {
+        if (scheduleDistribution != null && scheduleDistribution.getScheduleDistributionId() != null) {
+            scheduleDistribution.setUpdateTime(new Date());
+            int effectedNum = scheduleDistributionDao.updateScheduleDistribution(scheduleDistribution);
+            if (effectedNum != 1) {
+                throw new ScheduleOperationException("修改配送记录失败");
+            }
+            return new ScheduleExecution(ScheduleStateEnum.SUCCESS);
+        } else {
+            return new ScheduleExecution(ScheduleStateEnum.EMPTY);
+        }
+    }
+
+    @Override
+    public ScheduleDistribution getScheduleDistributionById(long scheduleDistributionId) {
+        return scheduleDistributionDao.queryScheduleDistributionById(scheduleDistributionId);
+    }
+
+    private void compactScheduleDistribution4modifyByUser(ScheduleDistribution oldDistribution, ScheduleDistribution scheduleDistribution) {
+        oldDistribution.setReceiptTime(scheduleDistribution.getReceiptTime());
+        oldDistribution.setReceiveAddr(scheduleDistribution.getReceiveAddr());
+        oldDistribution.setReceivePhone(scheduleDistribution.getReceivePhone());
+        oldDistribution.setReceiveName(scheduleDistribution.getReceiveName());
+        oldDistribution.setUpdateTime(new Date());
     }
 }

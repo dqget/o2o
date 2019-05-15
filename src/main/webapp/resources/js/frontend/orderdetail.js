@@ -80,17 +80,18 @@ $(function () {
                 } else if (order.isReceipt == 0) {
                     $("#order-operation").html("确认收货");
                     $("#order-operation").on('click', function (e) {
-                        alert("确认收货？");
-                        $.ajax({
-                            url: modifyOrderByUserUrl,
-                            type: "POST",
-                            contentType: 'application/json',
-                            dataType: "json",
-                            data: JSON.stringify({orderId: order.orderId, isReceipt: 1, receiptTime: new Date()}),
-                            success: function (data) {
-                                location.reload();
-                            }
-                        })
+                        $.confirm("确认收货？", function () {
+                            $.ajax({
+                                url: modifyOrderByUserUrl,
+                                type: "POST",
+                                contentType: 'application/json',
+                                dataType: "json",
+                                data: JSON.stringify({orderId: order.orderId, isReceipt: 1, receiptTime: new Date()}),
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            })
+                        });
                     });
                 } else {
                     $("#order-operation").html("交易成功");

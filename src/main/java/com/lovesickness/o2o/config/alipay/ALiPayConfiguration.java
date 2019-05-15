@@ -29,9 +29,13 @@ public class ALiPayConfiguration {
      */
     public static String signType;
     /**
-     *
+     * 订单异步回调接口
      */
     public static String notifyUrl;
+    /**
+     * 预定记录异步回调接口
+     */
+    public static String scheduleNotifyUrl;
     /**
      *
      */
@@ -45,6 +49,11 @@ public class ALiPayConfiguration {
     @Value(value = "${ali.notify_url}")
     public void setNotifyUrl(String notifyUrl) {
         ALiPayConfiguration.notifyUrl = notifyUrl;
+    }
+
+    @Value(value = "${ali.schedule_notify_url}")
+    public void setScheduleNotifyUrl(String scheduleNotifyUrl) {
+        ALiPayConfiguration.scheduleNotifyUrl = scheduleNotifyUrl;
     }
 
     @Value(value = "${ali.return_url}")

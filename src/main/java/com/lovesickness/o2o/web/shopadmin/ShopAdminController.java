@@ -88,6 +88,21 @@ public class ShopAdminController {
         return "shop/awardoperation";
     }
 
+    @GetMapping(value = "/schedulelist")
+    public String scheduleList() {
+        return "shop/schedulelist";
+    }
+
+    @GetMapping(value = "/scheduledistributionlist")
+    public String scheduleDistributionList() {
+        return "shop/scheduledistributionlist";
+    }
+
+    @GetMapping(value = "/distributionoperation")
+    public String distributionOperation() {
+        return "shop/distributionoperation";
+    }
+
     /**
      * 转发到操作成功页面
      *

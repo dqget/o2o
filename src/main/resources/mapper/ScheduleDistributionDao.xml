@@ -3,6 +3,23 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lovesickness.o2o.dao.ScheduleDistributionDao">
+
+    <resultMap id="scheduledistributionMap" type="com.lovesickness.o2o.entity.ScheduleDistribution">
+        <id column="schedule_distribution_id" property="scheduleDistributionId"/>
+        <result column="receive_name" property="receiveName"/>
+        <result column="schedule_id" property="scheduleId"/>
+        <result column="receive_phone" property="receivePhone"/>
+        <result column="receive_addr" property="receiveAddr"/>
+        <result column="receipt_time" property="receiptTime"/>
+        <result column="is_receipt" property="isReceipt"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="operator" column="operator_id"
+                     javaType="com.lovesickness.o2o.entity.PersonInfo">
+            <id column="operator_id" property="userId"/>
+            <result column="operator_name" property="name"/>
+        </association>
+    </resultMap>
+
     <insert id="batchInsertScheduleDistribution" parameterType="java.util.List">
         INSERT INTO tb_schedule_distribution (schedule_id, receive_name,
         receive_phone, receive_addr,receipt_time)
@@ -22,7 +39,7 @@
         UPDATE tb_schedule_distribution
         <set>
             <if test="operator!=null and operator.userId!=null">
-                operator_id = #{operator.operatorId},
+                operator_id = #{operator.userId},
             </if>
             <if test="receiveName!=null ">receive_name = #{receiveName},</if>
             <if test="receivePhone!=null ">receive_phone = #{receivePhone},</if>
@@ -31,6 +48,7 @@
             <if test="isReceipt!=null ">is_receipt = #{isReceipt},</if>
             <if test="updateTime!=null ">update_time = #{updateTime},</if>
         </set>
+        WHERE schedule_distribution_id = #{scheduleDistributionId}
     </update>
     <select id="queryScheduleDistribution" resultType="com.lovesickness.o2o.entity.ScheduleDistribution">
         SELECT
@@ -47,5 +65,21 @@
         WHERE schedule_id = #{scheduleId}
         ORDER BY
             schedule_distribution_id ASC
+    </select>
+    <select id="queryScheduleDistributionById" resultMap="scheduledistributionMap">
+        SELECT
+            schedule_distribution_id,
+            schedule_id,
+            operator_id,
+            receive_phone,
+            receive_name,
+            receive_addr,
+            receipt_time,
+            is_receipt,
+            update_time,
+            operator.name operator_name
+        FROM tb_schedule_distribution
+            LEFT JOIN tb_person_info operator ON operator_id = operator.user_id
+        WHERE schedule_distribution_id = #{scheduleDistributionId}
     </select>
 </mapper>

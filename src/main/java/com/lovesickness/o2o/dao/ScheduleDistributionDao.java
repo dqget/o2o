@@ -9,5 +9,7 @@ public interface ScheduleDistributionDao {
 
     List<ScheduleDistribution> queryScheduleDistribution(long scheduleId);
 
+    ScheduleDistribution queryScheduleDistributionById(long scheduleDistributionId);
+
     int updateScheduleDistribution(ScheduleDistribution scheduleDistribution);
 }

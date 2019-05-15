@@ -89,8 +89,8 @@ public class ALiPayUtil {
         AlipayTradeWapPayRequest alipayRequest = new AlipayTradeWapPayRequest();
 
         alipayRequest.setReturnUrl(ALiPayConfiguration.returnUrl);
-        //TODO 回调地址修改
-        alipayRequest.setNotifyUrl(ALiPayConfiguration.notifyUrl);
+
+        alipayRequest.setNotifyUrl(ALiPayConfiguration.scheduleNotifyUrl);
 
         // 封装请求支付信息
         AlipayTradeWapPayModel model = new AlipayTradeWapPayModel();

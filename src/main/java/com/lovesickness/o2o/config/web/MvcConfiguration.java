@@ -98,6 +98,7 @@ public class MvcConfiguration extends WebMvcConfigurerAdapter implements Applica
         multipartResolver.setDefaultEncoding("UTF-8");
         // 1024*1024*20 = 20M
         multipartResolver.setMaxUploadSize(20971520L);
+
         multipartResolver.setMaxInMemorySize(20971520);
         return multipartResolver;
     }

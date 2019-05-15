@@ -7,12 +7,16 @@ import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.lovesickness.o2o.config.alipay.ALiPayConfiguration;
 import com.lovesickness.o2o.dto.OrderExecution;
+import com.lovesickness.o2o.dto.ScheduleExecution;
 import com.lovesickness.o2o.dto.UserProductMapExecution;
 import com.lovesickness.o2o.entity.Order;
+import com.lovesickness.o2o.entity.Schedule;
 import com.lovesickness.o2o.entity.UserProductMap;
 import com.lovesickness.o2o.enums.OrderStateEnum;
+import com.lovesickness.o2o.enums.ScheduleStateEnum;
 import com.lovesickness.o2o.enums.UserProductMapStateEnum;
 import com.lovesickness.o2o.service.OrderService;
+import com.lovesickness.o2o.service.ScheduleService;
 import com.lovesickness.o2o.service.UserProductMapService;
 import com.lovesickness.o2o.service.UserShopMapService;
 import com.lovesickness.o2o.util.EntityTransformation;
@@ -57,6 +61,8 @@ public class AliPayController {
     private UserProductMapService userProductMapService;
     @Autowired
     private UserShopMapService userShopMapService;
+    @Autowired
+    private ScheduleService scheduleService;
 
     @PostMapping("/open")
     @ApiOperation(value = "根据用户订单信息支付宝支付功能", notes = "测试--")
@@ -108,7 +114,7 @@ public class AliPayController {
 
     @PostMapping("/notify")
     @ResponseBody
-    @ApiOperation(value = "支付异步接口", notes = "支付成功之后支付宝回调用此接口")
+    @ApiOperation(value = "订单支付成功异步接口", notes = "订单支付成功之后支付宝会异步调用此接口")
     public String notify(HttpServletRequest request) throws AlipayApiException {
         log.info("支付宝异步接口调用成功");
         //获取支付宝POST过来反馈信息
@@ -189,8 +195,97 @@ public class AliPayController {
         }
     }
 
+    @PostMapping("/schedulenotify")
+    @ResponseBody
+    @ApiOperation(value = "预定记录支付成功异步接口", notes = "预定记录支付成功之后支付宝会异步调用此接口")
+    public String notifySchedule(HttpServletRequest request) throws AlipayApiException {
+        log.info("支付宝异步接口调用成功");
+        //获取支付宝POST过来反馈信息
+        Map<String, String> params = getAliBaBaReturnMap(request);
+        log.debug(String.valueOf(params));
+        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
+        //商户订单号
+        String outTradeNo = request.getParameter("out_trade_no");
+        //支付宝交易号
+        String tradeNo = request.getParameter("trade_no");
+        //交易状态
+        String tradeStatus = request.getParameter("trade_status");
+        //调用SDK验证签名
+        boolean signVerified = AlipaySignature.rsaCheckV1(params,
+                ALiPayConfiguration.aliPublicKry,
+                "UTF-8",
+                ALiPayConfiguration.signType);
+        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
+        if (signVerified) {
+            //验证成功
+            ////////////////////////////////////////////////////////////////////
+            //请在这里加上商户的业务逻辑程序代码
+            //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+            boolean flg = false;
+            if ("TRADE_FINISHED".equals(tradeStatus)) {
+                //判断该笔订单是否在商户网站中已经做过处理
+                //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+                //如果有做过处理，不执行商户的业务程序
+                log.debug("该订单已经做过处理");
+                //注意：
+                //退款日期超过可退款期限后（如三个月可退款），支付宝系统发送该交易状态通知
+            } else if ("TRADE_SUCCESS".equals(tradeStatus)) {
+                //判断该笔订单是否在商户网站中已经做过处理
+                log.debug("该订单未做过处理");
+                //如果没有做过处理，根据订单号（out_tr_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                //1.修改预定记录信息
+                Schedule schedule = scheduleService.getScheduleById(Long.parseLong(outTradeNo));
+                schedule.setPayTime(new Date());
+                schedule.setIsPay(1);
+                schedule.setUpdateTime(new Date());
+                ScheduleExecution se = scheduleService.modifySchedule(schedule);
+                if (se.getState() == ScheduleStateEnum.SUCCESS.getState()) {
+                    //2.增加用户购买记录
+                    List<UserProductMap> userProductMaps = new ArrayList<>();
+                    for (int i = 0, l = schedule.getAmountDay(); i < l; i++) {
+                        UserProductMap userProductMap = new UserProductMap();
+                        userProductMap.setUser(schedule.getUser());
+                        userProductMap.setProduct(schedule.getProduct());
+                        userProductMap.setShop(schedule.getShop());
+                        userProductMap.setCreateTime(new Date());
+                        userProductMap.setPoint(schedule.getProduct().getPoint());
+                        userProductMaps.add(userProductMap);
+                    }
+                    UserProductMapExecution upme = userProductMapService.batchAddUserProductMap(userProductMaps);
+                    if (upme.getState() == UserProductMapStateEnum.SUCCESS.getState()) {
+                        flg = true;
+                        log.info("支付成功，修改预定记录成功、添加用户购买记录成功、添加用户积分成功");
+                    } else {
+                        log.error(upme.getStateInfo());
+                        log.error("支付成功，添加用户购买记录失败");
+                    }
+
+                }
+                //3.添加用户购买记录
+                //请务必判断请求时的total_fee、seller_id与通知时获取的total_fee、seller_id为一致的
+                //如果有做过处理，不执行商户的业务程序
+
+                //注意：
+                //付款完成后，支付宝系统发送该交易状态通知
+
+                //根据订单号将订单状态和支付宝记录表中状态都改为已支付
+            }
+            //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+            if (flg) {
+                return "success";
+            } else {
+                return "fail";
+            }
+        } else {
+            //验证失败
+            log.debug("支付验签失败");
+            return "fail";
+        }
+    }
 
     @GetMapping("/return")
+    @ApiOperation(value = "订单支付成功回调接口", notes = "订单支付成功之后支付宝会回调用此接口")
     public void returnPay(HttpServletRequest request, HttpServletResponse response) {
         log.info("支付宝回调接口调用成功");
         //获取支付宝GET过来反馈信息
@@ -238,6 +333,7 @@ public class AliPayController {
             e.printStackTrace();
         }
     }
+
 
     @GetMapping("/getorderno")
     @ResponseBody

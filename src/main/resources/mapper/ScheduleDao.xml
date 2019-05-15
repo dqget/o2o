@@ -23,6 +23,7 @@
                      javaType="com.lovesickness.o2o.entity.Product">
             <id column="product_id" property="productId"/>
             <result column="product_name" property="productName"/>
+            <result column="point" property="point"/>
         </association>
         <association property="user" column="user_id"
                      javaType="com.lovesickness.o2o.entity.PersonInfo">
@@ -68,6 +69,7 @@
             sd.enable_status,
             p.product_id,
             p.product_name,
+            p.point,
             s.shop_id,
             s.shop_name,
             u.user_id,
