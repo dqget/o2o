@@ -26,8 +26,7 @@ public class ScheduleController {
 
     @PostMapping("/addscheduleandopenpay")
     @ApiOperation(value = "添加预定记录，并支付", notes = "添加预定记录,并唤醒支付界面")
-    public void addSchedule(@RequestBody Schedule schedule,
-                            HttpServletRequest request,
+    public void addSchedule(@RequestBody Schedule schedule, HttpServletRequest request,
                             HttpServletResponse response) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null) {
@@ -108,5 +107,21 @@ public class ScheduleController {
             return new ResultBean<>(false, 0, "请重新登录");
         }
         return new ResultBean<>(scheduleService.getScheduleDistributionById(scheduleDistributionId));
+    }
+
+    @PostMapping("/oldscheduleopenpay")
+    @ApiOperation(value = "根据已经存在的订单进行支付使用支付宝支付功能",
+            notes = "1.查询订单判断是否支付 2.未支付唤起支付宝支付功能")
+    public void oldScheduleAliPay(@RequestParam(value = "scheduleId") Long scheduleId, HttpServletRequest request, HttpServletResponse response) {
+        //session中的用户信息
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+            return;
+        }
+        Schedule schedule = scheduleService.getScheduleById(scheduleId);
+        if (schedule.getIsPay() == 1) {
+            return;
+        }
+        ALiPayUtil.aliPay4Schedule(schedule, request, response);
     }
 }

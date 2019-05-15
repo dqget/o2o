@@ -25,6 +25,16 @@ public class Product implements Serializable {
     private ProductCategory productCategory;
     private Shop shop;
 
+    private Double aveStar;
+
+    public Double getAveStar() {
+        return aveStar;
+    }
+
+    public void setAveStar(Double aveStar) {
+        this.aveStar = aveStar;
+    }
+
     public Integer getPoint() {
         return point;
     }

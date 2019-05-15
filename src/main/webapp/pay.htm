@@ -196,9 +196,9 @@
                             success: function (data) {
                                 //订单状态为1表示支付成功
                                 if (data == 1) {
-                                    alert("支付成功，即将返回首页");
+                                    alert("支付成功，即将返回");
                                     //页面跳转
-                                    window.location.href = "/o2o/frontend/index";
+                                    window.location.href = "/o2o/frontend/orderlist";
                                     clearInterval(t);
                                 }
                             },

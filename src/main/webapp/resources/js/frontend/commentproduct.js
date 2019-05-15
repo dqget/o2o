@@ -29,7 +29,7 @@ $(function () {
             success: function (data) {
                 if (data.success) {
                     $.toast("评论成功");
-                    location.href = "/o2o/frontend/index";
+                    location.href = "/o2o/frontend/productdetail?productId=" + product.productId;
                 } else {
                     $.toast(data.msg);
                 }
@@ -70,9 +70,9 @@ $(function () {
             productHtml += '<li class="item-content">' + '<div class="item-media">'
                 + '<img src="' + getContextPath() + product.imgAddr + '" width="44">' +
                 '</div><div class="item-inner"><div class="item-title-row">'
-                + '<div class="item-title">' + product.productName + '</div>' +
+                + '<div class="item-subtitle">' + product.productName + '</div>' +
                 '</div><div class="item-title-row">'
-                + '<div class="item-subtitle ">' + product.productDesc + '</div>'
+                + '<div class="item-text">' + product.productDesc + '</div>'
                 + '</div></div></li>';
             $("#product-info").html(productHtml);
         });

@@ -46,8 +46,13 @@
             <result column="product_id" property="productId"/>
         </collection>
     </resultMap>
-
-    <insert id="insertProduct" parameterType="com.lovesickness.o2o.entity.Product" useGeneratedKeys="true" keyProperty="productId" keyColumn="product_id">
+    <resultMap id="aveStarMap" type="com.lovesickness.o2o.entity.Product">
+        <id column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="ave_star" property="aveStar"/>
+    </resultMap>
+    <insert id="insertProduct" parameterType="com.lovesickness.o2o.entity.Product" useGeneratedKeys="true"
+            keyProperty="productId" keyColumn="product_id">
         INSERT INTO tb_product
         (product_name, product_desc, img_addr, normal_price,
          promotion_price, priority, create_time, last_edit_time,
@@ -167,4 +172,19 @@
         WHERE product_category_id =
               #{productCategoryId}
     </update>
+    <select id="queryProductAveStar" parameterType="Long" resultMap="aveStarMap">
+        SELECT
+            a.product_id,
+            b.product_name,
+            sum(a.star_level) / COUNT(1) ave_star
+        FROM tb_order_product_map a, tb_product b
+        WHERE a.product_id IN (
+            SELECT product_id
+            FROM tb_product
+            WHERE shop_id = #{shopId})
+              AND a.is_evaluation = '1' AND a.product_id = b.product_id
+        GROUP BY product_id
+        ORDER BY ave_star DESC;
+    </select>
+
 </mapper>

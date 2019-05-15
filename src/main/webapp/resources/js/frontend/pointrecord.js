@@ -64,7 +64,7 @@ $(function () {
     $('.point-record-list').on('click', '.card', function (e) {
         let userAwardId = e.currentTarget.dataset.userAwardId;
         console.log(userAwardId);
-        window.location.href = '/o2o/frontend/myawarddeatil?userAwardId=' + userAwardId;
+        // window.location.href = '/o2o/frontend/myawarddeatil?userAwardId=' + userAwardId;
 
 
     });
