@@ -27,7 +27,7 @@ $(function () {
                 '<div class="col-20">' + item.product.productName + '</div>' +
                 '<div class="col-15">' + item.user.name + '</div>' +
                 '<div class="col-20">' + item.amountDay + '</div>' +
-                '<div class="col-15">' + getScheduleDetailHtml(item) + '</div></div>';
+                '<div class="col-20">' + getScheduleDetailHtml(item) + '</div></div>';
         });
         $('.schedule-wrap').html(html);
     }

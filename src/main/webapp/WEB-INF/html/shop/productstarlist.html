@@ -20,7 +20,7 @@
     <link rel="stylesheet"
           href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
 
-    <link rel="stylesheet" href="../resources/css/shop/schedulelist.css"
+    <link rel="stylesheet" href="../resources/css/shop/productstarlist.css"
           type="text/css">
 
 </head>
@@ -31,19 +31,17 @@
             <a class="button button-link button-nav pull-left back external"
                href="#" onclick="history.back(-1);"> <span class="icon icon-left"></span> 返回
             </a>
-            <h1 class="title">预定记录</h1>
+            <h1 class="title">评价排行</h1>
         </header>
-        <div class="content">
 
+        <div class="content">
             <div class="content-block">
-                <div class="row row-schedule">
-                    <div class="col-30">创建时间</div>
-                    <div class="col-20">商品</div>
-                    <div class="col-15">顾客</div>
-                    <div class="col-20">次数</div>
-                    <div class="col-20">操作</div>
+                <div class="row row-product-star-list">
+                    <div class="col-20">名次</div>
+                    <div class="col-50">名称</div>
+                    <div class="col-30">平均星级</div>
                 </div>
-                <div class="schedule-wrap"></div>
+                <div class="list-div product-star-list"></div>
             </div>
         </div>
     </div>
@@ -57,7 +55,7 @@
         src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
 <script type="text/javascript"
         src='../resources/js/common/common.js' charset='utf-8'></script>
-<script type="text/javascript" src='../resources/js/shop/schedulelist.js'></script>
+<script type="text/javascript" src='../resources/js/shop/productstarlist.js'></script>
 
 </body>
 </html>

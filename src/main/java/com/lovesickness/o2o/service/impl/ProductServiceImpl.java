@@ -136,6 +136,11 @@ public class ProductServiceImpl implements ProductService {
         return ee;
     }
 
+    @Override
+    public List<Product> getProductAveStar(long shopId) {
+        return productDao.queryProductAveStar(shopId);
+    }
+
     /**
      * 批量添加商品详情图
      *

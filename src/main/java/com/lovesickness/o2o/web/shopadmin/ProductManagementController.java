@@ -191,6 +191,18 @@ public class ProductManagementController {
 
     }
 
+    @GetMapping(value = "/getproductavestar")
+    @ApiOperation(value = "查询店铺下的商品列表", notes = "查询店铺下的商品列表")
+    public ResultBean<List<Product>> getProductAveStar(HttpServletRequest request) {
+        Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
+        if ((currentShop != null) && (currentShop.getShopId() != null)) {
+            return new ResultBean<>(productService.getProductAveStar(currentShop.getShopId()));
+        } else {
+            return new ResultBean<>(false, 0, "请重新登录");
+        }
+
+    }
+
     private Product compactProductCondition(Long shopId, Long productCategoryId, String productName) {
         Product productCondition = new Product();
         Shop shop = new Shop();

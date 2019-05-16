@@ -53,4 +53,6 @@ public interface ProductService {
     ProductExecution getProductList(Product productCondition, int pageIndex, int pageSize);
 
     EvaluationExecution getProductEvaluation(Product productCondition, Integer pageIndex, Integer pageSize);
+
+    List<Product> getProductAveStar(long shopId);
 }

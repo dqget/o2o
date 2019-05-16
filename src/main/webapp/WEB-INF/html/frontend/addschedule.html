@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>每周一花</title>
+    <meta name="description"
+          content="MSUI: Build mobile apps with simple HTML, CSS, and JS components.">
+    <meta name="author" content="阿里巴巴国际UED前端">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <!-- Google Web Fonts -->
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+
+    <link rel="apple-touch-icon-precomposed"
+          href="/">
+</head>
+<body>
+<div class="page-group">
+    <div id="page-label-input" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back external"
+               href="#" onclick="history.back(-1);">
+                <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">填写信息</h1>
+        </header>
+        <div class="content">
+            <div class="list-block">
+                <ul>
+                    <!-- 商品名称 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">商品名称</div>
+                                <div class="item-input">
+                                    <input type="text" id="product-name" placeholder="商品名称" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 现价 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">商品价格</div>
+                                <div class="item-input">
+                                    <input id="promotion-price" type="number" placeholder="商品价格"
+                                           readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <!-- 商品分类 -->
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">配送次数</div>
+                                <div class="item-input">
+                                    <input id="amount-day" type="number" placeholder="配送次数" value="5">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">单次配送数</div>
+                                <div class="item-input">
+                                    <input id="daily-quantity" type="number" placeholder="单次配送数" value="1">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">收件人</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="收件人" id="receive-name">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">收件手机号</div>
+                                <div class="item-input">
+                                    <input type="number" placeholder="收件人手机号" id="receive-phone">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">收件地址</div>
+                                <div class="item-input">
+                                    <input type="text" id='city-picker' value="山东 济南 历城区"/>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">详细地址</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="详细地址" id="receive-addr">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-inner">
+                                <div class="item-title label">初次配送时间</div>
+                                <div class="item-input">
+                                    <input type="date" placeholder="初次配送时间" id="receipt-time">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-25">
+                        <p></p>
+                    </div>
+                    <div class="col-50">
+                        <a href="#" class="button button-big button-fill button-success external"
+                           id="submit">支付</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="returnAli"></div>
+
+</div>
+
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js' charset='utf-8'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js' charset='utf-8'></script>
+<script type="text/javascript"
+        src="//g.alicdn.com/msui/sm/0.6.2/js/sm-city-picker.min.js"></script>
+<script type="text/javascript" src='../resources/js/frontend/addschedule.js' charset='utf-8'></script>
+<script type="text/javascript" src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src='../resources/js/pay/ap.js'></script>
+</body>
+</html>

@@ -52,4 +52,6 @@ public interface ProductDao {
     int queryProductCount(@Param("productCondition") Product productCondition);
 
     int updateProductCategoryToNull(long productCategoryId);
+
+    List<Product> queryProductAveStar(long shopId);
 }

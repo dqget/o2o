@@ -125,7 +125,7 @@
 <script type="text/javascript" src="resources/js/common/jquery.js"></script>
 
 <script>
-    const orderNo = sessionStorage.getItem('orderNo');
+    const scheduleId = sessionStorage.getItem('scheduleId');
     // debugger
     try {
         if (location.hash.indexOf('error') != -1) {
@@ -153,7 +153,7 @@
         }
 
         var t;
-        sessionStorage.removeItem('orderNo');
+        sessionStorage.removeItem('scheduleId');
         var browser = {
             versions: function () {
                 var u = navigator.userAgent, app = navigator.appVersion;
@@ -186,24 +186,24 @@
                 });
 
                 function ajaxStatus() {
-                    var checkOrderPaySuccessUrl = '/o2o/frontend/checkorderpaysuccess';
-                    if (orderNo != '') {
+                    var checkSchedulePaySuccessUrl = '/o2o/frontend/checkschedulepaysuccess';
+                    if (scheduleId != '') {
                         $.ajax({
-                            url: checkOrderPaySuccessUrl,
+                            url: checkSchedulePaySuccessUrl,
                             type: "GET",
                             dataType: "json",
-                            data: {orderNo: orderNo},
+                            data: {scheduleId: scheduleId},
                             success: function (data) {
                                 //订单状态为1表示支付成功
                                 if (data == 1) {
                                     alert("支付成功，即将返回");
                                     //页面跳转
-                                    window.location.href = "/o2o/frontend/orderlist";
+                                    window.location.href = "/o2o/frontend/schedulelist";
                                     clearInterval(t);
                                 }
                             },
                             error: function () {
-                                alert("请求订单状态出错");
+                                alert("请求预定记录状态出错");
                             }
                         });
                     }

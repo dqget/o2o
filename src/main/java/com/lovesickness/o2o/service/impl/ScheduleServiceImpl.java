@@ -184,6 +184,5 @@ public class ScheduleServiceImpl implements ScheduleService {
         oldDistribution.setReceiveAddr(scheduleDistribution.getReceiveAddr());
         oldDistribution.setReceivePhone(scheduleDistribution.getReceivePhone());
         oldDistribution.setReceiveName(scheduleDistribution.getReceiveName());
-        oldDistribution.setUpdateTime(new Date());
     }
 }

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>商铺助手</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="#">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm.min.css">
+    <link rel="stylesheet"
+          href="//g.alicdn.com/msui/sm/0.6.2/css/sm-extend.min.css">
+    <link rel="stylesheet" href="../resources/css/frontend/shopdetail.css"
+          type="text/css">
+</head>
+<body>
+<div class="page-group">
+    <div id="page" class="page">
+        <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left back external"
+               href="#" onclick="history.back(-1);">
+                <span class="icon icon-left"></span> 返回
+            </a>
+            <h1 class="title">配送情况详情</h1>
+
+        </header>
+        <div class="content infinite-scroll infinite-scroll-bottom" data-distance="100">
+
+
+            <div class="list-block">
+                <!--订单商品列表-->
+                <div style="padding:10px 10px;background-color:#ffffff;">
+                    <span>预期配送信息</span>
+                </div>
+
+                <ul>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">预期配送编号</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="预期配送编号" id="schedule-distribution-id"
+                                           readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件人</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="收件人" id="receive-name" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件人手机号</div>
+                                <div class="item-input">
+                                    <input type="number" placeholder="收件人手机号" id="receive-phone"
+                                           readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">收件地址</div>
+                                <div class="item-input">
+                                    <input type="text" id='city-picker' value="山东 济南 历城区"/>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">详细地址</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="详细地址" id="receive-addr" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">期望时间</div>
+                                <div class="item-input">
+                                    <input type="date" placeholder="期望时间" id="receipt-time" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">配送时间</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="配送时间" id="update-time" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="item-content">
+                            <div class="item-media"><i class="icon icon-form-name"></i></div>
+                            <div class="item-inner">
+                                <div class="item-title label">配送确认人</div>
+                                <div class="item-input">
+                                    <input type="text" placeholder="配送确认人" id="operator" readonly="readonly">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <div class="row">
+                    <div class="col-100"><a href="#" class="button button-big button-round"
+                                            id="distribution-operation"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+<div id="returnAli"></div>
+
+</div>
+</body>
+<!--<script type="text/javascript" src="../resources/js/common/jquery.js"></script>-->
+<script type='text/javascript'
+        src='//g.alicdn.com/sj/lib/zepto/zepto.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm.min.js'></script>
+<script type='text/javascript'
+        src='//g.alicdn.com/msui/sm/0.6.2/js/sm-extend.min.js'></script>
+<script type="text/javascript"
+        src="//g.alicdn.com/msui/sm/0.6.2/js/sm-city-picker.min.js"></script>
+<script type="text/javascript"
+        src='../resources/js/common/common.js' charset='utf-8'></script>
+<script type="text/javascript" src="../resources/js/frontend/distributionoperation.js"></script>
+</html>

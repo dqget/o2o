@@ -58,4 +58,25 @@ public class MainManagementController {
     public String pointRecord() {
         return "frontend/pointrecord";
     }
+
+
+    @GetMapping(value = "/addschedule")
+    public String addSchedule() {
+        return "frontend/addschedule";
+    }
+
+    @GetMapping(value = "/schedulelist")
+    public String scheduleList() {
+        return "frontend/schedulelist";
+    }
+
+    @GetMapping(value = "/scheduledistributionlist")
+    public String scheduleDistributionList() {
+        return "frontend/scheduledistributionlist";
+    }
+
+    @GetMapping(value = "/distributionoperation")
+    public String distributionOperation() {
+        return "frontend/distributionoperation";
+    }
 }

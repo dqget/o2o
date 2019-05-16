@@ -1,0 +1,16 @@
+.row-product-star-list {
+    border: 1px solid #999;
+    padding: .5rem;
+    border-top: none;
+    margin-left: auto;
+}
+
+.row-product-star-list:first-child {
+    border-top: 1px solid #999;
+}
+
+.product-star-list .row-product-star-list:first-child {
+    border-top: none;
+}
+
+

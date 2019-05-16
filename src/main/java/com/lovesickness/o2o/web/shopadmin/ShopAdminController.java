@@ -103,6 +103,12 @@ public class ShopAdminController {
         return "shop/distributionoperation";
     }
 
+
+    @GetMapping(value = "/productstarlist")
+    public String productStarList() {
+        return "shop/productstarlist";
+    }
+
     /**
      * 转发到操作成功页面
      *

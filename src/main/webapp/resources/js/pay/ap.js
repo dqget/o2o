@@ -104,6 +104,10 @@
         var c = encodeURIComponent(a.encode(d));
         location.href = "/o2o/pay.htm?goto=" + c
     };
+    b.paySchedule = function (d) {
+        var c = encodeURIComponent(a.encode(d));
+        location.href = "/o2o/payschedule.htm?goto=" + c
+    };
     b.decode = function (c) {
         return a.decode(decodeURIComponent(c))
     };

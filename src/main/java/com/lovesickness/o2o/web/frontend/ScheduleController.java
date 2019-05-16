@@ -26,8 +26,7 @@ public class ScheduleController {
 
     @PostMapping("/addscheduleandopenpay")
     @ApiOperation(value = "添加预定记录，并支付", notes = "添加预定记录,并唤醒支付界面")
-    public void addSchedule(@RequestBody Schedule schedule,
-                            HttpServletRequest request,
+    public void addSchedule(@RequestBody Schedule schedule, HttpServletRequest request,
                             HttpServletResponse response) {
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null) {
@@ -92,4 +91,37 @@ public class ScheduleController {
         }
     }
 
+    @GetMapping("/checkschedulepaysuccess")
+    @ApiOperation(value = "判断预定记录是否支付成功", notes = "轮询该接口查询是否成功")
+    public int checkSchedulePaySuccess(@RequestParam(value = "scheduleId") long scheduleId) {
+        return scheduleService.getScheduleById(scheduleId).getIsPay();
+    }
+
+    @GetMapping("/getscheduledistribution")
+    @ApiOperation(value = "顾客根据Id查询预定配送记录", notes = "根据预Id查询预定配送记录")
+    public ResultBean<ScheduleDistribution> getScheduleDistribution(
+            @RequestParam(value = "scheduleDistributionId") Long scheduleDistributionId,
+            HttpServletRequest request) {
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null || user.getUserId() == null) {
+            return new ResultBean<>(false, 0, "请重新登录");
+        }
+        return new ResultBean<>(scheduleService.getScheduleDistributionById(scheduleDistributionId));
+    }
+
+    @PostMapping("/oldscheduleopenpay")
+    @ApiOperation(value = "根据已经存在的订单进行支付使用支付宝支付功能",
+            notes = "1.查询订单判断是否支付 2.未支付唤起支付宝支付功能")
+    public void oldScheduleAliPay(@RequestParam(value = "scheduleId") Long scheduleId, HttpServletRequest request, HttpServletResponse response) {
+        //session中的用户信息
+        PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
+        if (user == null) {
+            return;
+        }
+        Schedule schedule = scheduleService.getScheduleById(scheduleId);
+        if (schedule.getIsPay() == 1) {
+            return;
+        }
+        ALiPayUtil.aliPay4Schedule(schedule, request, response);
+    }
 }
