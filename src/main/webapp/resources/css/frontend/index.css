@@ -121,6 +121,12 @@
 .fr{
     float: right;
 }
+.show{
+    display: block;
+}
+.hide{
+    display: none;
+}
 input[type='checkbox'] {
     display: none;
 }
@@ -215,4 +221,67 @@ input[type='checkbox'] {
     text-align: center;
     padding: 0;
     color: #3e3e3e;
+}
+
+.footer-g {
+    width: 100%;
+    /*height: 0.5rem;*/
+    background-color: #FFFFFF;
+    position: fixed;
+    bottom: 50px;
+    z-index: 990;
+    border-bottom: 0.5px solid #f0f0f0;
+}
+.footer-g .footer-l{
+    margin: 14px 10px;
+}
+.footer-g .footer-l input {
+    vertical-align: middle;
+}
+.footer-g .footer-l span {
+    color: #939393;
+    font-size: 0.8rem;
+    margin-left: 3px;
+}
+.footer-g .footer-r {
+    width: 20%;
+    color: #FFFFFF;
+    position: relative;
+    background-color: #f60;
+    padding: 19px;
+    margin: 8px;
+    border-radius: 20px;
+}
+.footer-g .footer-r img {
+    width: 100%;
+    height: 0.5rem;
+}
+.footer-g .footer-r span {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: .7rem;
+}
+.footer-g .sum-money {
+    height: 0.5rem;
+    line-height: 0.5rem;
+    margin-right: 0.12rem;
+    color: #3e3e3e;
+    position: absolute;
+    top: 50%;
+    left: 64%;
+    transform: translate(-50%, -50%);
+    font-size: .7rem;
+}
+.footer-g .sum-money span {
+    color: #f60;
+}
+.del_goods{
+    color:#d6151b;
+    font-size: 0.7rem;
+    border: 1px solid #d6151b;
+    border-radius: 20px;
+    padding: 5px 11px;
+    margin: 10px;
 }

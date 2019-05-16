@@ -3,8 +3,8 @@ $(function () {
     let url = '/o2o/frontend/getbuyercartbyuser';
     getBuyerCart();
     let buyerCart;
-
-    $('.card').on('click','.labcheck',function(event) {
+    //购物车商品选择
+    $('.buyercart-list').on('click','.labcheck',function(event) {
         if(!$(this).hasClass('checkBox')) {
             $(this).addClass('checkBox');
             event.preventDefault();
@@ -12,6 +12,48 @@ $(function () {
             $(this).removeClass('checkBox');
             event.preventDefault();
         }
+    });
+    //全选
+    $('.footer-g').on('click','.labcheck',function(event) {
+        if(!$(this).hasClass('checkBox')) {
+            $(this).addClass('checkBox');
+            event.preventDefault();
+        } else {
+            $(this).removeClass('checkBox');
+            event.preventDefault();
+        }
+    });
+    $("#check_all").click(function () {
+        if($(this).hasClass("checkBox")){
+            $(".buyercart-list").find(".labcheck").removeClass("checkBox");
+        }else{
+            $(".buyercart-list").find(".labcheck").addClass("checkBox");
+        }
+    });
+    //删除商品
+    $("#manage").click(function () {
+        $("#manage").removeClass("show").addClass("hide");
+        $("#finish").removeClass("hide").addClass("show");
+        $(".footer-r,.sum-money").removeClass("show").addClass("hide");
+        $(".del_goods").removeClass("hide").addClass("show");
+    });
+
+    $(document).on('click','.del_goods', function () {
+        if($('.buyercart-list').find(".labcheck").hasClass("checkBox")){
+            $.confirm('确定要删除该商品吗？', function () {
+                $(".labcheck[class*=checkBox]").parents(".card").remove();
+            });
+        }else {
+            $.toast("您还没有选择宝贝哦！");
+        }
+
+    });
+    //删除完成
+    $("#finish").click(function () {
+        $("#finish").removeClass("show").addClass("hide");
+        $("#manage").removeClass("hide").addClass("show");
+        $(".del_goods").removeClass("show").addClass("hide");
+        $(".footer-r,.sum-money").removeClass("hide").addClass("show");
     });
 
 
@@ -24,8 +66,7 @@ $(function () {
                 let html = '';
                 buyerCart.map(function (item, index) {
                     let product = item.product;
-                    html += '' + '<div class="card" data-product-id="'
-                        + product.productId + '">'
+                    html += '' + '<div class="card">'
                         + '<div class="left">'
                         + '<label class="labcheck">'
                         + '<input type="checkbox" class="select">' + '</label>' + '</div>'
@@ -38,24 +79,11 @@ $(function () {
                         + '<div class="money fl">'
                         + '<div class="new">￥' + product.promotionPrice + '</div>'
                         + '<div class="old">' + product.normalPrice + '</div>' + '</div>'
-                        + '<div class="kuang fr" id="changeCount">'
-                        + '<span class="one" id="sub">-' + '</span>'
+                        + '<div class="kuang fr" id="changeCount" >'
+                        + '<span class="one sub" data-product-id="' +  product.productId + '">-' + '</span>'
                         + '<span class="middle">' + item.amount + '</span>'
-                        + '<span class="two" id="add">+' + '</span>'
+                        + '<span class="two add" data-product-id="' +  product.productId + '">+' + '</span>'
                         + '</div></div></div></div></div>';
-                        /*+ '<div class="card-content">'
-                        + '<div class="list-block media-list" >' + '<ul>'
-                        + '<li class="item-content">'
-                        + '<div class="item-media">' + '<img src="'
-                        + getContextPath() + product.imgAddr + '" width="70">' + '</div>'
-                        + '<div class="item-inner">'
-                        + '<div class="item-subtitle">' + product.productName + '</div>'
-                        + '<div class="item-subtitle">' + product.productDesc + '</div>'
-                        + '</div></li></ul></div></div>'
-                        + '<div class="card-footer">' + '<p class="color-gray">'
-                        + '<del>￥' + product.normalPrice + '</del> ￥' + product.promotionPrice + '</p>'
-                        + '<span>' + item.amount + '</span>' + '</div>'
-                        + '</div>';*/
                 });
                 $('.buyercart-list').append(html);
                 let total = $('.list-div .card').length;
@@ -81,30 +109,49 @@ $(function () {
         sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
         window.location.href = '/o2o/pay/order';
     });
+    $(".sub").click(function (e) {
+        console.log(e.currentTarget.dataset.productId);
+    });
 
+    function edit_count(){
+        var number;
+        var total;
+        $("#sub").click(function () {
+            $(this).attr('data-product-id');
+            number--;
+            amount=-1;
+            total=number+amount;
+        });
+        $("#add").click(function () {
+            number++;
+            amount=1;
+            total=number+amount;
 
+        });
 
-    /*$.ajax({
-        url: '/o2o/frontend/updateitemtobuyercart',
-        type: "post",
-        contentType: 'application/json;charset=utf-8',
-        data:JSON.stringify([
-            {
-                "amount": 1,
-                "product": {
-                    "productId": 8
+        $.ajax({
+            url: '/o2o/frontend/updateitemtobuyercart',
+            type: "post",
+            contentType: 'application/json;charset=utf-8',
+            data:JSON.stringify([
+                {
+                    "amount": 1,
+                    "product": {
+                        "productId": product.productId
+                    }
                 }
-            }
-        ]),
-        dataType:'json',
-        success: function (data) {
-            console.log(data);
-            if (data.success) {
+            ]),
+            dataType:'json',
+            success: function (data) {
+                console.log(data);
+                if (data.success) {
+                    item.amount=total;
+                }
+            },
+            error:function (data) {
 
             }
-        },
-        error:function (data) {
+        });
+    }
 
-        }
-    });*/
 });
