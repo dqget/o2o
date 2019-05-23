@@ -52,8 +52,8 @@ $(function () {
                 }]
             };
             if (isClickPay) {
-                isClickPay = false;
                 $.confirm("确认支付？", function () {
+                    isClickPay = false;
                     $.ajax({
                         url: addScheduleAndOpenPayUrl,
                         type: "POST",

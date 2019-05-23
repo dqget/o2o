@@ -26,7 +26,7 @@ $(function () {
                         + '<div class="card-footer">'
                         + '<p class="color-gray">共计 ' + item.payPrice + '￥</p>'
                         + '<span>共' + item.amountDay + '次，一次' + item.dailyQuantity + '件</span>'
-                        + '<span>' + (checkPay(item) ? '查看配送情况' : '支付') + '</span>' + '</div>' + '</div>';
+                        + '<span>' + (checkPay(item) ? '查看配送情况' : '点击支付') + '</span>' + '</div>' + '</div>';
                 });
                 $(".list-div").append(html);
             }

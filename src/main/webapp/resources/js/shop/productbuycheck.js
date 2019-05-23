@@ -1,19 +1,19 @@
 $(function () {
-    var productName = '';
+    let productName = '';
     getList();
     getProductSellDailyList();
 
     function getList() {
         //获取用户购买信息的URL
-        var listUrl = '/o2o/shopadmin/listuserproductmapbyshop?pageIndex=1&pageSize=999&productName=' + productName;
+        let listUrl = '/o2o/shopadmin/listuserproductmapbyshop?pageIndex=1&pageSize=999&productName=' + productName;
 
         //访问后台，获取该店铺的购买信息列表
         $.getJSON(listUrl, function (data) {
             if (data.success) {
-                var userProductMapList = data.data.userProductMapList;
-                console.log(userProductMapList);
+                let userProductMapList = data.data.userProductMapList;
+                // console.log(userProductMapList);
 
-                var tempHtml = '';
+                let tempHtml = '';
                 //遍历购买信息，拼接处列信息
                 userProductMapList.map(function (item, index) {
                     tempHtml += '<div class="row row-productbuycheck">'
@@ -39,13 +39,13 @@ $(function () {
 
     function getProductSellDailyList() {
         //获取该店铺商品7天销售的URL
-        var listProductSellDailyListUrl = '/o2o/shopadmin/listproductselldailybyshop';
+        let listProductSellDailyListUrl = '/o2o/shopadmin/listproductselldailybyshop';
         //访问后台，该店铺商品7天销售的URL
         $.getJSON(listProductSellDailyListUrl, function (data) {
             if (data.success) {
-                var myChart = echarts.init(document.getElementById('chart'));
+                let myChart = echarts.init(document.getElementById('chart'));
                 //生成静态的Echart信息
-                var option = generateStaticEchartPart();
+                let option = generateStaticEchartPart();
                 //遍历销量统计列表，动态设定echarts的值
                 option.legend.data = data.legendData;
                 option.xAxis = data.xAxis;
@@ -64,7 +64,7 @@ $(function () {
         /**
          * echarts
          */
-        var option = {
+        let option = {
             //提示框，鼠标悬浮交互时的信息提示
             tooltip: {
                 trigger: 'axis',

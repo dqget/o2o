@@ -51,7 +51,7 @@ public class ALiPayUtil {
             //付款金额，必填
             String totalAmount = order.getPayPrice();
             //订单名称，必填
-            String subject = order.getShop().getShopName() + "的订单";
+            String subject = "AH的小花的订单";
             //商品描述，可空
             String body = "商品描述";
             //HttpServletRequestUtil.getString(request, "WIDbody");

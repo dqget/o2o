@@ -48,9 +48,10 @@ $(function () {
                 + '<div class="item-subtitle">' + product.productName
                 + '</div>' + '</div>' + '</li>' + '</ul>'
                 + '</div>' + '</div>' + '<div class="card-footer">'
-                + '<p class="color-gray">'
-                + product.normalPrice + '   ' + product.promotionPrice
-                + '</p>' + '<span>' + item.amount + '</span>' + '</div>'
+                + '<p class="color-gray"><del>￥'
+                + product.normalPrice + '</del><span style="color: red; font-size: medium; ">￥'
+                + product.promotionPrice
+                + '</span></p>' + '<span>' + item.amount + '件</span>' + '</div>'
                 + '</div>';
         });
         //选购的商品列表
@@ -60,8 +61,8 @@ $(function () {
         //sui地区选择器
         $("#city-picker").cityPicker({
             toolbarTemplate: '<header class="bar bar-nav">' +
-            '<button class="button button-link pull-right close-picker">确定</button>' +
-            '<h1 class="title">选择收件地址</h1></header>'
+                '<button class="button button-link pull-right close-picker">确定</button>' +
+                '<h1 class="title">选择收件地址</h1></header>'
         });
     }
 

@@ -41,7 +41,7 @@ public class SignUtil {
             e.printStackTrace();
         }
 
-        content = null;
+//        content = null;
         // 将sha1加密后的字符串可与signature对比，标识该请求来源于微信
         return tmpStr != null && tmpStr.equals(signature.toUpperCase());
     }

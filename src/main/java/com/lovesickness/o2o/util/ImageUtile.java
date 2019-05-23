@@ -17,12 +17,7 @@ public class ImageUtile {
     private static Random r = new Random();
 
     public static void main(String[] args) throws IOException {
-        Thumbnails.of(new File("D:/SSH视频/054 SSM到Spring Boot-从零开发校园商铺平台 加/images/item/imgTest.jpg"))
-                .size(200, 200)
-                .watermark(Positions.BOTTOM_RIGHT,
-                        ImageIO.read(new File(basePath + "/waterMark.png")), 0.25f).outputQuality(0.8f)
-                .toFile("D:/SSH视频/054 SSM到Spring Boot-从零开发校园商铺平台 加/images/item/imgTest2.jpg");
-        ;
+//
     }
 
     public static String generateThumbnails(ImageHolder image, String targetAddr) {
@@ -38,7 +33,8 @@ public class ImageUtile {
         try {
             Thumbnails.of(image.getImage()).size(200, 200)
                     .watermark(Positions.BOTTOM_RIGHT,
-                            ImageIO.read(new File(basePath + "/waterMark.png")), 0.25f).outputQuality(0.8f).toFile(dest);
+                            ImageIO.read(new File(basePath + "/waterMark.png")), 0.25f)
+                    .outputQuality(0.8f).toFile(dest);
         } catch (IOException e) {
             e.printStackTrace();
         }

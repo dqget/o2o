@@ -25,7 +25,7 @@ $(function () {
         scheduleDistributionList.map(function (item, index) {
             html +=
                 '<div class="col-33">' +
-                '<a href="#" class="button button-big button-fill external" '
+                '<a class="button button-big button-fill external" '
                 + (item.isReceipt == 1 ? 'style="opacity: 0.2"' : '')
                 + 'data-schedule-distribution-id="' + item.scheduleDistributionId + '" >'
                 + new Date(item.receiptTime).Format("yyyy-MM-dd") + '</a> </div>';

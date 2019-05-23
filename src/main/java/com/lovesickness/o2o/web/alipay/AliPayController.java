@@ -286,7 +286,7 @@ public class AliPayController {
 
     @GetMapping("/return")
     @ApiOperation(value = "订单支付成功回调接口", notes = "订单支付成功之后支付宝会回调用此接口")
-    public void returnPay(HttpServletRequest request, HttpServletResponse response) {
+    public String returnPay(HttpServletRequest request, HttpServletResponse response) {
         log.info("支付宝回调接口调用成功");
         //获取支付宝GET过来反馈信息
         Map<String, String> params = getAliBaBaReturnMap(request);
@@ -310,27 +310,24 @@ public class AliPayController {
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
-        try {
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out = response.getWriter();
-            if (verifyResult) {
-                //验证成功
-                /////////////////////////////////////////////////////////////
-                //请在这里加上商户的业务逻辑程序代码
-                //该页面可做页面美工编辑
-
-                out.println("验证成功<br/>请回到微信<br/>");
-                out.close();
-                //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
-                ///////////////////////////////////////////////
-            } else {
-                //该页面可做页面美工编辑
-                log.info("验证失败");
-                out.println("验证失败");
-                out.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        //            response.setContentType("text/html;charset=utf-8");
+        //            PrintWriter out = response.getWriter();
+        if (verifyResult) {
+            //验证成功
+            /////////////////////////////////////////////////////////////
+            //请在这里加上商户的业务逻辑程序代码
+            //该页面可做页面美工编辑
+            return "pay/paysuccess";
+            //                out.println("验证成功<br/>请回到微信<br/>");
+            //                out.close();
+            //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+            ///////////////////////////////////////////////
+        } else {
+            //该页面可做页面美工编辑
+            log.info("验证失败");
+            return "pay/payfail";
+            //                out.println("验证失败");
+            //                out.close();
         }
     }
 

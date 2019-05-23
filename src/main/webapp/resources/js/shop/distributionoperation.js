@@ -26,31 +26,37 @@ $(function () {
                     $("#order-operation").css("pointer-events", "none");
                 } else if (scheduleDistribution.isReceipt == 0) {
                     $("#distribution-operation").html("确认发货");
-
+                    let flag = false;
                     $("#distribution-operation").on('click', function (e) {
                         $.confirm('确认发货吗？', function () {
                             if (new Date() < scheduleDistribution.receiptTime) {
                                 $.confirm('还未到配送时间，确认发货吗?', function () {
-                                    $.ajax({
-                                        url: modifyScheduleDistributionByShopUrl,
-                                        type: "POST",
-                                        contentType: 'application/json',
-                                        dataType: "json",
-                                        data: JSON.stringify({
-                                            scheduleDistributionId: scheduleDistributionId,
-                                            isReceipt: 1,
-                                        }),
-                                        success: function (data) {
-                                            if (data.success) {
-                                                console.log(data);
-                                                location.reload();
-                                            } else {
-                                                $.toast(data.msg);
-                                            }
-                                        },
-                                    });
+                                    flag = true;
+                                });
+                            } else {
+                                flag = true;
+                            }
+                            if (flag) {
+                                $.ajax({
+                                    url: modifyScheduleDistributionByShopUrl,
+                                    type: "POST",
+                                    contentType: 'application/json',
+                                    dataType: "json",
+                                    data: JSON.stringify({
+                                        scheduleDistributionId: scheduleDistributionId,
+                                        isReceipt: 1,
+                                    }),
+                                    success: function (data) {
+                                        if (data.success) {
+                                            console.log(data);
+                                            location.reload();
+                                        } else {
+                                            $.toast(data.msg);
+                                        }
+                                    },
                                 });
                             }
+
                         });
                     });
                 }

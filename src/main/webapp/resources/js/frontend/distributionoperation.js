@@ -5,11 +5,12 @@ $(function () {
     getScheduleDistribution();
     let scheduleDistribution;
     //sui地区选择器
-    $("#city-picker").cityPicker({
-        toolbarTemplate: '<header class="bar bar-nav">' +
-        '<button class="button button-link pull-right close-picker">确定</button>' +
-        '<h1 class="title">选择收货地址</h1></header>'
-    });
+    // $("#city-picker").cityPicker({
+    //     toolbarTemplate: '<header class="bar bar-nav">' +
+    //         '<button class="button button-link pull-right close-picker">确定</button>' +
+    //         '<h1 class="title">选择收货地址</h1></header>'
+    // });
+
 
     function getScheduleDistribution() {
         let url = getScheduleDistributionUrl + '?scheduleDistributionId=' + scheduleDistributionId;
@@ -48,6 +49,11 @@ $(function () {
                             $.toast("请填写完整的配送信息");
                             checkMsg = false;
                         }
+                        if (new Date($("#receipt-time").val()) < new Date()) {
+                            $.toast("期望日期最早为明日");
+                            checkMsg = false;
+                        }
+
                         if (checkMsg) {
                             $.confirm('确认修改吗？', function () {
                                 $.ajax({
@@ -58,9 +64,9 @@ $(function () {
                                     data: JSON.stringify({
                                         scheduleDistributionId: scheduleDistributionId,
                                         receiveName: receiveName,
-                                        receiveAddr: $('#city-picker').val() + receiveAddr,
+                                        receiveAddr:  receiveAddr,
                                         receivePhone: receivePhone,
-                                        receiptTime: $("#receive-time").val()
+                                        receiptTime: $("#receipt-time").val()
                                     }),
                                     success: function (data) {
                                         if (data.success) {

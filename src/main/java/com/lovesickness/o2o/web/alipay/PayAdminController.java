@@ -21,4 +21,16 @@ public class PayAdminController {
     public String pay() {
         return "pay/order";
     }
+
+    @GetMapping(value = "/paysuccess")
+    @ApiOperation(value = "支付成功界面")
+    public String paySuccess() {
+        return "pay/paysuccess";
+    }
+
+    @GetMapping(value = "/payfail")
+    @ApiOperation(value = "支付失败界面")
+    public String payFail() {
+        return "pay/payfail";
+    }
 }

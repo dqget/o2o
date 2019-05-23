@@ -1,6 +1,8 @@
 package com.lovesickness.o2o.config.quartz;
 
 import com.lovesickness.o2o.service.ProductSellDailyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,8 @@ import java.util.Objects;
  */
 @Configuration
 public class QuartzConfiguration {
+    private static Logger logger = LoggerFactory.getLogger(QuartzConfiguration.class);
+
     @Autowired
     private ProductSellDailyService productSellDailyService;
     @Autowired
@@ -24,7 +28,7 @@ public class QuartzConfiguration {
 
     @Bean(name = "jobDetailFactory")
     public MethodInvokingJobDetailFactoryBean createJobDetail() {
-        //new出一个jobDetailFactoru对象，此工厂主要用来制作一个jobDetail，即制作一个任务
+        //new出一个jobDetailFactory对象，此工厂主要用来制作一个jobDetail，即制作一个任务
         //由于我们所作的定时任务根本上讲其实就是执行一个方法，所以用这个工厂比较方便
         MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
         //设置jobDetail的名字
@@ -38,10 +42,15 @@ public class QuartzConfiguration {
         jobDetailFactoryBean.setTargetObject(productSellDailyService);
         //指定运行任务的方法 根据反射
         jobDetailFactoryBean.setTargetMethod("dailyCalculate");
+//        jobDetailFactoryBean.setTargetMethod("printfHello");
 
         return jobDetailFactoryBean;
     }
 
+    /**
+     *
+     * @return Cron表达式触发器
+     */
     @Bean(name = "productSellDailyTriggerFactory")
     public CronTriggerFactoryBean createProductSellDailyTrigger() {
         //创建TriggerFactory实例，用来创建trigger
@@ -54,6 +63,7 @@ public class QuartzConfiguration {
         triggerFactory.setJobDetail(Objects.requireNonNull(jobDetailFactory.getObject()));
         //设定cron表达式
         triggerFactory.setCronExpression("0 0 0 * * ? ");
+//        triggerFactory.setCronExpression("0/10 * * * * ? ");
         return triggerFactory;
 
     }
@@ -61,7 +71,9 @@ public class QuartzConfiguration {
     /**
      * 创建调度工程
      */
+    @Bean("schedulerFactory")
     public SchedulerFactoryBean createSchedulerFactory() {
+        logger.info("创建任务调度工厂");
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
         schedulerFactoryBean.setTriggers(productSellDailyTriggerFactory.getObject());
         return schedulerFactoryBean;

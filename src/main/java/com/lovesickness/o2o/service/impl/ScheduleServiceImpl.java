@@ -85,7 +85,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 scheduleDistribution.setReceivePhone(baseScheduleDistribution.getReceivePhone());
                 scheduleDistribution.setReceiptTime(calendar.getTime());
                 //将日期加1天
-                calendar.add(Calendar.DATE, 1);
+                calendar.add(Calendar.DATE, 7);
 
                 scheduleDistributions.add(scheduleDistribution);
 

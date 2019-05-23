@@ -50,7 +50,7 @@ $(function () {
                 // console.log(order.user.name);
 
                 if (order.isPay == 0) {
-                    $("#order-operation").html("支付");
+                    $("#order-operation").html("未支付");
                     $("#order-operation").css("pointer-events", "none");
                 } else if (order.isShip == 0) {
                     $("#order-operation").html("确认发货");

@@ -1,11 +1,14 @@
 $(function () {
 
     let url = '/o2o/frontend/getbuyercartbyuser';
-    getBuyerCart();
     let buyerCart;
+    let payPrice = 0;
+    getBuyerCart();
+    edit_count();
+
     //购物车商品选择
-    $('.buyercart-list').on('click','.labcheck',function(event) {
-        if(!$(this).hasClass('checkBox')) {
+    $('.buyercart-list').on('click', '.labcheck', function (event) {
+        if (!$(this).hasClass('checkBox')) {
             $(this).addClass('checkBox');
             event.preventDefault();
         } else {
@@ -14,8 +17,8 @@ $(function () {
         }
     });
     //全选
-    $('.footer-g').on('click','.labcheck',function(event) {
-        if(!$(this).hasClass('checkBox')) {
+    $('.footer-g').on('click', '.labcheck', function (event) {
+        if (!$(this).hasClass('checkBox')) {
             $(this).addClass('checkBox');
             event.preventDefault();
         } else {
@@ -24,9 +27,9 @@ $(function () {
         }
     });
     $("#check_all").click(function () {
-        if($(this).hasClass("checkBox")){
+        if ($(this).hasClass("checkBox")) {
             $(".buyercart-list").find(".labcheck").removeClass("checkBox");
-        }else{
+        } else {
             $(".buyercart-list").find(".labcheck").addClass("checkBox");
         }
     });
@@ -36,14 +39,20 @@ $(function () {
         $("#finish").removeClass("hide").addClass("show");
         $(".footer-r,.sum-money").removeClass("show").addClass("hide");
         $(".del_goods").removeClass("hide").addClass("show");
+
+
     });
 
-    $(document).on('click','.del_goods', function () {
-        if($('.buyercart-list').find(".labcheck").hasClass("checkBox")){
+    $(document).on('click', '.del_goods', function () {
+        if ($('.buyercart-list').find(".labcheck").hasClass("checkBox")) {
             $.confirm('确定要删除该商品吗？', function () {
-                $(".labcheck[class*=checkBox]").parents(".card").remove();
+                // $(".labcheck[class*=checkBox]").parents(".card").remove();
+                // console.log($(".labcheck[class*=checkBox]").parents(".card").attr("data-product-id"));
+                // console.log($(".labcheck[class*=checkBox]").parents(".card").attr("data-product-id"));
+
+
             });
-        }else {
+        } else {
             $.toast("您还没有选择宝贝哦！");
         }
 
@@ -54,6 +63,7 @@ $(function () {
         $("#manage").removeClass("hide").addClass("show");
         $(".del_goods").removeClass("show").addClass("hide");
         $(".footer-r,.sum-money").removeClass("hide").addClass("show");
+
     });
 
 
@@ -66,10 +76,11 @@ $(function () {
                 let html = '';
                 buyerCart.map(function (item, index) {
                     let product = item.product;
-                    html += '' + '<div class="card">'
+                    html += '' + '<div class="card"  data-product-id="' + product.productId + '">'
                         + '<div class="left">'
-                        + '<label class="labcheck">'
-                        + '<input type="checkbox" class="select">' + '</label>' + '</div>'
+                        // + '<label class="labcheck">'
+                        // + '<input type="checkbox" class="select">' + '</label>'
+                        + '</div>'
                         + '<div class="goods clearfix">' + '<img src="'
                         + getContextPath() + product.imgAddr + '">'
                         + '<div class="goods_details fr">'
@@ -78,14 +89,20 @@ $(function () {
                         + '<div class="price clearfix">'
                         + '<div class="money fl">'
                         + '<div class="new">￥' + product.promotionPrice + '</div>'
-                        + '<div class="old">' + product.normalPrice + '</div>' + '</div>'
+                        + '<div class="old">￥' + product.normalPrice + '</div>' + '</div>'
                         + '<div class="kuang fr" id="changeCount" >'
-                        + '<span class="one sub" data-product-id="' +  product.productId + '">-' + '</span>'
-                        + '<span class="middle">' + item.amount + '</span>'
-                        + '<span class="two add" data-product-id="' +  product.productId + '">+' + '</span>'
+                        + '<span class="one sub" ' +
+                        'data-product-id="' + product.productId + '" data-amount-id ="productId' + index + '">-'
+                        + '</span>'
+                        + '<span class="middle" id="productId' + index + '">' + item.amount + '</span>'
+                        + '<span class="two add" ' +
+                        'data-product-id="' + product.productId + '"  data-amount-id ="productId' + index + '">+'
+                        + '</span>'
                         + '</div></div></div></div></div>';
+                    payPrice += parseInt(product.promotionPrice) * parseInt(item.amount);
                 });
                 $('.buyercart-list').append(html);
+                $('#pay-price').text('￥' + payPrice);
                 let total = $('.list-div .card').length;
                 maxItems = data.count;
                 if (total >= maxItems) {
@@ -103,55 +120,95 @@ $(function () {
     }
 
 
-
     $('#settleAccounts').click(function () {
+
         let sessionStorage = window.sessionStorage;
         sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
         window.location.href = '/o2o/pay/order';
     });
-    $(".sub").click(function (e) {
-        console.log(e.currentTarget.dataset.productId);
-    });
 
-    function edit_count(){
-        var number;
-        var total;
-        $("#sub").click(function () {
-            $(this).attr('data-product-id');
-            number--;
-            amount=-1;
-            total=number+amount;
-        });
-        $("#add").click(function () {
-            number++;
-            amount=1;
-            total=number+amount;
-
-        });
-
+    function updateBuyerCart(amount, productId) {
         $.ajax({
             url: '/o2o/frontend/updateitemtobuyercart',
             type: "post",
             contentType: 'application/json;charset=utf-8',
-            data:JSON.stringify([
+            data: JSON.stringify([
                 {
-                    "amount": 1,
+                    "amount": amount,
                     "product": {
-                        "productId": product.productId
+                        "productId": productId
                     }
                 }
             ]),
-            dataType:'json',
+            dataType: 'json',
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 if (data.success) {
-                    item.amount=total;
+                    $.getJSON(url, function (data) {
+                        if (data.success) {
+                            buyerCart = data.data;
+                            payPrice = 0;
+                            buyerCart.map(function (item, index) {
+                                let product = item.product;
+                                payPrice += parseInt(product.promotionPrice) * parseInt(item.amount);
+                            });
+                            $('#pay-price').text('￥' + payPrice);
+
+                        }
+                    });
+                    // location.reload();
+                } else {
+                    $.toast(data.msg);
+                    location.reload();
                 }
             },
-            error:function (data) {
+            error: function (data) {
+                $.toast("修改购物车失败");
+                location.reload();
 
             }
         });
+    }
+
+
+    function edit_count() {
+        let amount;
+        let product;
+        let productAmount;
+        let productAmountSpan;
+        let afterAmount;
+        $('.buyercart-list').on('click', '.sub', function (e) {
+            amount = -1;
+            product = e.currentTarget.dataset.productId;
+            productAmountSpan = $('#' + e.currentTarget.dataset.amountId);
+            productAmount = parseInt(productAmountSpan.text());
+            afterAmount = parseInt(productAmount + amount);
+
+            if (afterAmount == 0) {
+                location.reload();
+            } else {
+                productAmountSpan.text(afterAmount);
+
+            }
+            updateBuyerCart(amount, product);
+            // console.log(buyerCart);
+
+            // console.log(productAmount);
+        });
+
+        $('.buyercart-list').on('click', '.add', function (e) {
+            amount = 1;
+            product = e.currentTarget.dataset.productId;
+            productAmountSpan = $('#' + e.currentTarget.dataset.amountId);
+            productAmount = parseInt(productAmountSpan.text());
+
+            productAmountSpan.text(parseInt(productAmount + amount));
+            // console.log(productAmount);
+            updateBuyerCart(amount, product);
+            // console.log(buyerCart);
+
+        });
+
     }
 
 });

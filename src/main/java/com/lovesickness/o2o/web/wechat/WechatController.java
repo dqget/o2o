@@ -25,7 +25,7 @@ public class WechatController {
 
     @RequestMapping(method = {RequestMethod.GET})
     public void doGet(HttpServletRequest request, HttpServletResponse response) {
-        log.debug("et...");
+        log.debug("微信接入接口");
         // 微信加密签名，signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
         String signature = request.getParameter("signature");
         // 时间戳

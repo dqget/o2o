@@ -18,4 +18,6 @@ public interface ProductSellDailyService {
      * 根据条件查询  返回商品日销售量的统计
      */
     List<ProductSellDaily> listProductSellDaily(ProductSellDaily productSellDailyCondition, Date beginTime, Date endTime);
+
+    void printfHello();
 }
