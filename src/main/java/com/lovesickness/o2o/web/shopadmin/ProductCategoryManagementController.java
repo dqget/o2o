@@ -49,8 +49,8 @@ public class ProductCategoryManagementController {
 
     @PostMapping(value = "/removeproductcategory")
     @ApiOperation(value = "删除商品分类", notes = "向该店铺下删除商品分类")
-    public ResultBean<com.lovesickness.o2o.dto.ProductCategoryExecution> removeProductCategory(Long productCategoryId, HttpServletRequest request) {
-        request.getSession().invalidate();
+    public ResultBean<ProductCategoryExecution> removeProductCategory(Long productCategoryId, HttpServletRequest request) {
+//        request.getSession().invalidate();
         if (productCategoryId == null || productCategoryId < 0) {
             return new ResultBean<>(false, 0, "商品类别错误");
         }
