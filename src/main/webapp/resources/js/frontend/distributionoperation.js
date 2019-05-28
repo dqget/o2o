@@ -30,7 +30,7 @@ $(function () {
 
 
                 if (scheduleDistribution.isReceipt == 1) {
-                    $("#distribution-operation").html("花已经帮您送到");
+                    $("#distribution-operation").html("已经帮您送到");
                     $("#order-operation").css("pointer-events", "none");
                 } else if (scheduleDistribution.isReceipt == 0) {
                     $("#distribution-operation").html("确认修改");

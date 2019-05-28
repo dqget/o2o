@@ -32,11 +32,12 @@ $(function () {
             success: function (data) {
                 if (data.success) {
                     $.toast('修改密码成功！');
-                    if (usertype == 1) {
-                        window.location.href = '/o2o/frontend/index';
-                    } else {
-                        window.location.href = '/o2o/shopadmin/shoplist';
-                    }
+                    // if (usertype == 1) {
+                    //     window.location.href = '/o2o/frontend/index';
+                    // } else {
+                    //     window.location.href = '/o2o/shopadmin/shoplist';
+                    // }
+                    history.back(-1);
                 } else {
                     $.toast('修改密码失败！' + data.errMsg);
                     $('#j_captcha').click();
@@ -44,7 +45,7 @@ $(function () {
             }
         });
     });
-    $('#back').click(function () {
-        window.location.href = '/o2o/shopadmin/shoplist';
-    });
+    // $('#back').click(function () {
+    //     window.location.href = '/o2o/shopadmin/shoplist';
+    // });
 });

@@ -21,7 +21,12 @@
 <body>
 <div class="page-group">
     <div class="page">
+
         <header class="bar bar-nav">
+            <a class="button button-link button-nav pull-left external"
+               onClick="history.back(-1);" data-transition='slide-out'>
+                <span class="icon icon-left"></span> 返回
+            </a>
             <h1 class="title">确认订单</h1>
         </header>
         <nav class="bar bar-tab">
@@ -29,7 +34,7 @@
                 <span class="tab-label" id="price"></span>
             </p>
             <a class="tab-item external">
-                <span class="tab-label" id="pay">支付</span>
+                <span class="tab-label" id="pay" style="color: #ff6666">支付</span>
             </a>
         </nav>
 

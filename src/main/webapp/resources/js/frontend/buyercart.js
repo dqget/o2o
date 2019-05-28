@@ -73,6 +73,7 @@ $(function () {
                 buyerCart = data.data;
                 //当前查询条件总数
                 maxItems = data.count;
+
                 let html = '';
                 buyerCart.map(function (item, index) {
                     let product = item.product;
@@ -121,10 +122,13 @@ $(function () {
 
 
     $('#settleAccounts').click(function () {
-
-        let sessionStorage = window.sessionStorage;
-        sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
-        window.location.href = '/o2o/pay/order';
+        if (buyerCart.length === 0) {
+            $.toast("您还没有挑选商品");
+        }else {
+            let sessionStorage = window.sessionStorage;
+            sessionStorage.setItem('orderItems', JSON.stringify(buyerCart));
+            window.location.href = '/o2o/pay/order';
+        }
     });
 
     function updateBuyerCart(amount, productId) {
