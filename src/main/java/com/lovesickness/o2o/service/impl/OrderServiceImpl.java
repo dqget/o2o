@@ -69,10 +69,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderExecution getOrderList(Order order, String keyWord, Integer pageIndex, Integer pageSize) {
-        int bagenIndex = PageCalculator.calculateRowIndex(pageIndex, pageSize);
+    public OrderExecution getOrderList(Order order,
+                                       String keyWord,
+                                       Integer pageIndex,
+                                       Integer pageSize) {
+        int baginIndex = PageCalculator.
+                calculateRowIndex(pageIndex, pageSize);
         OrderExecution oe = new OrderExecution();
-        oe.setOrderList(orderDao.queryOrderList(order, keyWord, bagenIndex, pageSize));
+        oe.setOrderList(orderDao.
+                queryOrderList(order, keyWord, baginIndex, pageSize));
         oe.setCount(orderDao.queryOrderCount(order, keyWord));
         return oe;
     }

@@ -35,7 +35,7 @@ import java.util.Map;
  * @author 懿
  */
 @RestController
-@RequestMapping(value = "local", method = {RequestMethod.GET, RequestMethod.POST})
+@RequestMapping(value = "/local", method = {RequestMethod.GET, RequestMethod.POST})
 @Api(tags = "LocalAuthController|本地账户管理控制器")
 public class LocalAuthController {
     private static Logger logger = LoggerFactory.getLogger(LocalAuthController.class);

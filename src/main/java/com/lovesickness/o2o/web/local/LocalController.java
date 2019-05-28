@@ -28,4 +28,9 @@ public class LocalController {
     public String personOperation() {
         return "local/personoperation";
     }
+
+    @GetMapping(value = "/register")
+    public String register() {
+        return "local/register";
+    }
 }

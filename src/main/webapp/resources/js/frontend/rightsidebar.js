@@ -9,8 +9,9 @@ $(function () {
         + '<p></p><a class="in external" style="color: #ffffff" href=/o2o/frontend/schedulelist>预定记录</a></p>'
         + '<p></p><a class="in external" style="color: #ffffff" href=/o2o/frontend/pointrecord>兑换记录</a></p>'
         + '<p></p><a class="in external" style="color: #ffffff" href=/o2o/local/changepwd?usertype=1>修改密码</a></p>'
-        + '<p></p><a class="in external" style="color: #ffffff" id="log-out" href=# usertype="1">退出登录</a></p>';
-    const notLoginHtml = '<a href=/o2o/local/login?usertype=1 >登录</a>';
+        + '<p></p><a class="in external" style="color: #ffffff" id="log-out" usertype="1">退出登录</a></p>';
+    const notLoginHtml = '<p></p><a href=/o2o/local/login?usertype=1 style="color: #ffffff">登录</a>'
+        + '<p></p><a class="in external" style="color: #ffffff" href=/o2o/local/register>注册</a></p>';
     checkUserLogin();
 
     $('#me').click(function () {

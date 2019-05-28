@@ -35,7 +35,7 @@ $(function () {
                 let html = '';
                 productCategoryList
                     .map(function (item, index) {
-                        html += '<a href="#" class="button" data-product-search-id='
+                        html += '<a class="button" data-product-search-id='
                             + item.productCategoryId+ '>'+ item.productCategoryName+ '</a>';
                     });
                 $('#shopdetail-button-div').html(html);

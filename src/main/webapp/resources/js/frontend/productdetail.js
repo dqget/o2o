@@ -26,7 +26,7 @@ $(function () {
                     + new Date(item.createTime).Format("yyyy-MM-dd hh:mm")
                     + '</span></div></div><div class="card-footer" style="display:block;">' +
                     (item.starLevel != null ? '<span> ' + item.starLevel + '星</span>' : "") +
-                    '<a href="#" fromName="' + item.fromName + '" fromUid="' + item.fromUid + '"' +
+                    '<a fromName="' + item.fromName + '" fromUid="' + item.fromUid + '"' +
                     ' class="prompt-title-ok" style="float:right;">回复</a></div></li>';
             });
             $("#eva-list").html(evaHtml);

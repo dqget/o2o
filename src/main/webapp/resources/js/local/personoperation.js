@@ -44,6 +44,11 @@ $(function () {
         $('#userType').val(userType);
         //用户性别
         document.getElementById("gender")[userJSON.gender - 1].selected = true;
-        $('#profile_Img').attr("src", userJSON.profileImg)
+        if (userJSON.profileImg.startsWith("http")) {
+            $('#profile_Img').attr("src", userJSON.profileImg);
+        } else {
+            $('#profile_Img').attr("src", getContextPath() + userJSON.profileImg);
+
+        }
     }
 });

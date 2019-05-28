@@ -42,19 +42,19 @@ $(function () {
             contraryStatus = 0;
         }
         var html = "";
-        html = '<a href="#" class="edit" data-id="'
+        html = '<a  class="edit" data-id="'
             + productId
             + '" data-status="'
             + enableStatus
             + '">编辑</a>'
-            + '<a href="#" class="change" data-id="'
+            + '<a  class="change" data-id="'
             + productId
             + '" data-status="'
             + contraryStatus
             + '">'
             + textOp
             + '</a>'
-            + '<a href="#" class="preview" data-id="'
+            + '<a  class="preview" data-id="'
             + productId
             + '" data-status="'
             + enableStatus

@@ -24,7 +24,7 @@ $(function () {
             html += '<div class="row row-product-category now"><div class="col-40">'
                 + item.productCategoryName + '</div><div class="col-40">'
                 + item.priority
-                + '</div><div class="col-20"><a href="#" class="button delete" data-id="'
+                + '</div><div class="col-20"><a class="button delete" data-id="'
                 + item.productCategoryId + '">删除</a></div></div>';
 
         });
