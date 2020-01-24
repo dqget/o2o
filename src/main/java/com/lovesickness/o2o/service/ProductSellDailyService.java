@@ -19,5 +19,4 @@ public interface ProductSellDailyService {
      */
     List<ProductSellDaily> listProductSellDaily(ProductSellDaily productSellDailyCondition, Date beginTime, Date endTime);
 
-    void printfHello();
 }

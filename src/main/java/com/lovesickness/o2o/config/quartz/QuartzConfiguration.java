@@ -28,19 +28,19 @@ public class QuartzConfiguration {
 
     @Bean(name = "jobDetailFactory")
     public MethodInvokingJobDetailFactoryBean createJobDetail() {
-        //new出一个jobDetailFactory对象，此工厂主要用来制作一个jobDetail，即制作一个任务
-        //由于我们所作的定时任务根本上讲其实就是执行一个方法，所以用这个工厂比较方便
+        // new出一个jobDetailFactory对象，此工厂主要用来制作一个jobDetail，即制作一个任务
+        // 由于我们所作的定时任务根本上讲其实就是执行一个方法，所以用这个工厂比较方便
         MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
-        //设置jobDetail的名字
+        // 设置jobDetail的名字
         jobDetailFactoryBean.setName("product_sell_daily_job");
-        //设置jobDetail的组
+        // 设置jobDetail的组
         jobDetailFactoryBean.setGroup("job_product_sell_daily_group");
-        //对于相同的jobDetail，当指定多个Trigger时，很可能第一个job完成之前，第二个job就开始了
-        //滴定concurrent设为false，多个job不会并发运行，第二个job将不会再第一个job完成之前开始
+        // 对于相同的jobDetail，当指定多个Trigger时，很可能第一个job完成之前，第二个job就开始了
+        // 滴定concurrent设为false，多个job不会并发运行，第二个job将不会再第一个job完成之前开始
         jobDetailFactoryBean.setConcurrent(false);
-        //指定运行任务的类
+        // 指定运行任务的类
         jobDetailFactoryBean.setTargetObject(productSellDailyService);
-        //指定运行任务的方法 根据反射
+        // 指定运行任务的方法 根据反射
         jobDetailFactoryBean.setTargetMethod("dailyCalculate");
 //        jobDetailFactoryBean.setTargetMethod("printfHello");
 
@@ -48,20 +48,19 @@ public class QuartzConfiguration {
     }
 
     /**
-     *
      * @return Cron表达式触发器
      */
     @Bean(name = "productSellDailyTriggerFactory")
     public CronTriggerFactoryBean createProductSellDailyTrigger() {
-        //创建TriggerFactory实例，用来创建trigger
+        // 创建TriggerFactory实例，用来创建trigger
         CronTriggerFactoryBean triggerFactory = new CronTriggerFactoryBean();
-        //设置triggerFactory的名字
+        // 设置triggerFactory的名字
         triggerFactory.setName("product_sell_daily_trigger");
-        //设置triggerFactory的组名
+        // 设置triggerFactory的组名
         triggerFactory.setGroup("job_product_sell_daily_group");
-        //绑定jobDetail
+        // 绑定jobDetail
         triggerFactory.setJobDetail(Objects.requireNonNull(jobDetailFactory.getObject()));
-        //设定cron表达式
+        // 设定cron表达式
         triggerFactory.setCronExpression("0 0 0 * * ? ");
 //        triggerFactory.setCronExpression("0/10 * * * * ? ");
         return triggerFactory;

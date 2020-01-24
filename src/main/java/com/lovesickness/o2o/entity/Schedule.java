@@ -4,6 +4,9 @@ package com.lovesickness.o2o.entity;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author xiaoka
+ */
 public class Schedule {
 
     private Long scheduleId;

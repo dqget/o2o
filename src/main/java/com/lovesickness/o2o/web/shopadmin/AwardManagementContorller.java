@@ -69,7 +69,7 @@ public class AwardManagementContorller {
         } catch (IOException e) {
             return new ResultBean<>(e);
         }
-        if (award != null && thumbnail != null) {
+        if (award != null) {
             Shop currentShop = (Shop) request.getSession().getAttribute("currentShop");
             award.setShopId(currentShop.getShopId());
             return new ResultBean<>(awardService.addAward(award, thumbnail));

@@ -36,9 +36,4 @@ public class ProductSellDailyServiceImpl implements ProductSellDailyService {
             return null;
         }
     }
-
-    @Override
-    public void printfHello() {
-        System.out.println("Hello World");
-    }
 }

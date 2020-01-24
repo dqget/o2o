@@ -570,7 +570,7 @@ public class JedisUtil {
          * 以Map的形式返回hash中的存储和值
          *
          * @param String key
-         * @return Map<Strinig                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               String>
+         * @return Map<Strinig, String>
          */
         public Map<String, String> hgetAll(String key) {
             // ShardedJedis sjedis = getShardedJedis();

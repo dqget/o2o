@@ -85,20 +85,19 @@ public class OrderContorller {
             //3.唤起支付宝支付功能////
             ALiPayUtil.aliPay4Order(order, request, response);
         }
-
         //4.支付成功后回调接口///
     }
 
     @PostMapping("/oldorderopenpay")
     @ApiOperation(value = "根据已经存在的订单进行支付使用支付宝支付功能",
             notes = "1.查询订单判断是否支付 2.未支付唤起支付宝支付功能")
-    public void oldOrderAliPay(@RequestBody JSONObject orderNoJSNO, HttpServletRequest request, HttpServletResponse response) {
+    public void oldOrderAliPay(@RequestBody JSONObject orderNoJSON, HttpServletRequest request, HttpServletResponse response) {
         //session中的用户信息
         PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
         if (user == null) {
             return;
         }
-        String orderNo = orderNoJSNO.getString("orderNo");
+        String orderNo = orderNoJSON.getString("orderNo");
         Order order = orderService.getOrderByNo(orderNo);
         if (order.getIsPay() == 1) {
             return;

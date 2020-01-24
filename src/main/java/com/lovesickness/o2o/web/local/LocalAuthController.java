@@ -43,7 +43,6 @@ public class LocalAuthController {
     @Autowired
     private LocalAuthService localAuthService;
 
-
     @PostMapping(value = "/logincheck")
     @ApiOperation(value = "用户登录", notes = "根据用户名和密码进行登录，needVerify表示是否需要验证码校验")
     public Map<String, Object> loginCheck(HttpServletRequest request) {
@@ -73,7 +72,7 @@ public class LocalAuthController {
         return modelMap;
     }
 
-    @RequestMapping(value = "/ownerregister", method = RequestMethod.POST)
+    @PostMapping(value = "/ownerregister")
     @ApiOperation(value = "用户注册", notes = "非微信进行注册")
     public Map<String, Object> ownerRegister(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>(8);
@@ -84,16 +83,13 @@ public class LocalAuthController {
         }
         ObjectMapper mapper = new ObjectMapper();
         LocalAuth localAuth;
-        String localAuthStr = HttpServletRequestUtil.getString(request,
-                "localAuthStr");
+        String localAuthStr = HttpServletRequestUtil.getString(request, "localAuthStr");
         MultipartHttpServletRequest multipartRequest;
         CommonsMultipartFile profileImg;
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(
-                request.getSession().getServletContext());
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver(request.getSession().getServletContext());
         if (multipartResolver.isMultipart(request)) {
             multipartRequest = (MultipartHttpServletRequest) request;
-            profileImg = (CommonsMultipartFile) multipartRequest
-                    .getFile("thumbnail");
+            profileImg = (CommonsMultipartFile) multipartRequest.getFile("thumbnail");
         } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "上传图片不能为空");
@@ -109,14 +105,12 @@ public class LocalAuthController {
         if (localAuth != null && localAuth.getPassword() != null
                 && localAuth.getUserName() != null) {
             try {
-                PersonInfo user = (PersonInfo) request.getSession()
-                        .getAttribute("user");
+                PersonInfo user = (PersonInfo) request.getSession().getAttribute("user");
                 if (user != null && localAuth.getPersonInfo() != null) {
                     localAuth.getPersonInfo().setUserId(user.getUserId());
                 }
                 localAuth.getPersonInfo().setUserType(2);
-                LocalAuthExecution le = localAuthService.register(localAuth,
-                        new ImageHolder(profileImg.getInputStream(), profileImg.getOriginalFilename()));
+                LocalAuthExecution le = localAuthService.register(localAuth, new ImageHolder(profileImg.getInputStream(), profileImg.getOriginalFilename()));
                 if (le.getState() == LocalAuthStateEnum.SUCCESS.getState()) {
                     modelMap.put("success", true);
                 } else {
@@ -196,8 +190,7 @@ public class LocalAuthController {
                     return modelMap;
                 }
                 //修改平台账号的密码
-                LocalAuthExecution le = localAuthService.modifyLocalAuth(user.getUserId(), userName, password,
-                        newPassword);
+                LocalAuthExecution le = localAuthService.modifyLocalAuth(user.getUserId(), userName, password, newPassword);
                 if (le.getState() == LocalAuthStateEnum.SUCCESS.getState()) {
                     modelMap.put("success", true);
                 } else {
@@ -209,7 +202,6 @@ public class LocalAuthController {
                 modelMap.put("errMsg", e.toString());
                 return modelMap;
             }
-
         } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "请输入密码");
@@ -218,8 +210,7 @@ public class LocalAuthController {
     }
 
     @GetMapping("/generateqrcode4wechatlogin")
-    @ApiOperation(value = "生成微信登录的二维码",
-            notes = "生成微信登陆的二维码，usertype 1 表示登录前端系统 2 表示登录店家系统")
+    @ApiOperation(value = "生成微信登录的二维码", notes = "生成微信登陆的二维码，usertype 1 表示登录前端系统 2 表示登录店家系统")
     public void generateQRCode4ShopAuth(HttpServletRequest request, HttpServletResponse response) {
         // 1 表示登录前端系统
         // 2 表示登录店家系统
@@ -243,7 +234,7 @@ public class LocalAuthController {
         }
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @PostMapping(value = "/logout")
     @ApiOperation(value = "退出登录", notes = "退出登录")
     public Map<String, Object> logoutCheck(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
@@ -271,6 +262,7 @@ public class LocalAuthController {
     public ResultBean<?> testLogin(HttpServletRequest request) {
         PersonInfo user = localAuthService.getLocalAuthByUserNameAndPwd("xiaoy", "123123").getPersonInfo();
         request.getSession().setAttribute("user", user);
+        int i = 1 / 0;
         return new ResultBean<>(user);
     }
 }

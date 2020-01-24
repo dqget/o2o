@@ -69,21 +69,16 @@ public class WechatLoginController {
             log.debug("从微信获取到的用户信息:" + user);
             assert user != null;
             request.getSession().setAttribute("openId", openId);
-            //通过openId查询微信账号信息
+            // 通过openId查询微信账号信息
             wechatAuth = wechatAuthService.getWechatAuthByOpenId(openId);
-
-            //wechatAuth==null表示微信用户是第一次登录
+            // weChatAuth==null表示微信用户是第一次登录
             if (wechatAuth == null) {
                 log.info("该用户首次登录");
                 PersonInfo personInfo = WechatUtil.getPersonInfoFromRequest(user);
                 wechatAuth = new WechatAuth();
                 wechatAuth.setOpenId(user.getOpenId());
-//                if (FRONTEND.equals(userType)) {
                 //不允许用户创建店家身份
-                    personInfo.setUserType(1);
-//                } else {
-//                    personInfo.setUserType(2);
-//                }
+                personInfo.setUserType(1);
                 wechatAuth.setPersonInfo(personInfo);
                 WechatAuthExecution we = wechatAuthService.register(wechatAuth);
                 if (we.getState() != WechatAuthStateEnum.SUCCESS.getState()) {
